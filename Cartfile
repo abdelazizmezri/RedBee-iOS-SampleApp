@@ -1,3 +1,4 @@
 github "EricssonBroadcastServices/iOSClientPlayer" "master"
 github "EricssonBroadcastServices/iOSClientExposure" "master"
 github "EricssonBroadcastServices/iOSClientExposurePlayback" "master"
+github "EricssonBroadcastServices/iOSClientCast" "EMP-14894"

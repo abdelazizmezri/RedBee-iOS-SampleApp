@@ -1,0 +1,11 @@
+framework module Download {
+  umbrella header "Download.h"
+
+  export *
+  module * { export * }
+}
+
+module Download.Swift {
+    header "Download-Swift.h"
+    requires objc
+}

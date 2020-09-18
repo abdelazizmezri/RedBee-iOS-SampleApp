@@ -1,0 +1,11 @@
+{
+  "commitish" : "b504c34e92879100f2adad3c29c90b9bfc17293c",
+  "iOS" : [
+    {
+      "hash" : "fdf99fae1b14d620c0423754a6181c72cc38bb10e248366e0269d1e16e1478d7",
+      "name" : "Cast",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)"
+    }
+  ]
+}

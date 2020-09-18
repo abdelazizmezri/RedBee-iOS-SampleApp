@@ -13,3 +13,6 @@
 [submodule "Carthage/Checkouts/iOSClientExposurePlayback"]
 	url = https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback.git
 	path = Carthage/Checkouts/iOSClientExposurePlayback
+[submodule "Carthage/Checkouts/iOSClientCast"]
+	path = Carthage/Checkouts/iOSClientCast
+	url = https://github.com/EricssonBroadcastServices/iOSClientCast.git

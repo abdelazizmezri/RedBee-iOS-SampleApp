@@ -11,6 +11,7 @@ import Exposure
 import ExposurePlayback
 import Player
 import AVFoundation.AVFAudio.AVAudioSession
+import GoogleCast
 
 class PlayerViewController: UIViewController {
     
@@ -39,6 +40,12 @@ class PlayerViewController: UIViewController {
         button.tintColor = ColorState.active.button
         button.addTarget(self, action: #selector(actionPausePlay(_:)), for: .touchUpInside)
         return button
+    }()
+    
+    let castButton: GCKUICastButton = {
+        let castbutton = GCKUICastButton()
+        castbutton.tintColor = .white
+        return castbutton
     }()
     
     let playerView = UIView()
@@ -501,6 +508,7 @@ extension PlayerViewController {
         pausePlayButton.centerYAnchor.constraint(equalTo: playerView.centerYAnchor).isActive = true
         
         mainContentView.addArrangedSubview(controls)
+        mainContentView.addSubview(castButton)
         
     }
 }
