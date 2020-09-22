@@ -71,7 +71,7 @@ extension AssetListTableViewController {
         } else {
             // MOVIE / TV_CHANNEL
             let query = ""
-            loadAssets(query: query, environment: environment, endpoint: "/content/asset?assetType=\(selectedAsssetType!)&pageSize=100&pageNumber=2", method: HTTPMethod.get)
+            loadAssets(query: query, environment: environment, endpoint: "/content/asset?assetType=\(selectedAsssetType!)&pageSize=100&pageNumber=1", method: HTTPMethod.get)
         }
     }
     

@@ -32,6 +32,7 @@ class LoginViewController: UIViewController {
     
     let usernameTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: NSLocalizedString("Username", comment: ""))
+        textfield.text = ""
         if #available(iOS 11, *) {
             textfield.textContentType = UITextContentType.username
         }
@@ -40,6 +41,7 @@ class LoginViewController: UIViewController {
     
     let passwordTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: NSLocalizedString("Password", comment: ""))
+        textfield.text = ""
         if #available(iOS 11, *) {
             textfield.textContentType = UITextContentType.password
         }
@@ -179,7 +181,7 @@ extension LoginViewController {
                     let rootViewController = UIApplication.shared.windows.first(where: \.isKeyWindow)?.rootViewController
                     guard let mainNavigationController = rootViewController as? MainNavigationController else { return }
                     // mainNavigationController.viewControllers = [AssetListTableViewController()]
-                    mainNavigationController.viewControllers = [SelectionTableViewController()]
+                    mainNavigationController.viewControllers = [RootViewController()]
                     self?.dismiss(animated: true, completion: nil)
                 }
         }

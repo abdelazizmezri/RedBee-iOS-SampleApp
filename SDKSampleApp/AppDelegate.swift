@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         // Override point for customization after application launch.
         
         let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: ""))
+        options.physicalVolumeButtonsWillControlDeviceVolume = true
         GCKCastContext.setSharedInstanceWith(options)
         GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
         
@@ -28,11 +29,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         
         GCKCastContext.sharedInstance().sessionManager.add(self)
         
+//        let logFilter = GCKLoggerFilter()
+//        logFilter.minimumLevel = .verbose
+//        GCKLogger.sharedInstance().filter = logFilter
+//        GCKLogger.sharedInstance().delegate = self
+        
+        
+        let styler = GCKUIStyle.sharedInstance()
+        styler.castViews.iconTintColor = .lightGray
+        styler.castViews.mediaControl.expandedController.iconTintColor = .green
+        styler.castViews.backgroundColor = .white
+        styler.castViews.mediaControl.miniController.backgroundColor = .yellow
+        styler.castViews.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        styler.castViews.mediaControl.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 6) ?? UIFont.systemFont(ofSize: 6)
+        let muteOnImage = UIImage.init(named: "volume0.png")
+        if let muteOnImage = muteOnImage {
+          styler.castViews.muteOnImage = muteOnImage
+        }
+        styler.apply()
+        GCKUICastButton.appearance().tintColor = UIColor.gray
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // window = UIWindow()
-        let rootViewController = MainNavigationController()
-        window?.rootViewController = rootViewController
+        let navigationController = MainNavigationController()
+        
+        let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
+          as GCKUICastContainerViewController
+        castContainerVC.miniMediaControlsItemEnabled = true
+        
+        window?.rootViewController = castContainerVC
         window?.makeKeyAndVisible()
         return true
     }
@@ -52,7 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         session.add(castChannel)
         session.remoteMediaClient?.add(self)
         
-        
         castChannel
             .onTracksUpdated { [weak self] tracksUpdated in
                 let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
@@ -66,29 +91,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                 expandedControls.setCustomButton(customButton, at: 0)
                 
                 customButton.triggerAction = {
-                    let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
-                    let storyBoard = UIStoryboard(name: "TestEnv", bundle: nil)
-                    let ccViewController = storyBoard.instantiateViewController(withIdentifier: "TrackSelectionViewController") as! TrackSelectionViewController
                     
-                    // ccViewController.assign(audio: tracksUpdated.audio)
-                    // ccViewController.assign(text: tracksUpdated.subtitles)
-                    ccViewController.onDidSelectAudio = { [weak self] track in
-                        guard let `self` = self, let track = track as? Cast.Track else { return }
-                        self.castChannel.use(audioTrack: track)
-                    }
-                    ccViewController.onDidSelectText = { [weak self] track in
-                        guard let `self` = self else { return }
-                        if let track = track as? Cast.Track {
-                            self.castChannel.use(textTrack: track)
-                        }
-                        else {
-                            self.castChannel.hideSubtitles()
-                        }
-                    }
-                    ccViewController.onDismissed = { [weak ccViewController] in
-                        ccViewController?.dismiss(animated: true)
-                    }
-                    expandedControls.present(ccViewController, animated: true)
+//                    let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
+//                    let storyBoard = UIStoryboard(name: "TestEnv", bundle: nil)
+//                    let ccViewController = storyBoard.instantiateViewController(withIdentifier: "TrackSelectionViewController") as! TrackSelectionViewController
+//
+//                    // ccViewController.assign(audio: tracksUpdated.audio)
+//                    // ccViewController.assign(text: tracksUpdated.subtitles)
+//                    ccViewController.onDidSelectAudio = { [weak self] track in
+//                        guard let `self` = self, let track = track as? Cast.Track else { return }
+//                        self.castChannel.use(audioTrack: track)
+//                    }
+//                    ccViewController.onDidSelectText = { [weak self] track in
+//                        guard let `self` = self else { return }
+//                        if let track = track as? Cast.Track {
+//                            self.castChannel.use(textTrack: track)
+//                        }
+//                        else {
+//                            self.castChannel.hideSubtitles()
+//                        }
+//                    }
+//                    ccViewController.onDismissed = { [weak ccViewController] in
+//                        ccViewController?.dismiss(animated: true)
+//                    }
+//                    expandedControls.present(ccViewController, animated: true)
                 }
                 
                 print("Cast.Channel onTracksUpdated Audio",tracksUpdated.audio)
@@ -110,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                 let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
                 guard let `self` = self else { return }
                 let rw = ChromeCastButton()
-                rw.setTitle("RW30", for: .normal)
+                rw.setTitle("RW10", for: .normal)
                 rw.setTitleColor(UIColor.white, for: .normal)
                 rw.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
                 
@@ -122,13 +148,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                 rw.triggerAction = { [weak self] in
                     if let position = self?.castSession?.remoteMediaClient?.approximateStreamPosition() {
                         let seekOptions = GCKMediaSeekOptions()
-                        seekOptions.interval = position - 30
+                        seekOptions.interval = position - 10
                         self?.castSession?.remoteMediaClient?.seek(with: seekOptions)
                     }
                 }
                 
                 let ff = ChromeCastButton()
-                ff.setTitle("FF30", for: .normal)
+                ff.setTitle("FF10", for: .normal)
                 ff.setTitleColor(UIColor.white, for: .normal)
                 ff.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
                 
@@ -140,7 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                 ff.triggerAction = { [weak self] in
                     if let position = self?.castSession?.remoteMediaClient?.approximateStreamPosition() {
                         let seekOptions = GCKMediaSeekOptions()
-                        seekOptions.interval = position + 30
+                        seekOptions.interval = position + 10
                         self?.castSession?.remoteMediaClient?.seek(with: seekOptions)
                     }
                 }

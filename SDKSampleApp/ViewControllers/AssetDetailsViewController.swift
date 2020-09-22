@@ -47,7 +47,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         
         tableView.register(AssetListTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView()
-        
+        tableView.backgroundColor = .white
         
         // Check if this asset is available in downloads
         if self.enigmaDownloadManager.getDownloadedAsset(assetId: assetId) != nil {
@@ -107,6 +107,10 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AssetListTableViewCell
         
         cell.selectionStyle = .none
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .black
+        cell.detailTextLabel?.textColor = .black
+        
         
         cell.titleLabel.text = sections[indexPath.row]
         switch  indexPath.row {
