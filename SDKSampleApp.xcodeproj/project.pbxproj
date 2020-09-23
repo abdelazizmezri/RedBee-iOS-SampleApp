@@ -256,8 +256,8 @@
 		78C24FD625139846001ED9E3 /* SDKSampleAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDKSampleAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C24FDA25139846001ED9E3 /* SDKSampleAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSampleAppUITests.swift; sourceTree = "<group>"; };
 		78C24FDC25139846001ED9E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78C24FEE25139881001ED9E3 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cartfile; path = SDKSampleApp/Cartfile; sourceTree = SOURCE_ROOT; };
-		78C2502425139AB4001ED9E3 /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile.resolved; path = SDKSampleApp/Cartfile.resolved; sourceTree = SOURCE_ROOT; };
+		78C24FEE25139881001ED9E3 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
+		78C2502425139AB4001ED9E3 /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = SOURCE_ROOT; };
 		78C2505125139CB6001ED9E3 /* Player.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Player.xcodeproj; path = Carthage/Checkouts/iOSClientPlayer/Player.xcodeproj; sourceTree = "<group>"; };
 		78C2506025139CBF001ED9E3 /* Exposure.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Exposure.xcodeproj; path = Carthage/Checkouts/iOSClientExposure/Exposure.xcodeproj; sourceTree = "<group>"; };
 		78C2506F25139CC5001ED9E3 /* ExposurePlayback.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ExposurePlayback.xcodeproj; path = Carthage/Checkouts/iOSClientExposurePlayback/ExposurePlayback.xcodeproj; sourceTree = "<group>"; };
@@ -340,6 +340,11 @@
 		78C24FAC25139845001ED9E3 = {
 			isa = PBXGroup;
 			children = (
+				780B2DEF251B6B4C003B2A94 /* LICENSE */,
+				780B2E03251B6B4C003B2A94 /* README.md */,
+				780B2E04251B6C3D003B2A94 /* CHANGELOG.md */,
+				78C24FEE25139881001ED9E3 /* Cartfile */,
+				78C2502425139AB4001ED9E3 /* Cartfile.resolved */,
 				78C24FB725139845001ED9E3 /* SDKSampleApp */,
 				78C24FCE25139846001ED9E3 /* SDKSampleAppTests */,
 				78C24FD925139846001ED9E3 /* SDKSampleAppUITests */,
@@ -367,11 +372,6 @@
 		78C24FB725139845001ED9E3 /* SDKSampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				780B2DEF251B6B4C003B2A94 /* LICENSE */,
-				780B2E03251B6B4C003B2A94 /* README.md */,
-				780B2E04251B6C3D003B2A94 /* CHANGELOG.md */,
-				78C24FEE25139881001ED9E3 /* Cartfile */,
-				78C2502425139AB4001ED9E3 /* Cartfile.resolved */,
 				781C376F251887620094C2C6 /* SDKSampleApp.entitlements */,
 				78C251862513A0DC001ED9E3 /* Model */,
 				78C2518D2513A0F7001ED9E3 /* ViewModel */,
