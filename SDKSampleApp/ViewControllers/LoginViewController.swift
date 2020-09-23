@@ -8,6 +8,7 @@
 
 import UIKit
 import Exposure
+import GoogleCast
 
 class LoginViewController: UIViewController {
     
@@ -175,10 +176,14 @@ extension LoginViewController {
                 if let credentials = $0.value {
                     StorageProvider.store(environment: self?.environment)
                     StorageProvider.store(sessionToken: credentials.sessionToken)
+                    
+                    
                     let navigationController = MainNavigationController()
-                   //  navigationController.modalPresentationStyle = .fullScreen
-                    navigationController.viewControllers = [RootViewController()]
-                    self?.present(navigationController, animated: true, completion: nil)
+                    let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
+                      as GCKUICastContainerViewController
+                    castContainerVC.miniMediaControlsItemEnabled = true
+                    UIApplication.shared.keyWindow?.rootViewController = castContainerVC
+
                 }
         }
     }

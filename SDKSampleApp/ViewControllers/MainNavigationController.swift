@@ -24,14 +24,16 @@ class MainNavigationController: UINavigationController {
             let rootVC = RootViewController()
             viewControllers = [rootVC]
         } else {
-            perform(#selector(showLoginController), with: nil, afterDelay: 0.01)
+            let environmentViewController = EnvironmentViewController()
+            viewControllers = [environmentViewController]
+            
         }
     }
     
     
     /// Show Enviornment view if user not logged in
     @objc func showLoginController() {
-        self.modalPresentationStyle = .fullScreen
+            // self.modalPresentationStyle = .fullScreen
             let environmentViewController = EnvironmentViewController()
             viewControllers = [environmentViewController]
     }

@@ -155,12 +155,13 @@ extension RootViewController {
     /// Log out the user from the application
     func logoutUser() {
         
-        let navigationController = MainNavigationController()
-        
         guard let environment = StorageProvider.storedEnvironment, let sessionToken = StorageProvider.storedSessionToken else {
             
-            navigationController.modalPresentationStyle = .fullScreen
-            self.present(navigationController, animated: true, completion: nil)
+            let navigationController = MainNavigationController()
+            let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
+              as GCKUICastContainerViewController
+            castContainerVC.miniMediaControlsItemEnabled = true
+            UIApplication.shared.keyWindow?.rootViewController = castContainerVC
             return
         }
         
@@ -176,8 +177,11 @@ extension RootViewController {
                         StorageProvider.store(environment: nil)
                         StorageProvider.store(sessionToken: nil)
                         
-                        navigationController.modalPresentationStyle = .fullScreen
-                        self.present(navigationController, animated: true, completion: nil)
+                        let navigationController = MainNavigationController()
+                        let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
+                          as GCKUICastContainerViewController
+                        castContainerVC.miniMediaControlsItemEnabled = true
+                        UIApplication.shared.keyWindow?.rootViewController = castContainerVC
                     })
                     
                     let message = "\(error.code) " + error.message + "\n" + (error.info ?? "")
@@ -187,8 +191,11 @@ extension RootViewController {
                     StorageProvider.store(environment: nil)
                     StorageProvider.store(sessionToken: nil)
                     
-                    navigationController.modalPresentationStyle = .fullScreen
-                    self.present(navigationController, animated: true, completion: nil)
+                    let navigationController = MainNavigationController()
+                    let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
+                      as GCKUICastContainerViewController
+                    castContainerVC.miniMediaControlsItemEnabled = true
+                    UIApplication.shared.keyWindow?.rootViewController = castContainerVC
                 }
         }
     }
