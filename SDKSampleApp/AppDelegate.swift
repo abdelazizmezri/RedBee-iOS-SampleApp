@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "5D5D5CE6"))
+        
+        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "")) // Set your chrome cast app id here
         options.physicalVolumeButtonsWillControlDeviceVolume = true
         GCKCastContext.setSharedInstanceWith(options)
         GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
@@ -29,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         
         GCKCastContext.sharedInstance().sessionManager.add(self)
         
+        // Enable all the logs if needed 
 //        let logFilter = GCKLoggerFilter()
 //        logFilter.minimumLevel = .verbose
 //        GCKLogger.sharedInstance().filter = logFilter
@@ -190,10 +192,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     @objc func presentExpandedMediaControls() {
         print("present expanded media controls")
         // Segue directly to the ExpandedViewController.
-//        if let castContainerVC = window?.rootViewController as? GCKUICastContainerViewController {
-//            let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
-//            castContainerVC.present(expandedControls, animated: true)
-//        }
+        if let castContainerVC = window?.rootViewController as? GCKUICastContainerViewController {
+            let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
+            castContainerVC.present(expandedControls, animated: true)
+        }
     }
     
     func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
