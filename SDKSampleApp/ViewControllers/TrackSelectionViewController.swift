@@ -8,6 +8,7 @@
 
 import UIKit
 import Player
+import Cast
 
 class TrackSelectionViewController: UIViewController {
     
@@ -88,6 +89,7 @@ class TrackSelectionViewController: UIViewController {
     
 }
 
+// MARK: - Player Audio / Sub selection
 extension TrackSelectionViewController {
     func assign(audio: MediaGroup?) {
         audioViewModels = prepareViewModels(for: audio)
@@ -122,6 +124,35 @@ extension TrackSelectionViewController {
         return vms
     }
 }
+
+
+// MARK: - Chrome Cast Audio / Sub selection
+extension TrackSelectionViewController {
+    func assign(audio: [Cast.Track]) {
+        audioViewModels = audio.map{ TrackSelectionViewModel(model: $0) }
+        selectedAudio = (0..<audio.count).flatMap { index -> IndexPath? in
+            let vm = audio[index]
+            if vm.active {
+                return IndexPath(row: index, section: 0)
+            }
+            return nil
+            }.last
+    }
+    
+    func assign(text: [Cast.Track]) {
+        textViewModels = text.map{ TrackSelectionViewModel(model: $0) }
+        let off = TrackSelectionViewModel(model: nil)
+        textViewModels.append(off)
+        selectedText = (0..<text.count).flatMap { index -> IndexPath? in
+            let vm = text[index]
+            if vm.active {
+                return IndexPath(row: index, section: 0)
+            }
+            return nil
+            }.last
+    }
+}
+
 
 
 // MARK: - TableView Delegate
@@ -219,3 +250,5 @@ extension TrackSelectionViewController {
         subtitlesTableView.widthAnchor.constraint(equalTo: tablesHolderView.widthAnchor, multiplier: 0.5).isActive = true
     }
 }
+
+

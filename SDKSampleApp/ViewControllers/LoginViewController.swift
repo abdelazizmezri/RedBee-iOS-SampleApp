@@ -177,12 +177,10 @@ extension LoginViewController {
                 if let credentials = $0.value {
                     StorageProvider.store(environment: self?.environment)
                     StorageProvider.store(sessionToken: credentials.sessionToken)
-                    
-                    let rootViewController = UIApplication.shared.windows.first(where: \.isKeyWindow)?.rootViewController
-                    guard let mainNavigationController = rootViewController as? MainNavigationController else { return }
-                    // mainNavigationController.viewControllers = [AssetListTableViewController()]
-                    mainNavigationController.viewControllers = [RootViewController()]
-                    self?.dismiss(animated: true, completion: nil)
+                    let navigationController = MainNavigationController()
+                   //  navigationController.modalPresentationStyle = .fullScreen
+                    navigationController.viewControllers = [RootViewController()]
+                    self?.present(navigationController, animated: true, completion: nil)
                 }
         }
     }

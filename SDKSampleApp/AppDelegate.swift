@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: ""))
+        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "5D5D5CE6"))
         options.physicalVolumeButtonsWillControlDeviceVolume = true
         GCKCastContext.setSharedInstanceWith(options)
         GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
@@ -92,29 +92,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                 
                 customButton.triggerAction = {
                     
-//                    let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
-//                    let storyBoard = UIStoryboard(name: "TestEnv", bundle: nil)
-//                    let ccViewController = storyBoard.instantiateViewController(withIdentifier: "TrackSelectionViewController") as! TrackSelectionViewController
-//
-//                    // ccViewController.assign(audio: tracksUpdated.audio)
-//                    // ccViewController.assign(text: tracksUpdated.subtitles)
-//                    ccViewController.onDidSelectAudio = { [weak self] track in
-//                        guard let `self` = self, let track = track as? Cast.Track else { return }
-//                        self.castChannel.use(audioTrack: track)
-//                    }
-//                    ccViewController.onDidSelectText = { [weak self] track in
-//                        guard let `self` = self else { return }
-//                        if let track = track as? Cast.Track {
-//                            self.castChannel.use(textTrack: track)
-//                        }
-//                        else {
-//                            self.castChannel.hideSubtitles()
-//                        }
-//                    }
-//                    ccViewController.onDismissed = { [weak ccViewController] in
-//                        ccViewController?.dismiss(animated: true)
-//                    }
-//                    expandedControls.present(ccViewController, animated: true)
+                    let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
+                    
+                    let ccViewController = TrackSelectionViewController()
+
+                    ccViewController.assign(audio: tracksUpdated.audio)
+                    ccViewController.assign(text: tracksUpdated.subtitles)
+                    ccViewController.onDidSelectAudio = { [weak self] track in
+                        guard let `self` = self, let track = track as? Cast.Track else { return }
+                        self.castChannel.use(audioTrack: track)
+                    }
+                    ccViewController.onDidSelectText = { [weak self] track in
+                        guard let `self` = self else { return }
+                        if let track = track as? Cast.Track {
+                            self.castChannel.use(textTrack: track)
+                        }
+                        else {
+                            self.castChannel.hideSubtitles()
+                        }
+                    }
+                    ccViewController.onDismissed = { [weak ccViewController] in
+                        ccViewController?.dismiss(animated: true)
+                    }
+                    expandedControls.present(ccViewController, animated: true)
                 }
                 
                 print("Cast.Channel onTracksUpdated Audio",tracksUpdated.audio)
@@ -190,10 +190,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     @objc func presentExpandedMediaControls() {
         print("present expanded media controls")
         // Segue directly to the ExpandedViewController.
-        if let castContainerVC = window?.rootViewController as? GCKUICastContainerViewController {
-            let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
-            castContainerVC.present(expandedControls, animated: true)
-        }
+//        if let castContainerVC = window?.rootViewController as? GCKUICastContainerViewController {
+//            let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
+//            castContainerVC.present(expandedControls, animated: true)
+//        }
     }
     
     func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {

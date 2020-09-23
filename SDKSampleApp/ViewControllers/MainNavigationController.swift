@@ -31,8 +31,9 @@ class MainNavigationController: UINavigationController {
     
     /// Show Enviornment view if user not logged in
     @objc func showLoginController() {
-        let environmentViewController = EnvironmentViewController()
-        viewControllers = [environmentViewController]
+        self.modalPresentationStyle = .fullScreen
+            let environmentViewController = EnvironmentViewController()
+            viewControllers = [environmentViewController]
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {

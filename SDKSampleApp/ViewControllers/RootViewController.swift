@@ -54,9 +54,7 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let selectionlistViewController = SelectionTableViewController()
         
-        self.add(asChildViewController: selectionlistViewController)
         
         sessionManager = GCKCastContext.sharedInstance().sessionManager
         sessionManager.add(self)
@@ -69,6 +67,10 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
                               inContainerView: _miniMediaControlsContainerView)
         
         installViewController(miniMediaControlsViewController, inContainerView: _miniMediaControlsContainerView)
+        
+        let selectionlistViewController = SelectionTableViewController()
+        
+        self.add(asChildViewController: selectionlistViewController)
 
     }
     
@@ -156,6 +158,8 @@ extension RootViewController {
         let navigationController = MainNavigationController()
         
         guard let environment = StorageProvider.storedEnvironment, let sessionToken = StorageProvider.storedSessionToken else {
+            
+            navigationController.modalPresentationStyle = .fullScreen
             self.present(navigationController, animated: true, completion: nil)
             return
         }
@@ -171,6 +175,8 @@ extension RootViewController {
                         
                         StorageProvider.store(environment: nil)
                         StorageProvider.store(sessionToken: nil)
+                        
+                        navigationController.modalPresentationStyle = .fullScreen
                         self.present(navigationController, animated: true, completion: nil)
                     })
                     
@@ -180,6 +186,8 @@ extension RootViewController {
                 else {
                     StorageProvider.store(environment: nil)
                     StorageProvider.store(sessionToken: nil)
+                    
+                    navigationController.modalPresentationStyle = .fullScreen
                     self.present(navigationController, animated: true, completion: nil)
                 }
         }

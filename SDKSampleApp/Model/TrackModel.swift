@@ -7,6 +7,7 @@
 
 import Foundation
 import Player
+import Cast
 
 protocol TrackModel {
     var displayName: String { get }
@@ -17,4 +18,9 @@ protocol TrackModel {
 
 extension MediaTrack: TrackModel {
     var displayName: String { return name }
+}
+
+extension Cast.Track: TrackModel {
+    var displayName: String { return label }
+    var extendedLanguageTag: String? { return language }
 }
