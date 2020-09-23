@@ -30,11 +30,13 @@ class EnvironmentViewController: UIViewController {
     
     let environmentUrlTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: "Exposure base URL")
+        textfield.backgroundColor = ColorState.active.textFieldBackground
         return textfield
     }()
     
     let customerNameTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: NSLocalizedString("Customer Name", comment: ""))
+        textfield.backgroundColor = ColorState.active.textFieldBackground
         return textfield
     }()
     

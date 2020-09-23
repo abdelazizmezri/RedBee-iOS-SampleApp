@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         
         GCKCastContext.sharedInstance().sessionManager.add(self)
         
-        // Enable all the logs if needed 
+        // Enable all the logs if needed
 //        let logFilter = GCKLoggerFilter()
 //        logFilter.minimumLevel = .verbose
 //        GCKLogger.sharedInstance().filter = logFilter
