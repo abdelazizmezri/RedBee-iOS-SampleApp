@@ -1,0 +1,18 @@
+[submodule "Carthage/Checkouts/iOSClientExposure"]
+	path = Carthage/Checkouts/iOSClientExposure
+	url = https://github.com/EricssonBroadcastServices/iOSClientExposure.git
+[submodule "Carthage/Checkouts/iOSClientPlayer"]
+	path = Carthage/Checkouts/iOSClientPlayer
+	url = https://github.com/EricssonBroadcastServices/iOSClientPlayer.git
+[submodule "Carthage/Checkouts/iOSClientExposureDownload"]
+	path = Carthage/Checkouts/iOSClientExposureDownload
+	url = https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git
+[submodule "Carthage/Checkouts/iOSClientDownload"]
+	path = Carthage/Checkouts/iOSClientDownload
+	url = https://github.com/EricssonBroadcastServices/iOSClientDownload.git
+[submodule "Carthage/Checkouts/iOSClientExposurePlayback"]
+	url = https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback.git
+	path = Carthage/Checkouts/iOSClientExposurePlayback
+[submodule "Carthage/Checkouts/iOSClientCast"]
+	path = Carthage/Checkouts/iOSClientCast
+	url = https://github.com/EricssonBroadcastServices/iOSClientCast.git

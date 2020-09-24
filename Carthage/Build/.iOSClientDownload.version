@@ -1,0 +1,11 @@
+{
+  "commitish" : "210e30f630491376b140e0358e5e9415261f0da7",
+  "iOS" : [
+    {
+      "hash" : "738f8f935f1d06b3b29bdf9260716f8f3f995ef79a2aaf3a35f459251c4fb5dd",
+      "name" : "Download",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)"
+    }
+  ]
+}
