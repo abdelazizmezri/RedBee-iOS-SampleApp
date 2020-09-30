@@ -641,7 +641,7 @@ extension PlayerViewController: GCKSessionManagerListener {
                                                sessionToken: sessionToken.value)
         return CustomData(environment: castEnvironment,
                               assetId: playable.assetId,
-                              playbackProperties: properties)
+                              language: "es", playbackProperties: properties)
 
     }
 
