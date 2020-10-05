@@ -619,7 +619,7 @@ extension PlayerViewController: GCKSessionManagerListener {
         mediaInfoBuilder.metadata = nil
         mediaInfoBuilder.streamDuration = 0
         mediaInfoBuilder.mediaTracks = nil
-        mediaInfoBuilder.textTrackStyle = GCKMediaTextTrackStyle.createDefault()
+        mediaInfoBuilder.textTrackStyle = .createDefault()
         
         let mediaInfo = mediaInfoBuilder.build()
         
@@ -641,7 +641,7 @@ extension PlayerViewController: GCKSessionManagerListener {
                                                sessionToken: sessionToken.value)
         return CustomData(environment: castEnvironment,
                               assetId: playable.assetId,
-                              language: "es", playbackProperties: properties)
+                              language: "fr", playbackProperties: properties)
 
     }
 

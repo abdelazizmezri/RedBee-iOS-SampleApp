@@ -9,7 +9,7 @@ import UIKit
 import Cast
 import GoogleCast
 
-@main
+@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListener, GCKSessionManagerListener {
 
     var window: UIWindow?
