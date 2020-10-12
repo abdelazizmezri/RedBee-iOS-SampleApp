@@ -15,7 +15,7 @@ class TrackSelectionViewModel: Equatable {
     }
     
     var displayName: String {
-        return model?.displayName ?? "Off"
+        return model?.displayName ?? "None"
     }
     
     public static func == (lhs: TrackSelectionViewModel, rhs: TrackSelectionViewModel) -> Bool {
