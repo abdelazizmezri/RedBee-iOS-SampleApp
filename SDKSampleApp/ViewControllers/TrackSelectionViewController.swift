@@ -147,8 +147,9 @@ extension TrackSelectionViewController {
             let vm = text[index]
             if vm.active {
                 return IndexPath(row: index, section: 0)
+            } else {
+                return IndexPath(row: text.count, section: 0)
             }
-            return nil
             }.last
     }
 }
