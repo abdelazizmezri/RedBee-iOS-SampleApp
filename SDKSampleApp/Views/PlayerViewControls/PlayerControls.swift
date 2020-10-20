@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVKit
+
 
 class PlayerControls: UIView {
     
@@ -87,6 +89,8 @@ class PlayerControls: UIView {
     let nextProgramButton = RBMPlayerControlButton(titleText: "Next Program", target: self, action: #selector(nextProgram))
     let previousProgramButton = RBMPlayerControlButton(titleText: "Previous Program", target: self, action: #selector(previousProgram))
     
+    let pipButton = RBMPlayerControlButton(titleText: "Picture in Picture", target: self, action: #selector(pipButtonClicked))
+    
     var onSeekingTime: (Int64) -> Void = { _ in }
     var onSeeking: (Int64) -> Void = { _ in }
     var onTimeTick: () -> Void = { }
@@ -97,6 +101,7 @@ class PlayerControls: UIView {
     var onCC: () -> Void = { }
     var onNextProgram: () -> Void  = {}
     var onPreviousProgram: ()-> Void = {}
+    var onPiP: () -> Void = {} 
     
     fileprivate let queue = DispatchQueue(label: "com.emp.refApp.timestamp",
                                           qos: DispatchQoS.background,
@@ -114,6 +119,18 @@ class PlayerControls: UIView {
         
         setupLayout()
         
+        if #available(iOS 13.0, *) {
+            let startImage = AVPictureInPictureController.pictureInPictureButtonStartImage
+            let stopImage = AVPictureInPictureController.pictureInPictureButtonStopImage
+            pipButton.setImage(startImage, for: .normal)
+            pipButton.setImage(stopImage, for: .selected)
+                   
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        
+       
         timer = DispatchSource.makeTimerSource(queue: queue)
         timer?.schedule(deadline: .now() + .seconds(1), repeating: .seconds(1))
         timer?.setEventHandler { [weak self] in
@@ -181,6 +198,7 @@ extension PlayerControls {
         
         playerControlsView.addArrangedSubview(nextProgramButton)
         playerControlsView.addArrangedSubview(previousProgramButton)
+        playerControlsView.addArrangedSubview(pipButton)
     }
 }
 
@@ -235,5 +253,10 @@ extension PlayerControls {
     @objc func previousProgram() {
         onPreviousProgram()
     }
+    
+    @objc func pipButtonClicked() {
+        onPiP()
+    }
+    
     
 }

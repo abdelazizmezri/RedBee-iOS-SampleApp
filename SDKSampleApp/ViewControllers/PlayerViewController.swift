@@ -10,11 +10,12 @@ import UIKit
 import Exposure
 import ExposurePlayback
 import Player
-import AVFoundation.AVFAudio.AVAudioSession
+import AVFoundation
 import GoogleCast
 import Cast
+import AVKit
 
-class PlayerViewController: UIViewController, GCKRemoteMediaClientListener {
+class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPictureInPictureControllerDelegate {
     
     var environment: Environment!
     var sessionToken: SessionToken!
@@ -63,6 +64,8 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener {
     var castChannel: Channel = Channel()
     var castSession: GCKCastSession?
     
+    private var pictureInPictureController: AVPictureInPictureController?
+    
     override func loadView() {
         super.loadView()
         
@@ -79,7 +82,7 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dissmissKeyboard))
         view.addGestureRecognizer(tapGesture)
         view.bindToKeyboard()
-
+        
         setupPlayer(environment, sessionToken)
         self.enableAudioSeesionForPlayer()
         
@@ -115,7 +118,11 @@ extension PlayerViewController {
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
         player = Player(environment: environment, sessionToken: sessionToken)
-        player.configure(playerView: playerView)
+        let avPlayerLayer = player.configure(playerView: playerView)
+        
+        
+        pictureInPictureController = AVPictureInPictureController(playerLayer: avPlayerLayer)
+        pictureInPictureController?.delegate = self
         
         // The preparation and loading process can be followed by listening to associated events.
         player
@@ -123,15 +130,15 @@ extension PlayerViewController {
                 // Fires once the associated MediaSource has been created.
                 // Playback is not ready to start at this point.
                 self?.updateTimeLine(streamingInfo: source.streamingInfo)
-        }
-        .onPlaybackPrepared{ player, source in
-            // Published when the associated MediaSource completed asynchronous loading of relevant properties.
-            // Playback is not ready to start at this point.
-        }
-        .onPlaybackReady{ player, source in
-            // When this event fires starting playback is possible (playback can optionally be set to autoplay instead)
-            player.play()
-        }
+            }
+            .onPlaybackPrepared{ player, source in
+                // Published when the associated MediaSource completed asynchronous loading of relevant properties.
+                // Playback is not ready to start at this point.
+            }
+            .onPlaybackReady{ player, source in
+                // When this event fires starting playback is possible (playback can optionally be set to autoplay instead)
+                player.play()
+            }
         
         // Once playback is in progress the Player continuously publishes events related media status and user interaction.
         player
@@ -140,24 +147,24 @@ extension PlayerViewController {
                 // This is a one-time event.
                 guard let `self` = self else { return }
                 self.togglePlayPauseButton(paused: false)
-        }
-        .onPlaybackPaused{ [weak self] player, source in
-            // Fires when the playback pauses for some reason
-            guard let `self` = self else { return }
-            self.togglePlayPauseButton(paused: true)
-        }
-        .onPlaybackResumed{ [weak self] player, source in
-            // Fires when the playback resumes from a paused state
-            guard let `self` = self else { return }
-            self.togglePlayPauseButton(paused: false)
-        }
-        .onPlaybackAborted{ player, source in
-            // Published once the player.stop() method is called.
-            // This is considered a user action
-        }
-        .onPlaybackCompleted{ player, source in
-            // Published when playback reached the end of the current media.
-        }
+            }
+            .onPlaybackPaused{ [weak self] player, source in
+                // Fires when the playback pauses for some reason
+                guard let `self` = self else { return }
+                self.togglePlayPauseButton(paused: true)
+            }
+            .onPlaybackResumed{ [weak self] player, source in
+                // Fires when the playback resumes from a paused state
+                guard let `self` = self else { return }
+                self.togglePlayPauseButton(paused: false)
+            }
+            .onPlaybackAborted{ player, source in
+                // Published once the player.stop() method is called.
+                // This is considered a user action
+            }
+            .onPlaybackCompleted{ player, source in
+                // Published when playback reached the end of the current media.
+            }
         
         // Besides playback control events Player also publishes several status related events.
         player
@@ -165,32 +172,30 @@ extension PlayerViewController {
                 // Update user facing program information
                 guard let `self` = self else { return }
                 self.update(withProgram: program)
-        }
-        .onEntitlementResponse { [weak self] player, source, entitlement in
-            // Fires when a new entitlement is received, such as after attempting to start playback
-            guard let `self` = self else { return }
-            self.update(contractRestrictions: entitlement)
-        }
-        .onBitrateChanged{ player, source, bitrate in
-            // Published whenever the current bitrate changes
-            //self?.updateQualityIndicator(with: bitrate)
-        }
-        .onBufferingStarted{ player, source in
-            // Fires whenever the buffer is unable to keep up with playback
-        }
-        .onBufferingStopped{ player, source in
-            // Fires when buffering is no longer needed
-        }
-        .onDurationChanged{ player, source in
-            // Published when the active media received an update to its duration property
-        }
+            }
+            .onEntitlementResponse { [weak self] player, source, entitlement in
+                // Fires when a new entitlement is received, such as after attempting to start playback
+                guard let `self` = self else { return }
+                self.update(contractRestrictions: entitlement)
+            }
+            .onBitrateChanged{ player, source, bitrate in
+                // Published whenever the current bitrate changes
+                //self?.updateQualityIndicator(with: bitrate)
+            }
+            .onBufferingStarted{ player, source in
+                // Fires whenever the buffer is unable to keep up with playback
+            }
+            .onBufferingStopped{ player, source in
+                // Fires when buffering is no longer needed
+            }
+            .onDurationChanged{ player, source in
+                // Published when the active media received an update to its duration property
+            }
         
         // Error handling can be done by listening to associated event.
         player
             .onError{ [weak self] player, source, error in
                 guard let `self` = self else { return }
-                
-                print("ERROR " , error )
                 
                 let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
                     (alert: UIAlertAction!) -> Void in
@@ -198,12 +203,12 @@ extension PlayerViewController {
                 
                 let message = "\(error.code) " + error.message + "\n" + (error.info ?? "")
                 self.popupAlert(title: error.domain , message: message, actions: [okAction], preferedStyle: .alert)
-        }
+            }
             
-        .onWarning{ [weak self] player, source, warning in
-            guard let `self` = self else { return }
-            self.showToastMessage(message: warning.message, duration: 5)
-        }
+            .onWarning{ [weak self] player, source, warning in
+                guard let `self` = self else { return }
+                self.showToastMessage(message: warning.message, duration: 5)
+            }
         
         // Playback Progress
         programBasedTimeline.onSeek = { [weak self] offset in
@@ -239,7 +244,7 @@ extension PlayerViewController {
         vodBasedTimeline.startOverTrigger = { [weak self] in
             self?.player.seek(toPosition:0)
         }
-
+        
         // Start the playback
         self.startPlayBack(properties: playbackProperties)
     }
@@ -262,17 +267,14 @@ extension PlayerViewController {
                     self.chromecast(playable: playable, in: environment, sessionToken: sessionToken)
                 } else {
                     
-                    
                     vodBasedTimeline.isHidden = true
                     programBasedTimeline.isHidden = true
                     
                     player.startPlayback(playable: playable, properties: properties)
                 }
-              
+                
             }
         }
-        
-        
         
         
     }
@@ -301,15 +303,15 @@ extension PlayerViewController {
             programBasedTimeline.isHidden = false
             programBasedTimeline.startLoop()
         }
-            
-            // This is a catchup program
+        
+        // This is a catchup program
         else if streamingInfo.live == false && streamingInfo.staticProgram == false {
             vodBasedTimeline.isHidden = true
             vodBasedTimeline.stopLoop()
             programBasedTimeline.isHidden = false
             programBasedTimeline.startLoop()
         }
-            // This is a vod asset
+        // This is a vod asset
         else if streamingInfo.staticProgram == true {
             vodBasedTimeline.isHidden = false
             vodBasedTimeline.startLoop()
@@ -502,6 +504,60 @@ extension PlayerViewController {
             guard let `self` = self else { return }
             self.player.previousProgram()
         }
+        
+        controls.onPiP = { [weak self ] in
+            guard AVPictureInPictureController.isPictureInPictureSupported() else {
+                print("Picture in Picture mode is not supported")
+                return
+            }
+            
+            if let pipController = self?.pictureInPictureController {
+                if pipController.isPictureInPicturePossible {
+                    pipController.startPictureInPicture()
+                } else {
+                    pipController.addObserver(pipController, forKeyPath: "isPictureInPicturePossible", options: [.new], context: nil)
+                }
+            }
+        }
+    }
+}
+
+extension PlayerViewController {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == "isPictureInPicturePossible" else {
+            return
+        }
+        
+        if let pipController = object as? AVPictureInPictureController {
+            if pipController.isPictureInPicturePossible {
+                pipController.startPictureInPicture()
+            }
+        }
+    }
+    
+    func picture(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        //Update video controls of main player to reflect the current state of the video playback.
+        //You may want to update the video scrubber position.
+    }
+    
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        //Handle PIP will start event
+    }
+    
+    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        //Handle PIP did start event
+    }
+    
+    func picture(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        //Handle PIP failed to start event
+    }
+    
+    func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        //Handle PIP will stop event
+    }
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        //Handle PIP did start event
     }
 }
 
@@ -636,15 +692,15 @@ extension PlayerViewController: GCKSessionManagerListener {
     private func configure(for playable: Playable, environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64?, localTime: Int64?) -> Cast.CustomData {
         let properties = castPlaybackProperties(localOffset: localOffset, localTime: localTime)
         let castEnvironment = Cast.CastEnvironment(baseUrl: environment.baseUrl,
-                                               customer: environment.customer,
-                                               businessUnit: environment.businessUnit,
-                                               sessionToken: sessionToken.value)
+                                                   customer: environment.customer,
+                                                   businessUnit: environment.businessUnit,
+                                                   sessionToken: sessionToken.value)
         return CustomData(environment: castEnvironment,
-                              assetId: playable.assetId,
-                              language: "fr", playbackProperties: properties)
-
+                          assetId: playable.assetId,
+                          language: "fr", playbackProperties: properties)
+        
     }
-
+    
     private func castPlaybackProperties(localOffset: Int64?, localTime: Int64?) -> Cast.CustomData.PlaybackProperties {
         if let localOffset = localOffset {
             return Cast.CustomData.PlaybackProperties(playFrom: "startOffset", startOffset: localOffset)
