@@ -9,6 +9,7 @@
 import UIKit
 import ExposureDownload
 import ExposurePlayback
+import Exposure
 
 class DownloadListTableViewController: UITableViewController, EnigmaDownloadManager {
     
@@ -19,13 +20,34 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .white
         
         self.refreshTableView()
         
     }
     
     func refreshTableView() {
-        downloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+        guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
+          print("No Session token or enviornment provided ")
+          return
+        }
+        
+        
+        // If you want to fetch all the downloaded Media , regardless of the user you can use `enigmaDownloadManager.getDownloadedAssets()`
+        
+        // This will fetch all the downloaded media related to the current user
+        downloadedAssets = enigmaDownloadManager.getDownloadedAssets(accountId: session.accountId)
+        
+        // This will fetch all the downloaded media related to the current user from the exposure backend
+        /* GetAllDownloads(environment: environment, sessionToken: session )
+        .request()
+        .validate()
+        .response { _ in
+            
+            // Handle your response here
+        } */
+        
+        
         tableView.reloadData()
     }
     
@@ -47,12 +69,14 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         cell.selectionStyle = .none
+        cell.backgroundColor = .white
         cell.textLabel?.textColor = .black
         cell.detailTextLabel?.textColor = .black
         
         if let asset = downloadedAssets?[indexPath.row] {
             cell.textLabel?.text = asset.assetId
             
+            // Check if a download has expired
             let expired = self.enigmaDownloadManager.isExpired(assetId: asset.assetId)
             if expired {
                 print("Download has expired")
@@ -73,8 +97,13 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
             
             if let asset = self.downloadedAssets?[row] {
                 
+                guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
+                    print("No Session token or enviornment provided ")
+                    return
+                }
+                
                 // Developers can use ExposureDownloadTask removeDownloadedAsset option to delete an already downloaded asset
-                self.enigmaDownloadManager.removeDownloadedAsset(assetId: asset.assetId)
+                self.enigmaDownloadManager.removeDownloadedAsset(assetId: asset.assetId, sessionToken:session, environment: environment )
                 self.refreshTableView()
             }
         })
@@ -91,11 +120,11 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                 
                 // Developers can use the same download task to refresh the licence if it has expired.
                 let task = self.enigmaDownloadManager.download(assetId: asset.assetId, using: session, in: environment)
-                task.refreshLicence()
+                task.renewLicence()
                 task.onError {_, url, error in
                     print("📱 RefreshLicence Task failed with an error: \(error)",url ?? "")
                 }
-                .onCompleted { _, url in
+                .onLicenceRenewed { _, url in
                     print("📱 RefreshLicence Task completed: \(url)")
                 }
             }

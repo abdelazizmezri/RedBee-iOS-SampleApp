@@ -136,8 +136,13 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             let deletelAction = UIAlertAction(title: "Delete", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 
+                guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
+                    print("No Session token or enviornment provided ")
+                    return
+                }
+                
                 // Developers can use ExposureDownloadTask delete option to delete an already downloaded asset
-                self.enigmaDownloadManager.removeDownloadedAsset(assetId: self.assetId)
+                self.enigmaDownloadManager.removeDownloadedAsset(assetId: self.assetId, sessionToken: session, environment: environment)
                 self.downloadState = .notDownloaded
                 
                 self.refreshTableView()
@@ -153,7 +158,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     func suspendOrCancelDownload(assetId: String, indexPath: IndexPath) {
         
         guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment providec ")
+            print("No Session token or enviornment provided ")
             return
         }
          
@@ -250,7 +255,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         let cell = tableView.cellForRow(at: indexPath) as! AssetListTableViewCell
         
         guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment providec ")
+            print("No Session token or enviornment provided ")
             return
         }
         
@@ -261,8 +266,6 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         
         
         let task = self.enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
-        
-
         
         switch downloadState {
         case .prepared:
@@ -276,7 +279,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                 (alert: UIAlertAction!) -> Void in
                 
                 // Developers can use ExposureDownloadTask delete option to delete an already downloaded asset
-                self.enigmaDownloadManager.removeDownloadedAsset(assetId: self.assetId)
+                self.enigmaDownloadManager.removeDownloadedAsset(assetId: self.assetId, sessionToken: session, environment: environment)
                 self.refreshTableView()
                 
             })
@@ -284,23 +287,19 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             self.popupAlert(title: nil, message: "Asset has Downloaded", actions: [deletelAction,cancelAction], preferedStyle: .actionSheet)
             
         case .downloading:
-            
             let cancelDownload = UIAlertAction(title: "Cancel Download", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 task.cancel()
             })
-            
             let suspendDownload = UIAlertAction(title: "Suspend Download", style: .default, handler: { (alert: UIAlertAction) -> Void in
                 task.suspend()
             })
-            
             self.popupAlert(title: nil, message: message, actions: [cancelDownload,suspendDownload, cancelAction], preferedStyle: .actionSheet)
             
         case .suspended:
             let resumeDownload = UIAlertAction(title: "Resume Download", style: .default, handler: { (alert: UIAlertAction) -> Void in
                 task.resume()
             })
-            
             self.popupAlert(title: nil, message: message, actions: [resumeDownload, cancelAction], preferedStyle: .actionSheet)
             
             
@@ -319,7 +318,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                             if let keys = result.value {
                                 self.enigmaDownloadManager.isAvailableToDownload(assetId: self.assetId, environment: environment, availabilityKeys: keys.availabilityKeys ?? [] ) { [weak self] isAvailableToDownload in
                                     if isAvailableToDownload {
-        
+                                        
                                         task.addAllAdditionalMedia()
                                             
                                             // .addAudios(hlsNames: ["French", "German"])
@@ -372,10 +371,16 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                                         }
                                        
                                     } else {
+                                        print("Not available to download ")
                                         self?.popupAlert(title: nil, message: message, actions: [cancelAction], preferedStyle: .actionSheet)
                                     }
                             }
-                }
+                            } else {
+                                print("No availability Keys , start downloading anyway  ")
+                                self.popupAlert(title: nil, message: "Sorry you can not download this asset", actions: [cancelAction], preferedStyle: .actionSheet)
+                                
+                                
+                            }
             }
             
         default:
@@ -419,7 +424,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                 // print("VIDEOS DOWNLOAD INFO " , downloadInfo.videos )
                 // print("SUBS DOWNLOAD INDO ", downloadInfo.subtitles )
                 
-                let message = "Video : \(downloadInfo.videos) \n\n Audios : \(downloadInfo.audios) \n\n Subtitles: \(downloadInfo.subtitles)"
+                let message = "Video : \(downloadInfo.videos) \n\n Audios : \(downloadInfo.audios) \n\n Subtitles: \(downloadInfo.subtitles) \n\n DownloadCount : \(downloadInfo.downloadCount) \n\n MaxDownloadCount: \(downloadInfo.maxDownloadCount)"
                 
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
                     (alert: UIAlertAction!) -> Void in
