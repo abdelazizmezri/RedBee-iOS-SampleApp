@@ -25,7 +25,6 @@ class PlayerControls: UIView {
         return stackView
     }()
     
-    
     /// ProgramInfo View : 1st row
     let startTimeLabel = RBMPlayerControlLabel(labelText: "")
     let endTimeLabel = RBMPlayerControlLabel(labelText: "")
@@ -117,7 +116,9 @@ class PlayerControls: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        
         setupLayout()
+
         
         if #available(iOS 13.0, *) {
             let startImage = AVPictureInPictureController.pictureInPictureButtonStartImage
@@ -199,6 +200,8 @@ extension PlayerControls {
         playerControlsView.addArrangedSubview(nextProgramButton)
         playerControlsView.addArrangedSubview(previousProgramButton)
         playerControlsView.addArrangedSubview(pipButton)
+     
+        
     }
 }
 

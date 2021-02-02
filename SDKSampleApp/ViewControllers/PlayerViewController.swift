@@ -120,7 +120,6 @@ extension PlayerViewController {
         player = Player(environment: environment, sessionToken: sessionToken)
         let avPlayerLayer = player.configure(playerView: playerView)
         
-        
         pictureInPictureController = AVPictureInPictureController(playerLayer: avPlayerLayer)
         pictureInPictureController?.delegate = self
         
@@ -176,7 +175,13 @@ extension PlayerViewController {
             .onEntitlementResponse { [weak self] player, source, entitlement in
                 // Fires when a new entitlement is received, such as after attempting to start playback
                 guard let `self` = self else { return }
+
+                self.activateSprites(sprites: source.sprites)
+                
                 self.update(contractRestrictions: entitlement)
+                
+
+                
             }
             .onBitrateChanged{ player, source, bitrate in
                 // Published whenever the current bitrate changes
@@ -234,6 +239,16 @@ extension PlayerViewController {
         vodBasedTimeline.onSeek = { [weak self] offset in
             self?.player.seek(toPosition: offset)
         }
+        
+        vodBasedTimeline.onScrubbing = { [weak self] time in
+            if let assetId = self?.playable?.assetId {
+                let _ = self?.player.getSprite(time: time, assetId: assetId,callback: { image in
+                    self?.updateSpriteImage(image)
+                })
+            }
+            
+        }
+        
         vodBasedTimeline.currentPlayheadPosition = { [weak self] in
             return self?.player.playheadPosition
         }
@@ -275,7 +290,22 @@ extension PlayerViewController {
                 
             }
         }
-        
+    }
+    
+    func activateSprites(sprites: [Sprites]?) {
+        if let playable = playable, let sprites = sprites , let width = sprites.first?.width {
+            let _ = self.player.activateSprites(assetId: playable.assetId, width: width) {  spritesData, error in
+                // print(" Sprites Have been Activated " , spritesData )
+            }
+        }
+    }
+    
+    func updateSpriteImage(_ image: UIImage?) {
+        if let image = image {
+             self.vodBasedTimeline.spriteImageView.image = image
+        } else {
+            self.vodBasedTimeline.spriteImageView.image = nil
+        }
         
     }
     
@@ -594,6 +624,7 @@ extension PlayerViewController {
         castImage.centerYAnchor.constraint(equalTo: playerView.centerYAnchor).isActive = true
         
         mainContentView.addArrangedSubview(controls)
+        
     }
     
     func showCastButtonInPlayer() {
