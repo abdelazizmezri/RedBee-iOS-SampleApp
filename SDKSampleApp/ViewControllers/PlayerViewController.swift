@@ -294,7 +294,7 @@ extension PlayerViewController {
     
     func activateSprites(sprites: [Sprites]?) {
         if let playable = playable, let sprites = sprites , let width = sprites.first?.width {
-            let _ = self.player.activateSprites(assetId: playable.assetId, width: width) {  spritesData, error in
+            let _ = self.player.activateSprites(assetId: playable.assetId, width: width, quality: .medium) {  spritesData, error in
                 // print(" Sprites Have been Activated " , spritesData )
             }
         }

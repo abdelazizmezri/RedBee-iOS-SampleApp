@@ -257,7 +257,7 @@ extension VodBasedTimeline {
                             let thumbRect = playheadSlider.thumbRect(forBounds: playheadSlider.bounds, trackRect: trackRect, value: playheadSlider.value)
 
                             
-                            spriteImageView.frame = CGRect(x: thumbRect.maxX, y: -90, width: self.playheadSlider.frame.width/2, height: self.playheadSlider.frame.width/3)
+                            spriteImageView.frame = CGRect(x: thumbRect.maxX, y: -150, width: self.playheadSlider.frame.width/2, height: self.playheadSlider.frame.width/3)
                             
                             onScrubbing(currentTime)
                         }
