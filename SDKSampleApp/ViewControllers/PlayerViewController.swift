@@ -304,7 +304,7 @@ extension PlayerViewController {
         if let image = image {
              self.vodBasedTimeline.spriteImageView.image = image
         } else {
-            self.vodBasedTimeline.spriteImageView.image = nil
+            // self.vodBasedTimeline.spriteImageView.image = nil
         }
         
     }
