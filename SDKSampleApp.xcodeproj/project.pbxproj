@@ -176,13 +176,6 @@
 			remoteGlobalIDString = 7608027020693194007F59D5;
 			remoteInfo = "ExposurePlaybackTests-tvOS";
 		};
-		78C2507F25139CC5001ED9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 78C2506F25139CC5001ED9E3 /* ExposurePlayback.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 766BC3DF218894FB00D8537F;
-			remoteInfo = RefApp;
-		};
 		78C2508625139CCE001ED9E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C2508125139CCE001ED9E3 /* ExposureDownload.xcodeproj */;
@@ -435,7 +428,6 @@
 				78C2507A25139CC5001ED9E3 /* ExposurePlaybackTests-iOS.xctest */,
 				78C2507C25139CC5001ED9E3 /* ExposurePlayback.framework */,
 				78C2507E25139CC5001ED9E3 /* ExposurePlaybackTests-tvOS.xctest */,
-				78C2508025139CC5001ED9E3 /* RefApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -790,13 +782,6 @@
 			fileType = wrapper.cfbundle;
 			path = "ExposurePlaybackTests-tvOS.xctest";
 			remoteRef = 78C2507D25139CC5001ED9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		78C2508025139CC5001ED9E3 /* RefApp.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = RefApp.app;
-			remoteRef = 78C2507F25139CC5001ED9E3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C2508725139CCE001ED9E3 /* ExposureDownload.framework */ = {

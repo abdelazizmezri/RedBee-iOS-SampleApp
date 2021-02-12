@@ -68,11 +68,20 @@ class VodBasedTimeline: UIView {
         slider.minimumTrackTintColor = ColorState.active.accent
         slider.thumbTintColor = ColorState.active.text
         slider.maximumTrackTintColor = ColorState.active.accent
+        slider.isContinuous = true
         slider.addTarget(self, action: #selector(seekAction(_:)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(seekAction(_:)), for: .touchUpOutside)
-        slider.addTarget(self, action: #selector(playheadSliderAction(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(playheadSliderAction(_:_:)), for: .valueChanged)
         return slider
     }()
+    
+
+    var spriteImageView: UIImageView = {
+        let uiImageView = UIImageView()
+        uiImageView.translatesAutoresizingMaskIntoConstraints = true
+        return uiImageView
+    }()
+    
     
     // Views related to right side
     let rightTimeLabel: UILabel = {
@@ -147,6 +156,7 @@ class VodBasedTimeline: UIView {
     
     var startOverTrigger: () -> Void = { }
     var onSeek: (Int64) -> Void = { _ in }
+    var onScrubbing: (String) -> Void = { _ in }
 }
 
 // MARK: - Timeline Updates
@@ -209,24 +219,59 @@ extension VodBasedTimeline {
         }
     }
     
-    @objc func playheadSliderAction(_ sender: UISlider) {
-        isSliding = true
-        if let previousValue = lastPlayheadSliderValue {
-            if sender.value > previousValue && !canFastForward {
-                sender.value = previousValue
-                return
+    @objc func playheadSliderAction(_ sender: UISlider, _ event: UIEvent) {
+        
+        if let touchEvent = event.allTouches?.first {
+                switch touchEvent.phase {
+                case .began:
+                    // handle drag began
+                    // print("Slider begining moved ")
+                    
+                    
+                    isSliding = true
+
+                case .moved:
+                    // handle drag moved
+                    // print("Slider drag moved ")
+                    if let previousValue = lastPlayheadSliderValue {
+                        if sender.value > previousValue && !canFastForward {
+                            sender.value = previousValue
+                            return
+                        }
+                        
+                        if sender.value < previousValue && !canRewind {
+                            sender.value = previousValue
+                            
+                            // print(" sender.value is less than previous value  ")
+                            
+                            return
+                        }
+                        
+                        if let duration = currentDuration() {
+                            let sliderPosition = Int64(sender.value * Float(duration))
+                            leftTimeLabel.text = timeFormat(time: sliderPosition)
+                            
+                            let currentTime = timeFormat(time: sliderPosition)
+                            
+                            let trackRect = playheadSlider.trackRect(forBounds: playheadSlider.bounds)
+                            let thumbRect = playheadSlider.thumbRect(forBounds: playheadSlider.bounds, trackRect: trackRect, value: playheadSlider.value)
+
+                            
+                            spriteImageView.frame = CGRect(x: thumbRect.maxX, y: -150, width: self.playheadSlider.frame.width/2, height: self.playheadSlider.frame.width/3)
+                            
+                            onScrubbing(currentTime)
+                        }
+                    }
+                case .ended:
+                    // handle drag ended
+                    // print("Slider drag move ended  ")
+                    isSliding = false
+                    spriteImageView.image = nil
+                default:
+                    break
+                }
             }
-            
-            if sender.value < previousValue && !canRewind {
-                sender.value = previousValue
-                return
-            }
-            
-            if let duration = currentDuration() {
-                let sliderPosition = Int64(sender.value * Float(duration))
-                leftTimeLabel.text = timeFormat(time: sliderPosition)
-            }
-        }
+
     }
     
     @objc func seekAction(_ sender: UISlider) {
@@ -234,6 +279,8 @@ extension VodBasedTimeline {
         guard let duration = currentDuration() else { return }
         let rawOffset = Int64(sender.value * Float(duration))
         let seekOffset = min(duration - 1000, rawOffset)
+
+        
         onSeek(seekOffset)
     }
 }
@@ -251,6 +298,7 @@ extension VodBasedTimeline {
         
         addSubview(middleContainerView)
         middleContainerView.addArrangedSubview(playheadSlider)
+        contentView.addSubview(spriteImageView)
         
         addSubview(rightContainerView)
         rightContainerView.addArrangedSubview(rightTimeLabel)
