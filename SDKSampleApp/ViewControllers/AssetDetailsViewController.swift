@@ -186,6 +186,10 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
            (alert: UIAlertAction!) -> Void in
             task.cancel()
             task.onCanceled(callback: { cancelledTask, url  in
+                
+                // clean up the local media when user cancel the download
+                let _ = self.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
+                
                 self.downloadState = .cancelled
                 cell.downloadStateLabel.text = "Media Download Cancelled"
             })
@@ -268,6 +272,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         let task = self.enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
         
         switch downloadState {
+        
         case .prepared:
             let resumeDownload = UIAlertAction(title: "Resume Download", style: .default, handler: { (alert: UIAlertAction) -> Void in
                 task.resume()
@@ -326,6 +331,11 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                                         
                                         .onCanceled { task, url in
                                             print("📱 Media Download canceled",task.configuration.identifier,url)
+                                            
+                                            // clean up the local media when an error occured
+                                            if let assetId = self?.assetId {
+                                                let _ = self?.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
+                                            }
                                         }
                                         .onPrepared { _ in
                                             print("📱 Media Download prepared")
@@ -355,6 +365,12 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                                             print("📱 Download error: \(error)",url ?? "")
                                             cell.downloadStateLabel.text = "Download error"
                                             cell.downloadProgressView.progress = 0
+                                            
+                                            if let assetId = self?.assetId {
+                                                let _ = self?.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
+                                            }
+                                            
+                                            
                                         }
                                         .onCompleted { _, url in
                                             print("📱 Download completed: \(url)")
