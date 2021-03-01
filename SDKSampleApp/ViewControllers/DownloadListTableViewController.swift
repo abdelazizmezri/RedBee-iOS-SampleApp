@@ -66,15 +66,20 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        cell.selectionStyle = .none
-        cell.backgroundColor = .white
-        cell.textLabel?.textColor = .black
-        cell.detailTextLabel?.textColor = .black
-        
-        if let asset = downloadedAssets?[indexPath.row] {
+
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+            cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+            
+            cell.selectionStyle = .none
+            cell.backgroundColor = .white
+            cell.textLabel?.textColor = .black
+            cell.detailTextLabel?.textColor = .black
+            
+            if let asset = downloadedAssets?[indexPath.row] {
+                
             cell.textLabel?.text = asset.assetId
+            cell.detailTextLabel?.text = asset.downloadState.rawValue // show download state of the offline media record
             
             // Check if a download has expired
             let expired = self.enigmaDownloadManager.isExpired(assetId: asset.assetId)
@@ -82,11 +87,58 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                 print("Download has expired")
             }
         }
-         
         return cell
     }
     
     func showOptions(_ row:Int ) {
+        
+        if let asset = self.downloadedAssets?[row] {
+            switch  asset.downloadState {
+            case .cancel:
+                print(" Download was canceled , delete ? ")
+                showDeleteOption(row)
+            case .completed:
+                print(" Download was completed " )
+                showDownloadCompleteOptions(row)
+            case .notDownloaded:
+                print(" Asset has not downloaded / Should not appear in this list . Must clean up this record if available in the local records")
+            case .started:
+                print(" Download has started but never completed. Resume perhaps ? ")
+                self.showDeleteOption(row)
+            case .suspend:
+                print("Download was suspended , resume ? ")
+                self.showDeleteOption(row)
+            }
+        }
+    }
+    
+    func showDeleteOption(_ row:Int) {
+        let message = "Choose option"
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+            (alert: UIAlertAction!) -> Void in
+        })
+        let deletelAction = UIAlertAction(title: "Delete", style: .default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            
+            if let asset = self.downloadedAssets?[row] {
+                
+                guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
+                    print("No Session token or enviornment provided ")
+                    return
+                }
+                
+                // Developers can use ExposureDownloadTask removeDownloadedAsset option to delete an already downloaded asset
+                self.enigmaDownloadManager.removeDownloadedAsset(assetId: asset.assetId, sessionToken:session, environment: environment )
+                self.refreshTableView()
+            }
+        })
+        self.popupAlert(title: nil, message: message, actions: [ deletelAction, cancelAction], preferedStyle: .actionSheet)
+    }
+    
+    
+    /// Show options when the asset has completly downloaded
+    /// - Parameter row: row
+    func showDownloadCompleteOptions(_ row:Int) {
         let message = "Choose option"
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
             (alert: UIAlertAction!) -> Void in

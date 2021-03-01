@@ -11,7 +11,7 @@ import Exposure
 import ExposurePlayback
 import ExposureDownload
 
-enum DownloadState: String {
+fileprivate enum DownloadState: String {
     
     /// The asset is not downloaded at all.
     case notDownloaded
@@ -36,7 +36,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
    
     
     var assetId = String()
-    var downloadState = DownloadState.notDownloaded
+    fileprivate var downloadState = DownloadState.notDownloaded
     
     var sections = ["Play Asset", "Download", "Show Download Info"]
     

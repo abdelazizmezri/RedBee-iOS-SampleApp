@@ -8,6 +8,9 @@
 import UIKit
 import Cast
 import GoogleCast
+import ExposureDownload
+import Download
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListener, GCKSessionManagerListener {
@@ -19,6 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        let fileName = "\(Date()).log"
+        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
+        freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
         
         
         let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "")) // Set your chrome cast app id here
@@ -68,6 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.gckExpandedMediaControlsTriggered, object: nil)
+        
     }
     
     func hookChromecastListener() {
@@ -240,4 +250,41 @@ class ChromeCastButton: UIButton {
     @objc func trigger() {
         triggerAction()
     }
+}
+
+
+// MARK: - Enable Background Downloads
+extension AppDelegate {
+
+    
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        if identifier == SessionConfigurationIdentifier.default.rawValue {
+            print("🛏 Rejoining session \(identifier)")
+            let sessionManager = ExposureSessionManager.shared.manager
+            sessionManager.backgroundCompletionHandler = completionHandler
+    
+            sessionManager.restoreTasks { downloadTasks in
+                downloadTasks.forEach {
+                    print("🛏 found",$0.taskDescription ?? "")
+                    // Restore state
+                    self.log(downloadTask: $0)
+                }
+            }
+            
+            
+            sessionManager.backgroundErrorCompletionHandler = { error in
+                print(" backgroundErrorCompletionHandler in app Delegate " , error )
+            }
+        }
+    }
+    
+    private func log(downloadTask: AVAssetDownloadTask) {
+        print(" Download task state " , downloadTask )
+    }
+}
+
+
+class ExposureSessionManager {
+    static let shared = ExposureSessionManager()
+    let manager = Download.SessionManager<ExposureDownloadTask>()
 }
