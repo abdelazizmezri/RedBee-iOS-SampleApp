@@ -320,12 +320,12 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                                 self.enigmaDownloadManager.isAvailableToDownload(assetId: self.assetId, environment: environment, availabilityKeys: keys.availabilityKeys ?? [] ) { [weak self] isAvailableToDownload in
                                     if isAvailableToDownload {
                                         
-                                        task.addAllAdditionalMedia()
+                                         task.addAllAdditionalMedia()
                                             
-                                            // .addAudios(hlsNames: ["French", "German"])
-                                            // .addSubtitles(hlsNames: ["French"])
+                                            // task.addAudios(hlsNames: ["French"])
+                                            // .addSubtitles(hlsNames: ["Arabic", "French"])
                                         
-                                        .onCanceled { task, url in
+                                        task.onCanceled { task, url in
                                             print("📱 Media Download canceled",task.configuration.identifier,url)
                                         }
                                         .onPrepared { _ in
@@ -356,6 +356,8 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                                             print("📱 Download error: \(error)",url ?? "")
                                             cell.downloadStateLabel.text = "Download error"
                                             cell.downloadProgressView.progress = 0
+                                            
+                                            task.cancel()
                                             
                                             if let assetId = self?.assetId {
                                                 let _ = self?.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
