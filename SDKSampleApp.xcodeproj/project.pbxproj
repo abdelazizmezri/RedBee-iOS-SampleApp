@@ -10,6 +10,19 @@
 		781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C373F25187CA60094C2C6 /* UIViewController+Extension.swift */; };
 		781C377325188EF10094C2C6 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C377225188EF10094C2C6 /* ExternalAccessory.framework */; };
 		781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C3872251A1AF70094C2C6 /* RootViewController.swift */; };
+		783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783703E8274E2CDE00EC1F26 /* AppDelegate.swift */; };
+		783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 783703EC274E2CDE00EC1F26 /* Main.storyboard */; };
+		783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 783703EF274E2CE700EC1F26 /* Assets.xcassets */; };
+		783703F3274E2CE700EC1F26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 783703F1274E2CE700EC1F26 /* LaunchScreen.storyboard */; };
+		7837040E274E2E8F00EC1F26 /* EnviornmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */; };
+		78370416274E300300EC1F26 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78370415274E300300EC1F26 /* LoginViewController.swift */; };
+		7837041D274E33AA00EC1F26 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2506C25139CBF001ED9E3 /* Exposure.framework */; };
+		7837041E274E33AA00EC1F26 /* Exposure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2506C25139CBF001ED9E3 /* Exposure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78370422274E33B100EC1F26 /* ExposurePlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2507C25139CC5001ED9E3 /* ExposurePlayback.framework */; };
+		78370423274E33B100EC1F26 /* ExposurePlayback.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2507C25139CC5001ED9E3 /* ExposurePlayback.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78370426274E33B700EC1F26 /* Player.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; };
+		78370427274E33B700EC1F26 /* Player.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
 		78BA91082514EB5A00816B4A /* Cast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA91012514EB4D00816B4A /* Cast.framework */; };
 		78BA910B2514EB6800816B4A /* Cast.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA91012514EB4D00816B4A /* Cast.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78BA938A2514F5F700816B4A /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA93892514F5F700816B4A /* GoogleCast.framework */; };
@@ -61,6 +74,7 @@
 		78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251A62513A135001ED9E3 /* RBMTextField.swift */; };
 		78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AA2513A143001ED9E3 /* RBMButton.swift */; };
 		78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */; };
+		78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,6 +221,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7837041F274E33AA00EC1F26 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				78370427274E33B700EC1F26 /* Player.framework in Embed Frameworks */,
+				78370423274E33B100EC1F26 /* ExposurePlayback.framework in Embed Frameworks */,
+				7837041E274E33AA00EC1F26 /* Exposure.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C250D425139D3B001ED9E3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,6 +260,15 @@
 		781C376F251887620094C2C6 /* SDKSampleApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SDKSampleApp.entitlements; sourceTree = "<group>"; };
 		781C377225188EF10094C2C6 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		781C3872251A1AF70094C2C6 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDKSampleAppTvOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		783703E8274E2CDE00EC1F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		783703ED274E2CDE00EC1F26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		783703EF274E2CE700EC1F26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		783703F2274E2CE700EC1F26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		783703F4274E2CE700EC1F26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviornmentViewController.swift; sourceTree = "<group>"; };
+		78370415274E300300EC1F26 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		78637F0A274E366500185D14 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		78BA900E2514E47F00816B4A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		78BA90FB2514EB4D00816B4A /* Cast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cast.xcodeproj; path = Carthage/Checkouts/iOSClientCast/Cast.xcodeproj; sourceTree = "<group>"; };
 		78BA936E2514F59400816B4A /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -289,6 +325,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		783703E3274E2CDE00EC1F26 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78370426274E33B700EC1F26 /* Player.framework in Frameworks */,
+				78370422274E33B100EC1F26 /* ExposurePlayback.framework in Frameworks */,
+				7837041D274E33AA00EC1F26 /* Exposure.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB225139845001ED9E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,6 +367,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		783703E7274E2CDE00EC1F26 /* SDKSampleAppTvOS */ = {
+			isa = PBXGroup;
+			children = (
+				783703E8274E2CDE00EC1F26 /* AppDelegate.swift */,
+				7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */,
+				78370415274E300300EC1F26 /* LoginViewController.swift */,
+				78637F0A274E366500185D14 /* PlayerViewController.swift */,
+				783703EC274E2CDE00EC1F26 /* Main.storyboard */,
+				783703EF274E2CE700EC1F26 /* Assets.xcassets */,
+				783703F1274E2CE700EC1F26 /* LaunchScreen.storyboard */,
+				783703F4274E2CE700EC1F26 /* Info.plist */,
+			);
+			path = SDKSampleAppTvOS;
+			sourceTree = "<group>";
+		};
 		78BA90FC2514EB4D00816B4A /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +402,7 @@
 				78C24FB725139845001ED9E3 /* SDKSampleApp */,
 				78C24FCE25139846001ED9E3 /* SDKSampleAppTests */,
 				78C24FD925139846001ED9E3 /* SDKSampleAppUITests */,
+				783703E7274E2CDE00EC1F26 /* SDKSampleAppTvOS */,
 				78C24FB625139845001ED9E3 /* Products */,
 				78C250D125139D3B001ED9E3 /* Frameworks */,
 				78BA90FB2514EB4D00816B4A /* Cast.xcodeproj */,
@@ -358,6 +420,7 @@
 				78C24FB525139845001ED9E3 /* SDKSampleApp.app */,
 				78C24FCB25139846001ED9E3 /* SDKSampleAppTests.xctest */,
 				78C24FD625139846001ED9E3 /* SDKSampleAppUITests.xctest */,
+				783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -562,6 +625,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		783703E5274E2CDE00EC1F26 /* SDKSampleAppTvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78370409274E2CE700EC1F26 /* Build configuration list for PBXNativeTarget "SDKSampleAppTvOS" */;
+			buildPhases = (
+				783703E2274E2CDE00EC1F26 /* Sources */,
+				783703E3274E2CDE00EC1F26 /* Frameworks */,
+				783703E4274E2CDE00EC1F26 /* Resources */,
+				7837041F274E33AA00EC1F26 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SDKSampleAppTvOS;
+			productName = SDKSampleAppTvOS;
+			productReference = 783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 		78C24FB425139845001ED9E3 /* SDKSampleApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 78C24FDF25139846001ED9E3 /* Build configuration list for PBXNativeTarget "SDKSampleApp" */;
@@ -623,9 +704,12 @@
 		78C24FAD25139845001ED9E3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					783703E5274E2CDE00EC1F26 = {
+						CreatedOnToolsVersion = 12.3;
+					};
 					78C24FB425139845001ED9E3 = {
 						CreatedOnToolsVersion = 12.0;
 					};
@@ -681,6 +765,7 @@
 				78C24FB425139845001ED9E3 /* SDKSampleApp */,
 				78C24FCA25139846001ED9E3 /* SDKSampleAppTests */,
 				78C24FD525139846001ED9E3 /* SDKSampleAppUITests */,
+				783703E5274E2CDE00EC1F26 /* SDKSampleAppTvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -815,6 +900,16 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		783703E4274E2CDE00EC1F26 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				783703F3274E2CE700EC1F26 /* LaunchScreen.storyboard in Resources */,
+				783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */,
+				783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB325139845001ED9E3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -866,6 +961,18 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		783703E2274E2CDE00EC1F26 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */,
+				78370416274E300300EC1F26 /* LoginViewController.swift in Sources */,
+				7837040E274E2E8F00EC1F26 /* EnviornmentViewController.swift in Sources */,
+				783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */,
+				78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB125139845001ED9E3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -938,6 +1045,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		783703EC274E2CDE00EC1F26 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				783703ED274E2CDE00EC1F26 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		783703F1274E2CE700EC1F26 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				783703F2274E2CE700EC1F26 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		78C24FBE25139845001ED9E3 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -957,6 +1080,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		783703F5274E2CE700EC1F26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.3;
+			};
+			name = Debug;
+		};
+		783703F6274E2CE700EC1F26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.3;
+			};
+			name = Release;
+		};
 		78C24FDD25139846001ED9E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1114,7 +1281,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SDKSampleApp/SDKSampleApp.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 3P5CH3HLZN;
 				ENABLE_BITCODE = YES;
@@ -1134,7 +1301,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.emp.ExposurePlayback.SampleApp";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emp.ExposurePlayback.SampleApp";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1227,6 +1394,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		78370409274E2CE700EC1F26 /* Build configuration list for PBXNativeTarget "SDKSampleAppTvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				783703F5274E2CE700EC1F26 /* Debug */,
+				783703F6274E2CE700EC1F26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		78C24FB025139845001ED9E3 /* Build configuration list for PBXProject "SDKSampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
