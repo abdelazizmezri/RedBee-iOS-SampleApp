@@ -64,7 +64,7 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
 
         self.player.startPlayback(playable: playable, properties: PlaybackProperties(playFrom: .beginning))
         
-        // self.playBackMonitoring(newPlayerViewController)
+        self.playBackMonitoring(newPlayerViewController)
     }
     
     private func playBackMonitoring(_ newPlayerViewController: AVPlayerViewController) {
