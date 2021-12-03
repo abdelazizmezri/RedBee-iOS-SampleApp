@@ -56,8 +56,7 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
         if isViewLoaded {
             view.addSubview(newPlayerViewController.view)
         }
-        
-        // let viewController = DefaultPlayerViewController()
+
         self.player = Player(environment: environment, sessionToken: sessionToken)
         newPlayerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newPlayerViewController)
         newPlayerViewController.delegate = self
