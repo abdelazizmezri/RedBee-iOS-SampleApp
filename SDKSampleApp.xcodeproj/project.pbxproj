@@ -10,6 +10,13 @@
 		781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C373F25187CA60094C2C6 /* UIViewController+Extension.swift */; };
 		781C377325188EF10094C2C6 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C377225188EF10094C2C6 /* ExternalAccessory.framework */; };
 		781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C3872251A1AF70094C2C6 /* RootViewController.swift */; };
+		7825E70E27633DB000DC4FA7 /* ContentProposalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */; };
+		7825E71127633E3500DC4FA7 /* ContentProposalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */; };
+		7825E71427633E3C00DC4FA7 /* UIView+Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251542513A045001ED9E3 /* UIView+Anchor.swift */; };
+		7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
+		7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
+		7825E71D2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
+		7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
 		783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783703E8274E2CDE00EC1F26 /* AppDelegate.swift */; };
 		783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 783703EC274E2CDE00EC1F26 /* Main.storyboard */; };
 		783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 783703EF274E2CE700EC1F26 /* Assets.xcassets */; };
@@ -260,6 +267,9 @@
 		781C376F251887620094C2C6 /* SDKSampleApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SDKSampleApp.entitlements; sourceTree = "<group>"; };
 		781C377225188EF10094C2C6 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		781C3872251A1AF70094C2C6 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProposalViewController.swift; sourceTree = "<group>"; };
+		7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAssetDataSource.swift; sourceTree = "<group>"; };
+		7825E71C2763405400DC4FA7 /* AssetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewModel.swift; sourceTree = "<group>"; };
 		783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDKSampleAppTvOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		783703E8274E2CDE00EC1F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		783703ED274E2CDE00EC1F26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -367,9 +377,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7825E6EE276339F400DC4FA7 /* Push Next Content */ = {
+			isa = PBXGroup;
+			children = (
+				7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */,
+			);
+			path = "Push Next Content";
+			sourceTree = "<group>";
+		};
 		783703E7274E2CDE00EC1F26 /* SDKSampleAppTvOS */ = {
 			isa = PBXGroup;
 			children = (
+				7825E6EE276339F400DC4FA7 /* Push Next Content */,
 				783703E8274E2CDE00EC1F26 /* AppDelegate.swift */,
 				7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */,
 				78370415274E300300EC1F26 /* LoginViewController.swift */,
@@ -610,6 +629,7 @@
 			isa = PBXGroup;
 			children = (
 				78C251872513A0E7001ED9E3 /* TrackModel.swift */,
+				7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -618,6 +638,7 @@
 			isa = PBXGroup;
 			children = (
 				78C2518E2513A106001ED9E3 /* TrackSelectionViewModel.swift */,
+				7825E71C2763405400DC4FA7 /* AssetViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -965,11 +986,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7825E70E27633DB000DC4FA7 /* ContentProposalViewController.swift in Sources */,
 				78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */,
+				7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */,
 				78370416274E300300EC1F26 /* LoginViewController.swift in Sources */,
+				7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
 				7837040E274E2E8F00EC1F26 /* EnviornmentViewController.swift in Sources */,
 				783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */,
 				78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */,
+				7825E71427633E3C00DC4FA7 /* UIView+Anchor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -980,11 +1005,14 @@
 				781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */,
 				78C2513925139FB6001ED9E3 /* PlayerControls.swift in Sources */,
 				78C2511925139F33001ED9E3 /* LoginViewController.swift in Sources */,
+				7825E71D2763405400DC4FA7 /* AssetViewModel.swift in Sources */,
 				78C251552513A045001ED9E3 /* UIView+Anchor.swift in Sources */,
 				78C2512725139F64001ED9E3 /* EPGListViewController.swift in Sources */,
 				78C2514F2513A02F001ED9E3 /* UIImageView+constraint.swift in Sources */,
+				7825E71127633E3500DC4FA7 /* ContentProposalViewController.swift in Sources */,
 				78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */,
 				78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */,
+				7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
 				78C2510525139E47001ED9E3 /* ColorScheme.swift in Sources */,
 				78C251592513A058001ED9E3 /* UIView+Keyboard.swift in Sources */,
 				78C24FB925139845001ED9E3 /* AppDelegate.swift in Sources */,
@@ -1085,8 +1113,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 3P5CH3HLZN;
 				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1094,7 +1123,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.emp.iOSWhiteLabelApp tvos";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1107,8 +1136,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 3P5CH3HLZN;
 				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1116,7 +1146,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.emp.iOSWhiteLabelApp tvos";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;

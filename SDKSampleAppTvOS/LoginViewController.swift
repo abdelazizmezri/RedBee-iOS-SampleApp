@@ -140,14 +140,47 @@ class LoginViewController: UIViewController {
         
         playerVC.environment = environment
         playerVC.sessionToken = sessionToken
-
-        let playable = AssetPlayable(assetId:"")
         
-        playerVC.playable = playable
+        let assetId = ""
+        
+        playerVC.playerAssetDataSource = PlayerAssetDataSource(environment: environment, sessionToken: sessionToken)
 
-        self.present(playerVC, animated: false) {
-            playerVC.startPlayback()
+        playerVC.playerAssetDataSource.assetId = assetId
+        let playable = AssetPlayable(assetId:assetId)
+        playerVC.playable = playable
+        
+        // fetching asset details 
+        playerVC.playerAssetDataSource.onDataUpdated = { viewModel in
+            playerVC.assetViewModel = viewModel
+            
+            // When using white labeled Asset End point, you should get pushNextCuePoint value
+            // Pass pushNextCuePoint value
+            playerVC.pushNextCuePoint = 1398000 // dummy value
+            
+            DispatchQueue.main.async {
+                self.present(playerVC, animated: false) {
+                    playerVC.startPlayback()
+                }
+            }
         }
+        
+        playerVC.playerAssetDataSource.onErrorUpdating = { error in
+            
+            DispatchQueue.main.async {
+                self.present(playerVC, animated: false) {
+                    
+                    // When using white labeled Asset End point, you should get pushNextCuePoint value
+                    // Pass pushNextCuePoint value
+                    playerVC.pushNextCuePoint = 0
+
+                    self.present(playerVC, animated: false) {
+                        playerVC.startPlayback()
+                    }
+                }
+            }
+        }
+        
+        
     }
     
     
