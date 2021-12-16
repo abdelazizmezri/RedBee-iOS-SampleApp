@@ -140,11 +140,23 @@ extension PlayerViewController {
             }
         
         // Once playback is in progress the Player continuously publishes events related media status and user interaction.
-        player
             .onPlaybackStarted{ [weak self] player, source in
                 // Published once the playback starts for the first time.
                 // This is a one-time event.
                 guard let `self` = self else { return }
+                
+                if let currentItem = player.playerItem ,
+                  let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                            kCMTextMarkupAttribute_CharacterBackgroundColorARGB as String: [0,0,1,0.3]
+                            ]), let textStyle2:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                                kCMTextMarkupAttribute_ForegroundColorARGB as String: [1,0,1,1.0]
+                    ]), let textStyleSize3: AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                        kCMTextMarkupAttribute_RelativeFontSize as String: 200
+                    ]) {
+                    
+                    currentItem.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
+                }
+                
                 self.togglePlayPauseButton(paused: false)
             }
             .onPlaybackPaused{ [weak self] player, source in
@@ -279,7 +291,7 @@ extension PlayerViewController {
                 
                 
                 if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
-                    self.chromecast(playable: playable, in: environment, sessionToken: sessionToken)
+                    self.chromecast(playable: playable, in: environment, sessionToken: sessionToken, currentplayheadTime: self.player.playheadTime)
                 } else {
                     
                     vodBasedTimeline.isHidden = true
@@ -690,58 +702,48 @@ extension PlayerViewController: GCKSessionManagerListener {
         showCastButtonInPlayer()
         
         guard let env = environment, let token = sessionToken , let playable = nowPlaying else { return }
-        self.chromecast(playable: playable, in: env, sessionToken: token)
+        let currentplayheadTime = self.player.playheadTime
+        self.chromecast(playable: playable, in: env, sessionToken: token, currentplayheadTime : currentplayheadTime)
+        
     }
     
     
-    func chromecast(playable: Playable, in environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, localTime: Int64? = nil) {
+    func chromecast(playable: Playable, in environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, localTime: Int64? = nil, currentplayheadTime : Int64?) {
+        
+
         guard let session = GCKCastContext.sharedInstance().sessionManager.currentCastSession else { return }
         
-        let customData = configure(for: playable, environment: environment, sessionToken: sessionToken, localOffset: localOffset, localTime: localTime)
-        
+        let customData = CustomData(customer: environment.customer, businessUnit: environment.businessUnit).toJson
+    
         let mediaInfoBuilder = GCKMediaInformationBuilder()
         mediaInfoBuilder.contentID = playable.assetId
-        mediaInfoBuilder.streamType = .none
-        mediaInfoBuilder.contentType = "video/mp4"
-        mediaInfoBuilder.metadata = nil
-        mediaInfoBuilder.streamDuration = 0
-        mediaInfoBuilder.mediaTracks = nil
         mediaInfoBuilder.textTrackStyle = .createDefault()
         
         let mediaInfo = mediaInfoBuilder.build()
         
-        let mediaLoadOptions = GCKMediaLoadOptions()
-        mediaLoadOptions.customData = customData.toJson
-        
-        print(customData.toJson)
-        
-        session
-            .remoteMediaClient?
-            .loadMedia(mediaInfo, with: mediaLoadOptions)
-    }
+        if let remoteMediaClient = session.remoteMediaClient {
+            
+            let mediaQueueItemBuilder = GCKMediaQueueItemBuilder()
+            mediaQueueItemBuilder.mediaInformation = mediaInfo
+            let mediaQueueItem = mediaQueueItemBuilder.build()
+            let queueDataBuilder = GCKMediaQueueDataBuilder(queueType: .generic)
+            queueDataBuilder.items = [mediaQueueItem]
+            queueDataBuilder.repeatMode = remoteMediaClient.mediaStatus?.queueRepeatMode ?? .off
+            
     
-    private func configure(for playable: Playable, environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64?, localTime: Int64?) -> Cast.CustomData {
-        let properties = castPlaybackProperties(localOffset: localOffset, localTime: localTime)
-        let castEnvironment = Cast.CastEnvironment(baseUrl: environment.baseUrl,
-                                                   customer: environment.customer,
-                                                   businessUnit: environment.businessUnit,
-                                                   sessionToken: sessionToken.value)
-        return CustomData(environment: castEnvironment,
-                          assetId: playable.assetId,
-                          language: "fr", playbackProperties: properties)
-        
-    }
+
+            let mediaLoadRequestDataBuilder = GCKMediaLoadRequestDataBuilder()
+            mediaLoadRequestDataBuilder.credentials = "\(sessionToken.value)"
+            mediaLoadRequestDataBuilder.queueData = queueDataBuilder.build()
+            mediaLoadRequestDataBuilder.customData = customData
+            
+//            if let playheadTime = currentplayheadTime {
+//                mediaLoadRequestDataBuilder.startTime = TimeInterval(playheadTime/1000)
+//            }
+            let _ = remoteMediaClient.loadMedia(with: mediaLoadRequestDataBuilder.build())
+
+        }
     
-    private func castPlaybackProperties(localOffset: Int64?, localTime: Int64?) -> Cast.CustomData.PlaybackProperties {
-        if let localOffset = localOffset {
-            return Cast.CustomData.PlaybackProperties(playFrom: "startOffset", startOffset: localOffset)
-        }
-        else if let localTime = localTime {
-            return Cast.CustomData.PlaybackProperties(playFrom: "startTime", startTime: localTime)
-        }
-        else {
-            return Cast.CustomData.PlaybackProperties(playFrom: "bookmark")
-        }
     }
     
     private func localTime(playable: Playable) -> (Int64?, Int64?) {

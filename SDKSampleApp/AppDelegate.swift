@@ -267,7 +267,7 @@ extension AppDelegate {
                 downloadTasks.forEach {
                     print("🛏 found",$0.taskDescription ?? "")
                     // Restore state
-                    self.log(downloadTask: $0)
+                    // self.log(downloadTask: $0)
                 }
             }
             

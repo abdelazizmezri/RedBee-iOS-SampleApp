@@ -19,7 +19,13 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
     var playable: Playable!
     var environment: Environment!
     var sessionToken: SessionToken!
+    var playerAssetDataSource: PlayerAssetDataSource!
     var newPlayerViewController = AVPlayerViewController()
+    var assetViewModel: AssetViewModel?
+    var properties: PlaybackProperties!
+    
+    var pushNextCuePoint: Int64?
+    var contentProposalViewController: ContentProposalViewController?
     
     @objc dynamic var playerViewController: AVPlayerViewController?
     
@@ -48,6 +54,8 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
             oldPlayerViewController.viewIfLoaded?.removeFromSuperview()
         }
         
+        self.contentProposalViewController = ContentProposalViewController()
+        
         self.playerViewController = newPlayerViewController
         
         addChild(newPlayerViewController)
@@ -61,7 +69,7 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
         newPlayerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newPlayerViewController)
         newPlayerViewController.delegate = self
 
-        self.player.startPlayback(playable: playable, properties: PlaybackProperties(playFrom: .beginning))
+        self.player.startPlayback(playable: playable)
         
         self.playBackMonitoring(newPlayerViewController)
     }
@@ -80,8 +88,31 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
             .onPlaybackReady{  player, source in
                 print(" On playback ready ")
             }
-            .onPlaybackStarted { player, source in
-                print(" On playback onPlaybackStarted ")
+            .onPlaybackStarted { [weak self] player, source in
+                
+                let extenalMediaInfo = self?.createExternalMediaInfo()
+                
+                let playerItem = newPlayerViewController.player?.currentItem
+                if self?.pushNextCuePoint != nil || self?.pushNextCuePoint != 0  {
+                    playerItem?.nextContentProposal = self?.setProposal()
+                }
+                
+                playerItem?.externalMetadata = extenalMediaInfo ?? []
+                
+                // Customising subtitles
+                /* if let currentItem = player.playerItem ,
+                  let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                            kCMTextMarkupAttribute_CharacterBackgroundColorARGB as String: [0,0,1,0.3]
+                            ]), let textStyle2:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                                kCMTextMarkupAttribute_ForegroundColorARGB as String: [1,0,1,1.0]
+                    ]), let textStyleSize3: AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                        kCMTextMarkupAttribute_RelativeFontSize as String: 200
+                    ]) {
+                    
+                    playerItem?.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
+                } */
+                
+                newPlayerViewController.player?.replaceCurrentItem(with: playerItem)
             }
         
             .onPlaybackAborted { [weak self] player, source in
@@ -121,4 +152,132 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
         return false
     }
     
+}
+
+
+// MARK: Push Next Content
+extension PlayerViewController {
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, shouldPresent proposal: AVContentProposal) -> Bool {
+        // Set the presentation to use on the player view controller for this content proposal
+        playerViewController.contentProposalViewController = contentProposalViewController
+        return true
+    }
+    
+    /// Set up Content proposal / Push Next Content proposal
+    /// - Returns: AVContentProposal
+    func setProposal() -> AVContentProposal? {
+        
+        // Set Next Episode / Program Meta data
+        guard let cuepoint = pushNextCuePoint else {
+            return nil
+            
+        }
+
+        // Set up Next content Image
+        let image = UIImage(named: "dummy")
+        
+        // Set up Next content Title
+        let title = "Lorem Ipsum is simply dummy text of the printing"
+        var contentMetadata = [AVMetadataItem]()
+        
+        let titleItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle, value: title)
+        contentMetadata.append(titleItem)
+        
+        // Set up Next content desciption
+        let desciption = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+        let descItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription, value: desciption)
+        contentMetadata.append(descItem)
+        
+        let contentProposal = AVContentProposal(contentTimeForTransition: CMTime(milliseconds: cuepoint), title: title, previewImage: image)
+        contentProposal.automaticAcceptanceInterval = -1.0
+        contentProposal.metadata = contentMetadata
+        return contentProposal
+    }
+    
+    
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, didAccept proposal: AVContentProposal) {
+        
+        print(" User did accept content proposal ")
+        
+        // Start the player with next content Id
+        // can be fetched by WLA : /push-next-content/ end point
+        // Assign new push next content value
+        /*
+         self.playerAssetDataSource.assetId = assetId
+         let newPlayable = AssetPlayable(assetId : nextAssetId)
+         self.playable = newPlayable
+         self.properties = PlaybackProperties(playFrom: .defaultBehaviour)
+         
+         // Fetch next asset's details
+         self.playerAssetDataSource.onDataUpdated = { viewModel in
+             self.assetViewModel = viewModel
+
+             if let assetDuration = viewModel?.asset.duration, let pushNextCuepoint = nextContent.upNext?.pushNextCuepoint {
+                 self.pushNextCuePoint = pushNextCuepoint
+             } else {
+                 self.pushNextCuePoint = 0
+             }
+             DispatchQueue.main.async {
+                 self.startPlayback()
+             }
+         }
+         
+         */
+
+        
+    }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, didReject proposal: AVContentProposal) {
+        // print(" didReject content proposal")
+    }
+}
+
+// MARK: AVPlayerViewController Custom MediaInfo
+extension PlayerViewController {
+    
+    /// Create External media info that will be shown in swip down modal in tv
+    /// - Returns: AVMetadataItem
+    private func createExternalMediaInfo() -> [AVMetadataItem] {
+        // ExternamMediaInfo
+        var metadata = [AVMetadataItem]()
+        
+        
+        if let title = assetViewModel?.title {
+            
+            let titleItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle, value: title)
+            metadata.append(titleItem)
+        }
+        
+        if let desciption = assetViewModel?.description {
+            
+            let descItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription, value: desciption)
+            metadata.append(descItem)
+        }
+        
+        if let image = assetViewModel?.image?.url, let url = URL(string: "\(image)?w=280") {
+            do {
+                let data =  try Data(contentsOf: url )
+                if let image = UIImage(data: data) , let pngData = image.pngData() {
+                    
+                    let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork, value: pngData)
+                    metadata.append(artworkItem)
+                }
+            } catch {
+                print(" Error gettting data from url " , error.localizedDescription)
+            }
+        }
+        
+        return metadata
+    }
+    
+    
+    private func makeMetadataItem(_ identifier: AVMetadataIdentifier, value: Any) -> AVMetadataItem {
+        let item = AVMutableMetadataItem()
+        item.identifier = identifier
+        item.value = value as? NSCopying & NSObjectProtocol
+        item.extendedLanguageTag = "und"
+        return item.copy() as! AVMetadataItem
+    }
 }
