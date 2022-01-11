@@ -11,7 +11,6 @@
 		781C377325188EF10094C2C6 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C377225188EF10094C2C6 /* ExternalAccessory.framework */; };
 		781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C3872251A1AF70094C2C6 /* RootViewController.swift */; };
 		7825E70E27633DB000DC4FA7 /* ContentProposalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */; };
-		7825E71127633E3500DC4FA7 /* ContentProposalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */; };
 		7825E71427633E3C00DC4FA7 /* UIView+Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251542513A045001ED9E3 /* UIView+Anchor.swift */; };
 		7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
 		7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
@@ -30,6 +29,28 @@
 		78370426274E33B700EC1F26 /* Player.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; };
 		78370427274E33B700EC1F26 /* Player.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
+		78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */; };
+		78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C8278D751400BBD3F5 /* ContentView.swift */; };
+		78B6D8CB278D751A00BBD3F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78B6D8CA278D751A00BBD3F5 /* Assets.xcassets */; };
+		78B6D8CE278D751A00BBD3F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78B6D8CD278D751A00BBD3F5 /* Preview Assets.xcassets */; };
+		78B6D8EB278D7B2500BBD3F5 /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
+		78B6D8F0278D7B9800BBD3F5 /* AssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8EF278D7B9800BBD3F5 /* AssetView.swift */; };
+		78B6D900278D820E00BBD3F5 /* CustomVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8FF278D820E00BBD3F5 /* CustomVideoPlayer.swift */; };
+		78B6D921278D842800BBD3F5 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D920278D842800BBD3F5 /* PlayerViewController.swift */; };
+		78B6D925278D846600BBD3F5 /* VodBasedTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2513F25139FD6001ED9E3 /* VodBasedTimeline.swift */; };
+		78B6D929278D846800BBD3F5 /* ProgramBasedTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2514525139FE6001ED9E3 /* ProgramBasedTimeline.swift */; };
+		78B6D92D278D846D00BBD3F5 /* PlayerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2513825139FB6001ED9E3 /* PlayerControls.swift */; };
+		78B6D934278D84A000BBD3F5 /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510425139E47001ED9E3 /* ColorScheme.swift */; };
+		78B6D938278D84A400BBD3F5 /* RBMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251A62513A135001ED9E3 /* RBMTextField.swift */; };
+		78B6D93C278D84A600BBD3F5 /* RBMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AA2513A143001ED9E3 /* RBMButton.swift */; };
+		78B6D940278D84A900BBD3F5 /* RBMPlayerControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */; };
+		78B6D94B278D84D100BBD3F5 /* UIView+Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251542513A045001ED9E3 /* UIView+Anchor.swift */; };
+		78B6D94F278D84E100BBD3F5 /* Int+timeFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2516C2513A0A3001ED9E3 /* Int+timeFormat.swift */; };
+		78B6D953278D84E400BBD3F5 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251682513A092001ED9E3 /* Date+Extension.swift */; };
+		78B6D957278D84E800BBD3F5 /* UIColor+hexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2515C2513A068001ED9E3 /* UIColor+hexColor.swift */; };
+		78B6D964278D857F00BBD3F5 /* UIView+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251582513A058001ED9E3 /* UIView+Keyboard.swift */; };
+		78B6D968278D865300BBD3F5 /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251702513A0B2001ED9E3 /* UIViewController+Toast.swift */; };
+		78B6D96C278D86AC00BBD3F5 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251602513A077001ED9E3 /* UIViewController+Alert.swift */; };
 		78BA91082514EB5A00816B4A /* Cast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA91012514EB4D00816B4A /* Cast.framework */; };
 		78BA910B2514EB6800816B4A /* Cast.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA91012514EB4D00816B4A /* Cast.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78BA938A2514F5F700816B4A /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78BA93892514F5F700816B4A /* GoogleCast.framework */; };
@@ -279,6 +300,15 @@
 		7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviornmentViewController.swift; sourceTree = "<group>"; };
 		78370415274E300300EC1F26 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		78637F0A274E366500185D14 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDKSampleSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSampleSwiftUIApp.swift; sourceTree = "<group>"; };
+		78B6D8C8278D751400BBD3F5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		78B6D8CA278D751A00BBD3F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78B6D8CD278D751A00BBD3F5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		78B6D8CF278D751A00BBD3F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78B6D8EF278D7B9800BBD3F5 /* AssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetView.swift; sourceTree = "<group>"; };
+		78B6D8FF278D820E00BBD3F5 /* CustomVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVideoPlayer.swift; sourceTree = "<group>"; };
+		78B6D920278D842800BBD3F5 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		78BA900E2514E47F00816B4A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		78BA90FB2514EB4D00816B4A /* Cast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cast.xcodeproj; path = Carthage/Checkouts/iOSClientCast/Cast.xcodeproj; sourceTree = "<group>"; };
 		78BA936E2514F59400816B4A /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -345,6 +375,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78B6D8C1278D751300BBD3F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB225139845001ED9E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -401,6 +438,29 @@
 			path = SDKSampleAppTvOS;
 			sourceTree = "<group>";
 		};
+		78B6D8C5278D751300BBD3F5 /* SDKSampleSwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */,
+				78B6D8C8278D751400BBD3F5 /* ContentView.swift */,
+				78B6D8EF278D7B9800BBD3F5 /* AssetView.swift */,
+				78B6D8FF278D820E00BBD3F5 /* CustomVideoPlayer.swift */,
+				78B6D920278D842800BBD3F5 /* PlayerViewController.swift */,
+				78B6D8CA278D751A00BBD3F5 /* Assets.xcassets */,
+				78B6D8CF278D751A00BBD3F5 /* Info.plist */,
+				78B6D8CC278D751A00BBD3F5 /* Preview Content */,
+			);
+			path = SDKSampleSwiftUI;
+			sourceTree = "<group>";
+		};
+		78B6D8CC278D751A00BBD3F5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				78B6D8CD278D751A00BBD3F5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		78BA90FC2514EB4D00816B4A /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +482,7 @@
 				78C24FCE25139846001ED9E3 /* SDKSampleAppTests */,
 				78C24FD925139846001ED9E3 /* SDKSampleAppUITests */,
 				783703E7274E2CDE00EC1F26 /* SDKSampleAppTvOS */,
+				78B6D8C5278D751300BBD3F5 /* SDKSampleSwiftUI */,
 				78C24FB625139845001ED9E3 /* Products */,
 				78C250D125139D3B001ED9E3 /* Frameworks */,
 				78BA90FB2514EB4D00816B4A /* Cast.xcodeproj */,
@@ -440,6 +501,7 @@
 				78C24FCB25139846001ED9E3 /* SDKSampleAppTests.xctest */,
 				78C24FD625139846001ED9E3 /* SDKSampleAppUITests.xctest */,
 				783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */,
+				78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -664,6 +726,23 @@
 			productReference = 783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
+		78B6D8C3278D751300BBD3F5 /* SDKSampleSwiftUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78B6D8E4278D751A00BBD3F5 /* Build configuration list for PBXNativeTarget "SDKSampleSwiftUI" */;
+			buildPhases = (
+				78B6D8C0278D751300BBD3F5 /* Sources */,
+				78B6D8C1278D751300BBD3F5 /* Frameworks */,
+				78B6D8C2278D751300BBD3F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SDKSampleSwiftUI;
+			productName = SDKSampleSwiftUI;
+			productReference = 78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
 		78C24FB425139845001ED9E3 /* SDKSampleApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 78C24FDF25139846001ED9E3 /* Build configuration list for PBXNativeTarget "SDKSampleApp" */;
@@ -731,6 +810,9 @@
 					783703E5274E2CDE00EC1F26 = {
 						CreatedOnToolsVersion = 12.3;
 					};
+					78B6D8C3278D751300BBD3F5 = {
+						CreatedOnToolsVersion = 12.3;
+					};
 					78C24FB425139845001ED9E3 = {
 						CreatedOnToolsVersion = 12.0;
 					};
@@ -787,6 +869,7 @@
 				78C24FCA25139846001ED9E3 /* SDKSampleAppTests */,
 				78C24FD525139846001ED9E3 /* SDKSampleAppUITests */,
 				783703E5274E2CDE00EC1F26 /* SDKSampleAppTvOS */,
+				78B6D8C3278D751300BBD3F5 /* SDKSampleSwiftUI */,
 			);
 		};
 /* End PBXProject section */
@@ -931,6 +1014,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78B6D8C2278D751300BBD3F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78B6D8CE278D751A00BBD3F5 /* Preview Assets.xcassets in Resources */,
+				78B6D8CB278D751A00BBD3F5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB325139845001ED9E3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -998,6 +1090,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78B6D8C0278D751300BBD3F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */,
+				78B6D92D278D846D00BBD3F5 /* PlayerControls.swift in Sources */,
+				78B6D929278D846800BBD3F5 /* ProgramBasedTimeline.swift in Sources */,
+				78B6D957278D84E800BBD3F5 /* UIColor+hexColor.swift in Sources */,
+				78B6D921278D842800BBD3F5 /* PlayerViewController.swift in Sources */,
+				78B6D93C278D84A600BBD3F5 /* RBMButton.swift in Sources */,
+				78B6D8F0278D7B9800BBD3F5 /* AssetView.swift in Sources */,
+				78B6D8EB278D7B2500BBD3F5 /* StorageProvider.swift in Sources */,
+				78B6D934278D84A000BBD3F5 /* ColorScheme.swift in Sources */,
+				78B6D938278D84A400BBD3F5 /* RBMTextField.swift in Sources */,
+				78B6D968278D865300BBD3F5 /* UIViewController+Toast.swift in Sources */,
+				78B6D953278D84E400BBD3F5 /* Date+Extension.swift in Sources */,
+				78B6D964278D857F00BBD3F5 /* UIView+Keyboard.swift in Sources */,
+				78B6D940278D84A900BBD3F5 /* RBMPlayerControlLabel.swift in Sources */,
+				78B6D900278D820E00BBD3F5 /* CustomVideoPlayer.swift in Sources */,
+				78B6D96C278D86AC00BBD3F5 /* UIViewController+Alert.swift in Sources */,
+				78B6D925278D846600BBD3F5 /* VodBasedTimeline.swift in Sources */,
+				78B6D94F278D84E100BBD3F5 /* Int+timeFormat.swift in Sources */,
+				78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */,
+				78B6D94B278D84D100BBD3F5 /* UIView+Anchor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C24FB125139845001ED9E3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1009,7 +1128,6 @@
 				78C251552513A045001ED9E3 /* UIView+Anchor.swift in Sources */,
 				78C2512725139F64001ED9E3 /* EPGListViewController.swift in Sources */,
 				78C2514F2513A02F001ED9E3 /* UIImageView+constraint.swift in Sources */,
-				7825E71127633E3500DC4FA7 /* ContentProposalViewController.swift in Sources */,
 				78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */,
 				78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */,
 				7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
@@ -1151,6 +1269,48 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 14.3;
+			};
+			name = Release;
+		};
+		78B6D8D0278D751A00BBD3F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SDKSampleSwiftUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = SDKSampleSwiftUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		78B6D8D1278D751A00BBD3F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SDKSampleSwiftUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = SDKSampleSwiftUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1429,6 +1589,15 @@
 			buildConfigurations = (
 				783703F5274E2CE700EC1F26 /* Debug */,
 				783703F6274E2CE700EC1F26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78B6D8E4278D751A00BBD3F5 /* Build configuration list for PBXNativeTarget "SDKSampleSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78B6D8D0278D751A00BBD3F5 /* Debug */,
+				78B6D8D1278D751A00BBD3F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
