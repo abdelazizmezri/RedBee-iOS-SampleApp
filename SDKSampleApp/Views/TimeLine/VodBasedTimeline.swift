@@ -21,11 +21,11 @@ class VodBasedTimeline: UIView {
     // Blur View which holds all the elements
     let blurView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black
+        /* view.backgroundColor = UIColor.black
         view.layer.opacity = 0.5
         view.layer.borderColor = ColorState.active.textFieldPlaceholder.cgColor
         view.layer.cornerRadius = 5
-        view.layer.borderWidth = 0.2
+        view.layer.borderWidth = 0.2 */
         return view
     }()
     
@@ -58,7 +58,7 @@ class VodBasedTimeline: UIView {
         let label = UILabel()
         label.text = ""
         label.font = label.font.withSize(11)
-        label.textColor = ColorState.active.button
+        label.textColor = .darkGray
         return label
     }()
     
@@ -88,7 +88,7 @@ class VodBasedTimeline: UIView {
         let label = UILabel()
         label.text = ""
         label.font = label.font.withSize(11)
-        label.textColor = ColorState.active.button
+        label.textColor = .darkGray
         return label
     }()
     

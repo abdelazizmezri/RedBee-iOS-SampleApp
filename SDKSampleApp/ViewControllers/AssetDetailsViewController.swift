@@ -453,7 +453,15 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     ///   - playable: channelPlayable / AssetPlayable
     ///   - asset: asset
     func handlePlay(playable : Playable) {
-        let destinationViewController = PlayerViewController()
+        
+        // Fetching asset details is optional. You can directly call `showStickyPlayer`
+        // self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
+        self.getExposureAsset(assetId: playable.assetId, playable: playable)
+        
+        // Use below implementation to see the detailed Player View
+        
+        /* let destinationViewController = PlayerViewController()
+        
         destinationViewController.environment = StorageProvider.storedEnvironment
         destinationViewController.sessionToken = StorageProvider.storedSessionToken
         
@@ -465,6 +473,92 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         destinationViewController.playbackProperties = properties
         destinationViewController.playable = playable
         
-        self.navigationController?.pushViewController(destinationViewController, animated: false)
+        self.navigationController?.pushViewController(destinationViewController, animated: false) */
+        
+      
+    }
+    
+
+    /// Fetch the Asset  details to pass to the player  : Optional
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - playable: playable
+    private func getExposureAsset(assetId: String, playable: Playable) {
+        guard let env = StorageProvider.storedEnvironment, let session = StorageProvider.storedSessionToken else {
+            return
+        }
+        
+        let query = "fieldSet=ALL&&&onlyPublished=true"
+        ExposureApi<Asset>(environment: env, endpoint: "/content/asset/"+assetId, query: query, method: .get, sessionToken: session)
+            .request()
+            .validate()
+            .response{ [weak self] in
+                
+                if let asset = $0.value {
+                    self?.showMiniPlayer(environment: env, session: session, playable: playable, asset: asset)
+                }
+                if let error = $0.error {
+                    print("Error on fetching Asset " , error)
+                }
+            }
+    }
+    
+    func showMiniPlayer(environment: Environment, session: SessionToken, playable: Playable, asset: Asset) {
+        let demoVC = StickyPlayerViewController()
+        demoVC.environment = StorageProvider.storedEnvironment
+        demoVC.sessionToken = StorageProvider.storedSessionToken
+        
+        if let player = StickyPlayerViewController.player {
+            player.stop()
+        }
+        
+        demoVC.asset = asset
+        
+        demoVC.popupItem.title = asset.localized?.first?.title ?? asset.assetId
+        demoVC.popupItem.subtitle = asset.localized?.first?.description ?? asset.assetId
+        
+        demoVC.playable = playable
+        
+        let playButton = UIBarButtonItem()
+        playButton.title = "play"
+        playButton.image = UIImage(systemName: "play")
+
+        let stopButton = UIBarButtonItem()
+        stopButton.title = "stop"
+        stopButton.image = UIImage(systemName: "stop")
+        
+        
+        demoVC.popupItem.leadingBarButtonItems = [playButton]
+        demoVC.popupItem.trailingBarButtonItems = [stopButton]
+        
+        demoVC.view.backgroundColor = .white
+        
+        // Customise popupBar appearance
+        let appearance = LNPopupBarAppearance()
+        appearance.backgroundColor = UIColor.clear
+
+        navigationController?.popupBar.inheritsAppearanceFromDockingView = false
+        navigationController?.popupBar.backgroundColor = .white
+        navigationController?.popupBar.standardAppearance.backgroundColor = UIColor.white
+        navigationController?.popupBar.progressViewStyle = .top
+        navigationController?.popupBar.progressView.tintColor = .red
+        navigationController?.popupBar.standardAppearance = appearance
+        
+        
+        
+        if let urlString = asset.localized?.first?.images?.first?.url, let url = URL(string: urlString) {
+            DispatchQueue.global().async { [weak self] in
+                if let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            demoVC.popupItem.image = image
+                            demoVC.assetImage = image
+                        }
+                    }
+                }
+            }
+        }
+
+        navigationController?.presentPopupBar(withContentViewController: demoVC, openPopup:true, animated: true, completion: nil)
     }
 }

@@ -21,11 +21,11 @@ class ProgramBasedTimeline: UIView {
     // Blur View which holds all the elements
     let blurView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black
+        /* view.backgroundColor = UIColor.gray
         view.layer.opacity = 0.5
         view.layer.borderColor = ColorState.active.textFieldPlaceholder.cgColor
         view.layer.cornerRadius = 5
-        view.layer.borderWidth = 0.2
+        view.layer.borderWidth = 0.2 */ 
         return view
     }()
     
@@ -58,7 +58,7 @@ class ProgramBasedTimeline: UIView {
     let leftTimeLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.textColor = ColorState.active.button
+        label.textColor = .darkGray
         label.font = label.font.withSize(11)
         return label
     }()
@@ -72,7 +72,7 @@ class ProgramBasedTimeline: UIView {
         let button = UIButton()
         button.setTitle("LIVE", for: .normal)
         button.titleLabel?.font = UIFont(name: "OpenSans-Light", size: 09)
-        button.setTitleColor(ColorState.active.button, for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
         button.addTarget(self, action: #selector(goLiveAction), for: .touchUpInside)
         button.titleLabel?.font = button.titleLabel?.font.withSize(11)
         return button
@@ -104,7 +104,7 @@ class ProgramBasedTimeline: UIView {
         let label = UILabel()
         label.text = ""
         label.font = label.font.withSize(11)
-        label.textColor = ColorState.active.button
+        label.textColor = .darkGray
         return label
     }()
     
@@ -112,7 +112,7 @@ class ProgramBasedTimeline: UIView {
         let button = UIButton()
         button.setImage(UIImage.init(named: "undo"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = ColorState.active.button
+        button.tintColor = UIColor.black
         button.addTarget(self, action: #selector(startOverAction(_:)), for: .touchUpInside)
         return button
     }()
@@ -122,6 +122,13 @@ class ProgramBasedTimeline: UIView {
         super.init(frame: frame)
         
         setupLayout()
+        
+        currentDuration = { [weak self] in
+            if let start = self?.currentProgram?.startDate?.millisecondsSince1970, let end = self?.currentProgram?.endDate?.millisecondsSince1970 {
+                return end-start
+            }
+            return nil
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -174,16 +181,31 @@ class ProgramBasedTimeline: UIView {
             }
         }
         
-        if !liveEdgeIndicator.isHidden {
-            if sender.value > liveEdgeIndicator.progress {
-                sender.value = liveEdgeIndicator.progress
-                return
-            }
-        }
+//        if !liveEdgeIndicator.isHidden {
+//            if sender.value > liveEdgeIndicator.progress {
+//                sender.value = liveEdgeIndicator.progress
+//                return
+//            }
+//        }
+//
+//        guard let startTime = currentProgram?.startDate?.millisecondsSince1970, let endTime = currentProgram?.endDate?.millisecondsSince1970 else { return }
+//        let seekDelta = Int64(sender.value * Float(endTime-startTime))
+//        leftTimeLabel.text = timeFormat(time: seekDelta)
         
-        guard let startTime = currentProgram?.startDate?.millisecondsSince1970, let endTime = currentProgram?.endDate?.millisecondsSince1970 else { return }
-        let seekDelta = Int64(sender.value * Float(endTime-startTime))
-        leftTimeLabel.text = timeFormat(time: seekDelta)
+        
+        if let duration = currentDuration() {
+            let sliderPosition = Int64(sender.value * Float(duration))
+            leftTimeLabel.text = timeFormat(time: sliderPosition)
+            
+            let currentTime = timeFormat(time: sliderPosition)
+            onScrubbing(currentTime)
+            
+            let getSeekDeltaValues = getSeekDelta(sender.value)
+            if let startTime = getSeekDeltaValues?.startTime , let seekDelta = getSeekDeltaValues?.seekDelta {
+                onSeek(startTime + seekDelta)
+            }
+            
+        }
     }
     
     @objc func seekAction(_ sender: UISlider) {
@@ -195,6 +217,7 @@ class ProgramBasedTimeline: UIView {
     
     fileprivate var timerQueue = DispatchQueue(label: "com.emp.refApp.programBasedTimeLine", qos: DispatchQoS.background, attributes: DispatchQueue.Attributes.concurrent)
     fileprivate var timer: DispatchSourceTimer?
+    
     fileprivate func updateLoop() {
         if let program = currentProgram {
             epgUpdateLoop(program: program)
@@ -206,8 +229,13 @@ class ProgramBasedTimeline: UIView {
     
     /// MARK: Configuration
     var currentPlayheadTime: () -> Int64? = { return nil }
+    var currentDuration: () -> Int64? = { return nil }
     var timeBehindLiveEdge: () -> Int64? = { return nil }
     var currentProgram: Program?
+    
+    
+
+    
     var canFastForward: Bool = true {
         didSet {
             // Update UI restrictions
@@ -235,12 +263,41 @@ class ProgramBasedTimeline: UIView {
     var goLiveTrigger: () -> Void = { }
     var startOverTrigger: () -> Void = { }
     var onSeek: (Int64) -> Void = { _ in }
+    var onScrubbing: (String) -> Void = { _ in }
 }
 
 
 
 // MARK: - Timeline Updates
 extension ProgramBasedTimeline {
+    
+    /// Calculate the  seek delta value
+    /// - Parameter senderValue: seek value
+    /// - Returns: start time & the seek delta value
+    func getSeekDelta(_ senderValue: Float) -> (startTime:Int64, seekDelta:Int64)?  {
+        var programStartTime = currentProgram?.startDate?.millisecondsSince1970
+  
+        // When playing a channel (no Epg ) , channel stream does not have any start Date, so we will use the startTime
+        if programStartTime == nil {
+            if let currentProgramStartTime = currentProgram?.startTime, let startTimeInUnix = Int(currentProgramStartTime) {
+                programStartTime = Date(timeIntervalSince1970: TimeInterval(Int(startTimeInUnix))).millisecondsSince1970
+            }
+        }
+
+        var programEndTime = currentProgram?.endDate?.millisecondsSince1970
+
+        // If the program End time is missing we matched the end time to the current live time
+        if programEndTime == nil {
+            let playheadTime = currentPlayheadTime()
+            let timeBehindLive = timeBehindLiveEdge()
+            programEndTime = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
+        }
+
+        guard let startTime = programStartTime , let endTime = programEndTime else { return nil }
+
+        let seekDelta = Int64(senderValue * Float(endTime - startTime))
+        return (startTime,seekDelta)
+    }
     
     fileprivate func epgUpdateLoop(program: Program) {
         startOverButton.isHidden = false
@@ -249,14 +306,31 @@ extension ProgramBasedTimeline {
         let timeBehindLive = timeBehindLiveEdge()
         let liveTime = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
         
-        let programStart = program.startDate?.millisecondsSince1970
-        let programEnd = program.endDate?.millisecondsSince1970
+        var programStart = program.startDate?.millisecondsSince1970
+        var programEnd = program.endDate?.millisecondsSince1970
+        
+        // When playing a channel (no Epg ) , channel stream does not have any start Date, so we will use the startTime
+        if programStart == nil {
+            if let startTime = program.startTime, let startTimeInUnix = Int(startTime) {
+                programStart = Date(timeIntervalSince1970: TimeInterval(Int(startTimeInUnix))).millisecondsSince1970
+            }
+        }
+        
+        // If the program End time is missing we matched the end time to the current live time
+        if programEnd == nil {
+            let playheadTime = currentPlayheadTime()
+            let timeBehindLive = timeBehindLiveEdge()
+            programEnd = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
+        }
         
         // Indicate time left
-        updateLeftTimelabel(playheadTime: playheadTime, programEnd: programEnd)
+        // updateLeftTimelabel(playheadTime: playheadTime, programEnd: programEnd)
+        
+        // Indicate time left
+        updateTimelabels(playheadTime: playheadTime, programstart: programStart, programEnd: programEnd, live: liveTime)
         
         // Indicate current offset
-        if let startTime = programStart, let playhead = playheadTime {
+        /* if let startTime = programStart, let playhead = playheadTime {
             if playhead >= startTime {
                 leftTimeLabel.isHidden = false
                 leftTimeLabel.text = timeFormat(time: playhead - startTime)
@@ -268,10 +342,10 @@ extension ProgramBasedTimeline {
         }
         else {
             leftTimeLabel.isHidden = true
-        }
+        } */
         
         /// Update playheadSlider
-        updatePlayheadSlider(startTime: programStart, playheadTime: playheadTime, endTime: programEnd)
+        updatePlayheadSlider(startTime: programStart, playheadTime: playheadTime, endTime: programEnd, liveTime: liveTime)
         
         /// Update liveEdge indicator
         updateLiveEdgeIndicator(startTime: programStart, liveTime: liveTime, endTime: programEnd)
@@ -281,48 +355,78 @@ extension ProgramBasedTimeline {
     }
     
     fileprivate func noEpgUpdateLoop() {
-        playheadSlider.isHidden = true
+        // playheadSlider.isHidden = true
         startOverButton.isHidden = true
         
         rightTimeLabel.isHidden = true
+        leftTimeLabel.isHidden = true
         
         let playheadTime = currentPlayheadTime()
         let timeBehindLive = timeBehindLiveEdge()
         let liveTime = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
         
-        updatePlayheadSlider(startTime: nil, playheadTime: playheadTime, endTime: nil)
-        updateLiveEdgeIndicator(startTime: nil, liveTime: liveTime, endTime: nil)
+        updatePlayheadSlider(startTime: nil, playheadTime: playheadTime, endTime: currentProgram?.endDate?.millisecondsSince1970, liveTime: liveTime)
         updateGoLiveIndicator(playheadTime: playheadTime, liveTime: liveTime)
     }
     
-    private func updateLeftTimelabel(playheadTime: Int64?, programEnd: Int64?) {
-        guard !isSliding else { return }
-        if let endTime = programEnd, let playhead = playheadTime {
-            if endTime >= playhead {
-                rightTimeLabel.isHidden = false
-                rightTimeLabel.text = timeFormat(time: endTime - playhead)
-            }
-            else {
-                // Warning. Program has ended, request new program
-                rightTimeLabel.isHidden = true
+    
+    /// Update time labels
+    /// - Parameters:
+    ///   - playheadTime: playhead time
+    ///   - programEnd: program End time
+    private func updateTimelabels(playheadTime: Int64?, programstart: Int64?, programEnd: Int64?, live: Int64?) {
+        
+        rightTimeLabel.isHidden = false
+        leftTimeLabel.isHidden = false
+        
+        if let start = programstart, let endTime = programEnd, let playhead = playheadTime {
+            if let live = live {
+                if isLive(playhead: playhead, live: live) {
+                   // program is live
+                } else {
+                    // Do nothing
+                }
+            } else {
+
+                if endTime >= playhead {
+                    
+                    rightTimeLabel.text = timeFormat(time: endTime - start )
+                    leftTimeLabel.text = timeFormat(time: playhead - start)
+                }
+                else {
+                    // Warning. Program has ended, request new program
+                    rightTimeLabel.isHidden = true
+                    leftTimeLabel.isHidden = true
+                }
             }
         }
         else {
+
             rightTimeLabel.isHidden = true
+            leftTimeLabel.isHidden = true
         }
     }
+    
     
     private func updateGoLiveIndicator(playheadTime: Int64?, liveTime: Int64?) {
         if let playhead = playheadTime, let live = liveTime {
             if isLive(playhead: playhead, live: live) {
                 goLiveIndicator.backgroundColor = ColorState.active.accent
+                if let _ = timeBehindLiveEdge() {
+                    leftTimeLabel.text = "00:00"
+                }
+                playheadSlider.value = 1
             }
             else {
                 /// Indicate the time behind live
                 goLiveIndicator.backgroundColor = ColorState.active.accentedBackground
+                if let timeBehindLive = timeBehindLiveEdge() {
+                    leftTimeLabel.text = timeFormat(time: timeBehindLive)
+                }
             }
         }
         else {
+            // Not a live program , but a catchup
             goLiveIndicator.backgroundColor = ColorState.active.background
             leftTimeLabel.isHidden = true
         }
@@ -345,23 +449,39 @@ extension ProgramBasedTimeline {
         }
     }
     
-    private func updatePlayheadSlider(startTime: Int64?, playheadTime: Int64?, endTime: Int64?) {
+    private func updatePlayheadSlider(startTime: Int64?, playheadTime: Int64?, endTime: Int64?, liveTime: Int64? ) {
         guard !isSliding else { return }
-        if let playhead = playheadTime, let start = startTime, let end = endTime {
-            playheadSlider.isHidden = false
-            if start <= playhead && playhead <= end {
-                let progress = Float(playhead - start) / Float(end - start)
-                lastPlayheadSliderValue = Float(progress)
-                playheadSlider.setValue(Float(progress), animated: false)
-            }
-            else {
+
+        playheadSlider.isHidden = false
+        if let start = startTime, let end = endTime {
+            
+            if let playhead = playheadTime {
+                if start <= playhead && playhead <= end {
+                    /* if isLive(playhead: playhead, live: live) {
+                        
+                        lastPlayheadSliderValue = 1
+                        playheadSlider.setValue(Float(1), animated: false)
+                    } else {
+                        let progress = Float(playhead - start) / Float(end - start)
+                        lastPlayheadSliderValue = Float(progress)
+                        playheadSlider.setValue(Float(progress), animated: false)
+                    } */
+                    
+                    let progress = Float(playhead - start) / Float(end - start)
+                    lastPlayheadSliderValue = Float(progress)
+                    playheadSlider.setValue(Float(progress), animated: false)
+                    
+                }
+            } else {
+                let progress = Float(start) / Float(end - start)
+                
                 /// Warning, the program has ended
-                lastPlayheadSliderValue = 1
-                playheadSlider.setValue(1, animated: false)
+                lastPlayheadSliderValue = progress
+                playheadSlider.setValue(progress, animated: false)
             }
         }
         else {
-            playheadSlider.isHidden = true
+            playheadSlider.value = 1.0
             lastPlayheadSliderValue = nil
         }
     }
@@ -374,7 +494,7 @@ extension ProgramBasedTimeline {
         return time.timeFormat()
     }
     
-    fileprivate func isLive(playhead: Int64, live: Int64) -> Bool {
+    func isLive(playhead: Int64, live: Int64) -> Bool {
         let closeEnough: Int64 = 2 * 6000
         let delta = playhead - live
         return abs(delta) < closeEnough

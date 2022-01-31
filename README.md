@@ -40,7 +40,7 @@ Example application for developers to follow how to use EMP iOS SDKs
 
 ## Installation
 
-Installation can be done by cloning the repo  *iOSClientSDKSampleApp* & run `carthage update`
+Installation can be done by cloning the repo  *iOSClientSDKSampleApp* & run `carthage update --use-submodules --use-xcframeworks`
 
 
 ### Carthage
