@@ -20,8 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
     var castSession: GCKCastSession?
 
 
+    let tabBarController = UITabBarController()
+    var mainNavCtrl: UINavigationController?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        application.beginReceivingRemoteControlEvents()
         
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
@@ -46,25 +51,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
 //        GCKLogger.sharedInstance().delegate = self
         
         
-        let styler = GCKUIStyle.sharedInstance()
-        styler.castViews.iconTintColor = .lightGray
-        styler.castViews.mediaControl.expandedController.iconTintColor = .green
-        styler.castViews.backgroundColor = .white
-        styler.castViews.mediaControl.miniController.backgroundColor = .yellow
-        styler.castViews.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 16) ?? UIFont.systemFont(ofSize: 16)
-        styler.castViews.mediaControl.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 6) ?? UIFont.systemFont(ofSize: 6)
-        let muteOnImage = UIImage.init(named: "volume0.png")
-        if let muteOnImage = muteOnImage {
-          styler.castViews.muteOnImage = muteOnImage
-        }
-        styler.apply()
-        GCKUICastButton.appearance().tintColor = UIColor.gray
+//        let styler = GCKUIStyle.sharedInstance()
+//        styler.castViews.iconTintColor = .lightGray
+//        styler.castViews.mediaControl.expandedController.iconTintColor = .green
+//        styler.castViews.backgroundColor = .white
+//        styler.castViews.mediaControl.miniController.backgroundColor = .yellow
+//        styler.castViews.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 16) ?? UIFont.systemFont(ofSize: 16)
+//        styler.castViews.mediaControl.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 6) ?? UIFont.systemFont(ofSize: 6)
+//        let muteOnImage = UIImage.init(named: "volume0.png")
+//        if let muteOnImage = muteOnImage {
+//          styler.castViews.muteOnImage = muteOnImage
+//        }
+//
+//        styler.apply()
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        // window = UIWindow()
         let navigationController = MainNavigationController()
         
+        /* if StorageProvider.storedSessionToken != nil {
+            
+            let tabBarController = UITabBarController()
+            
+            
+            if #available(iOS 15.0, *) {
+                let appearance = UITabBarAppearance()
+                appearance.configureWithOpaqueBackground()
+                appearance.backgroundColor = .white
+                tabBarController.tabBar.standardAppearance = appearance
+                tabBarController.tabBar.scrollEdgeAppearance = tabBarController.tabBar.standardAppearance
+            }
+
+            let selectionlistViewController = SelectionTableViewController()
+            
+            let firstNav = UINavigationController(rootViewController: selectionlistViewController)
+            
+            firstNav.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: ""), tag: 0)
+            
+            let selectionlistViewController2 = LoginViewController()
+            let secondNav = UINavigationController(rootViewController: selectionlistViewController2)
+            
+            secondNav.tabBarItem = UITabBarItem(title: "Second", image: UIImage(named: ""), tag: 1)
+            
+            let tabs = [firstNav, secondNav]
+            tabBarController.setViewControllers(tabs, animated: false)
+            
+            navigationController = UINavigationController(rootViewController: tabBarController)
+            
+        } else {
+            navigationController = MainNavigationController()
+        } */
+    
         let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
           as GCKUICastContainerViewController
         castContainerVC.miniMediaControlsItemEnabled = true

@@ -129,6 +129,8 @@ extension PlayerViewController {
                 // Fires once the associated MediaSource has been created.
                 // Playback is not ready to start at this point.
                 self?.updateTimeLine(streamingInfo: source.streamingInfo)
+                
+                
             }
             .onPlaybackPrepared{ player, source in
                 // Published when the associated MediaSource completed asynchronous loading of relevant properties.
@@ -184,15 +186,13 @@ extension PlayerViewController {
                 guard let `self` = self else { return }
                 self.update(withProgram: program)
             }
-            .onEntitlementResponse { [weak self] player, source, entitlement in
+            
+            .onEntitlementResponse { [weak self] player, source, entitlement  in
                 // Fires when a new entitlement is received, such as after attempting to start playback
                 guard let `self` = self else { return }
 
                 self.activateSprites(sprites: source.sprites)
-                
                 self.update(contractRestrictions: entitlement)
-                
-
                 
             }
             .onBitrateChanged{ player, source, bitrate in
@@ -225,6 +225,11 @@ extension PlayerViewController {
             .onWarning{ [weak self] player, source, warning in
                 guard let `self` = self else { return }
                 self.showToastMessage(message: warning.message, duration: 5)
+            }
+        
+        // Media Type
+            .onMediaType { [weak self] type in
+                // Media Type : audio / video
             }
         
         // Playback Progress
@@ -661,7 +666,7 @@ extension PlayerViewController {
     fileprivate func enableAudioSeesionForPlayer() {
         do {
             if #available(iOS 11.0, *) {
-                try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback, policy: .longForm)
+                try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback, policy: AVAudioSession.RouteSharingPolicy.longFormAudio)
             }
             else {
                 try audioSession.setCategory(AVAudioSession.Category.playback)

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,8 @@
 		7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
 		7825E71D2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
 		7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
+		7834099B2796BF4D001831D5 /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78856FEF27906DED00CA6563 /* SwiftRefinements.swift */; };
+		7834099E2796C03F001831D5 /* LNPopupController in Frameworks */ = {isa = PBXBuildFile; productRef = 7834099D2796C03F001831D5 /* LNPopupController */; };
 		783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783703E8274E2CDE00EC1F26 /* AppDelegate.swift */; };
 		783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 783703EC274E2CDE00EC1F26 /* Main.storyboard */; };
 		783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 783703EF274E2CE700EC1F26 /* Assets.xcassets */; };
@@ -28,7 +30,20 @@
 		78370423274E33B100EC1F26 /* ExposurePlayback.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2507C25139CC5001ED9E3 /* ExposurePlayback.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78370426274E33B700EC1F26 /* Player.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; };
 		78370427274E33B700EC1F26 /* Player.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505D25139CB6001ED9E3 /* Player.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7838DCBA27A025AA0052848A /* AVAudioSession+Airplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7838DCB927A025AA0052848A /* AVAudioSession+Airplay.swift */; };
+		7838DCDC27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
+		7838DCDD27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
+		7838DCDE27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
 		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
+		78856FF4279070F200CA6563 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2506825139CBF001ED9E3 /* Exposure.framework */; };
+		78856FF5279070F200CA6563 /* Exposure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2506825139CBF001ED9E3 /* Exposure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78856FF7279070FB00CA6563 /* ExposurePlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2507825139CC5001ED9E3 /* ExposurePlayback.framework */; };
+		78856FF8279070FB00CA6563 /* ExposurePlayback.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2507825139CC5001ED9E3 /* ExposurePlayback.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78856FF92790710300CA6563 /* Player.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505925139CB6001ED9E3 /* Player.framework */; };
+		78856FFA2790710300CA6563 /* Player.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78C2505925139CB6001ED9E3 /* Player.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78ABF315279169A200C65424 /* AssetTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ABF314279169A200C65424 /* AssetTypes.swift */; };
+		78ABF3292791705400C65424 /* AssetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ABF3282791705400C65424 /* AssetListView.swift */; };
+		78ABF32E279171D800C65424 /* AssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ABF32D279171D800C65424 /* AssetLoader.swift */; };
 		78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */; };
 		78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C8278D751400BBD3F5 /* ContentView.swift */; };
 		78B6D8CB278D751A00BBD3F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78B6D8CA278D751A00BBD3F5 /* Assets.xcassets */; };
@@ -103,6 +118,8 @@
 		78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AA2513A143001ED9E3 /* RBMButton.swift */; };
 		78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */; };
 		78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
+		78EA7155279AEC2F00A805B5 /* LNPopupController in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 7834099D2796C03F001831D5 /* LNPopupController */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -262,6 +279,19 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78856FF6279070F200CA6563 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				78856FFA2790710300CA6563 /* Player.framework in Embed Frameworks */,
+				78856FF8279070FB00CA6563 /* ExposurePlayback.framework in Embed Frameworks */,
+				78856FF5279070F200CA6563 /* Exposure.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78C250D425139D3B001ED9E3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,6 +300,7 @@
 			files = (
 				78BA910B2514EB6800816B4A /* Cast.framework in Embed Frameworks */,
 				78C250DC25139D4B001ED9E3 /* Player.framework in Embed Frameworks */,
+				78EA7155279AEC2F00A805B5 /* LNPopupController in Embed Frameworks */,
 				78C250E025139D51001ED9E3 /* ExposureDownload.framework in Embed Frameworks */,
 				78C250E425139D58001ED9E3 /* Download.framework in Embed Frameworks */,
 				78C250D825139D44001ED9E3 /* ExposurePlayback.framework in Embed Frameworks */,
@@ -299,7 +330,13 @@
 		783703F4274E2CE700EC1F26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7837040D274E2E8F00EC1F26 /* EnviornmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviornmentViewController.swift; sourceTree = "<group>"; };
 		78370415274E300300EC1F26 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7838DCB927A025AA0052848A /* AVAudioSession+Airplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAudioSession+Airplay.swift"; sourceTree = "<group>"; };
+		7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "SampleApplication-Guide.md"; sourceTree = "<group>"; };
 		78637F0A274E366500185D14 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		78856FEF27906DED00CA6563 /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftRefinements.swift; sourceTree = "<group>"; };
+		78ABF314279169A200C65424 /* AssetTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetTypes.swift; sourceTree = "<group>"; };
+		78ABF3282791705400C65424 /* AssetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListView.swift; sourceTree = "<group>"; };
+		78ABF32D279171D800C65424 /* AssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLoader.swift; sourceTree = "<group>"; };
 		78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDKSampleSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSampleSwiftUIApp.swift; sourceTree = "<group>"; };
 		78B6D8C8278D751400BBD3F5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -362,6 +399,7 @@
 		78C251A62513A135001ED9E3 /* RBMTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBMTextField.swift; sourceTree = "<group>"; };
 		78C251AA2513A143001ED9E3 /* RBMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBMButton.swift; sourceTree = "<group>"; };
 		78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBMPlayerControlLabel.swift; sourceTree = "<group>"; };
+		78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyPlayerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -379,6 +417,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78856FF7279070FB00CA6563 /* ExposurePlayback.framework in Frameworks */,
+				78856FF92790710300CA6563 /* Player.framework in Frameworks */,
+				78856FF4279070F200CA6563 /* Exposure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +431,7 @@
 				78BA91082514EB5A00816B4A /* Cast.framework in Frameworks */,
 				78C250DB25139D4B001ED9E3 /* Player.framework in Frameworks */,
 				78C250DF25139D51001ED9E3 /* ExposureDownload.framework in Frameworks */,
+				7834099E2796C03F001831D5 /* LNPopupController in Frameworks */,
 				78C250E325139D58001ED9E3 /* Download.framework in Frameworks */,
 				78C250D725139D44001ED9E3 /* ExposurePlayback.framework in Frameworks */,
 				781C377325188EF10094C2C6 /* ExternalAccessory.framework in Frameworks */,
@@ -438,17 +480,28 @@
 			path = SDKSampleAppTvOS;
 			sourceTree = "<group>";
 		};
+		78ABF32A2791714300C65424 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				78ABF314279169A200C65424 /* AssetTypes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		78B6D8C5278D751300BBD3F5 /* SDKSampleSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				78ABF32A2791714300C65424 /* Models */,
 				78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */,
 				78B6D8C8278D751400BBD3F5 /* ContentView.swift */,
 				78B6D8EF278D7B9800BBD3F5 /* AssetView.swift */,
+				78ABF3282791705400C65424 /* AssetListView.swift */,
 				78B6D8FF278D820E00BBD3F5 /* CustomVideoPlayer.swift */,
 				78B6D920278D842800BBD3F5 /* PlayerViewController.swift */,
 				78B6D8CA278D751A00BBD3F5 /* Assets.xcassets */,
 				78B6D8CF278D751A00BBD3F5 /* Info.plist */,
 				78B6D8CC278D751A00BBD3F5 /* Preview Content */,
+				78ABF32D279171D800C65424 /* AssetLoader.swift */,
 			);
 			path = SDKSampleSwiftUI;
 			sourceTree = "<group>";
@@ -476,6 +529,7 @@
 				780B2DEF251B6B4C003B2A94 /* LICENSE */,
 				780B2E03251B6B4C003B2A94 /* README.md */,
 				780B2E04251B6C3D003B2A94 /* CHANGELOG.md */,
+				7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */,
 				78C24FEE25139881001ED9E3 /* Cartfile */,
 				78C2502425139AB4001ED9E3 /* Cartfile.resolved */,
 				78C24FB725139845001ED9E3 /* SDKSampleApp */,
@@ -510,6 +564,7 @@
 			isa = PBXGroup;
 			children = (
 				781C376F251887620094C2C6 /* SDKSampleApp.entitlements */,
+				78856FEF27906DED00CA6563 /* SwiftRefinements.swift */,
 				78C251862513A0DC001ED9E3 /* Model */,
 				78C2518D2513A0F7001ED9E3 /* ViewModel */,
 				78C2513625139F9E001ED9E3 /* Views */,
@@ -640,6 +695,7 @@
 				78C2512A25139F71001ED9E3 /* PlayerViewController.swift */,
 				78C2512E25139F82001ED9E3 /* TrackSelectionViewController.swift */,
 				78C2513225139F8F001ED9E3 /* DownloadListTableViewController.swift */,
+				78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -683,6 +739,7 @@
 				78C251682513A092001ED9E3 /* Date+Extension.swift */,
 				78C2516C2513A0A3001ED9E3 /* Int+timeFormat.swift */,
 				78C251702513A0B2001ED9E3 /* UIViewController+Toast.swift */,
+				7838DCB927A025AA0052848A /* AVAudioSession+Airplay.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -733,12 +790,15 @@
 				78B6D8C0278D751300BBD3F5 /* Sources */,
 				78B6D8C1278D751300BBD3F5 /* Frameworks */,
 				78B6D8C2278D751300BBD3F5 /* Resources */,
+				78856FF6279070F200CA6563 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = SDKSampleSwiftUI;
+			packageProductDependencies = (
+			);
 			productName = SDKSampleSwiftUI;
 			productReference = 78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */;
 			productType = "com.apple.product-type.application";
@@ -758,6 +818,9 @@
 			dependencies = (
 			);
 			name = SDKSampleApp;
+			packageProductDependencies = (
+				7834099D2796C03F001831D5 /* LNPopupController */,
+			);
 			productName = SDKSampleApp;
 			productReference = 78C24FB525139845001ED9E3 /* SDKSampleApp.app */;
 			productType = "com.apple.product-type.application";
@@ -835,6 +898,9 @@
 				Base,
 			);
 			mainGroup = 78C24FAC25139845001ED9E3;
+			packageReferences = (
+				7834099C2796C03F001831D5 /* XCRemoteSwiftPackageReference "LNPopupController" */,
+			);
 			productRefGroup = 78C24FB625139845001ED9E3 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -1011,6 +1077,7 @@
 				783703F3274E2CE700EC1F26 /* LaunchScreen.storyboard in Resources */,
 				783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */,
 				783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */,
+				7838DCDD27A7C5290052848A /* SampleApplication-Guide.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1087,7 @@
 			files = (
 				78B6D8CE278D751A00BBD3F5 /* Preview Assets.xcassets in Resources */,
 				78B6D8CB278D751A00BBD3F5 /* Assets.xcassets in Resources */,
+				7838DCDE27A7C5290052848A /* SampleApplication-Guide.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1032,6 +1100,7 @@
 				78C24FEF25139881001ED9E3 /* Cartfile in Resources */,
 				78C2502525139AB4001ED9E3 /* Cartfile.resolved in Resources */,
 				78C24FC025139845001ED9E3 /* Main.storyboard in Resources */,
+				7838DCDC27A7C5290052848A /* SampleApplication-Guide.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1108,10 +1177,13 @@
 				78B6D953278D84E400BBD3F5 /* Date+Extension.swift in Sources */,
 				78B6D964278D857F00BBD3F5 /* UIView+Keyboard.swift in Sources */,
 				78B6D940278D84A900BBD3F5 /* RBMPlayerControlLabel.swift in Sources */,
+				78ABF32E279171D800C65424 /* AssetLoader.swift in Sources */,
 				78B6D900278D820E00BBD3F5 /* CustomVideoPlayer.swift in Sources */,
+				78ABF315279169A200C65424 /* AssetTypes.swift in Sources */,
 				78B6D96C278D86AC00BBD3F5 /* UIViewController+Alert.swift in Sources */,
 				78B6D925278D846600BBD3F5 /* VodBasedTimeline.swift in Sources */,
 				78B6D94F278D84E100BBD3F5 /* Int+timeFormat.swift in Sources */,
+				78ABF3292791705400C65424 /* AssetListView.swift in Sources */,
 				78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */,
 				78B6D94B278D84D100BBD3F5 /* UIView+Anchor.swift in Sources */,
 			);
@@ -1121,6 +1193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7834099B2796BF4D001831D5 /* SwiftRefinements.swift in Sources */,
 				781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */,
 				78C2513925139FB6001ED9E3 /* PlayerControls.swift in Sources */,
 				78C2511925139F33001ED9E3 /* LoginViewController.swift in Sources */,
@@ -1129,6 +1202,7 @@
 				78C2512725139F64001ED9E3 /* EPGListViewController.swift in Sources */,
 				78C2514F2513A02F001ED9E3 /* UIImageView+constraint.swift in Sources */,
 				78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */,
+				7838DCBA27A025AA0052848A /* AVAudioSession+Airplay.swift in Sources */,
 				78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */,
 				7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
 				78C2510525139E47001ED9E3 /* ColorScheme.swift in Sources */,
@@ -1139,6 +1213,7 @@
 				78C2516D2513A0A3001ED9E3 /* Int+timeFormat.swift in Sources */,
 				781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */,
 				78C250FD25139E09001ED9E3 /* MainNavigationController.swift in Sources */,
+				78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */,
 				78C2512F25139F82001ED9E3 /* TrackSelectionViewController.swift in Sources */,
 				78C2514A25139FF8001ED9E3 /* AssetListTableViewCell.swift in Sources */,
 				78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */,
@@ -1449,7 +1524,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SDKSampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1482,7 +1557,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SDKSampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1639,6 +1714,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7834099C2796C03F001831D5 /* XCRemoteSwiftPackageReference "LNPopupController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNPopupController";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7834099D2796C03F001831D5 /* LNPopupController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7834099C2796C03F001831D5 /* XCRemoteSwiftPackageReference "LNPopupController" */;
+			productName = LNPopupController;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 78C24FAD25139845001ED9E3 /* Project object */;
 }
