@@ -29,6 +29,10 @@
 		7850403B28ACC9BA0035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */; };
 		7850403E28ACCA1D0035D509 /* iOSClientCast in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403D28ACCA1D0035D509 /* iOSClientCast */; };
 		7850404128ACCCD10035D509 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404028ACCCD10035D509 /* iOSClientExposureDownload */; };
+		7850404328ACE7E40035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404228ACE7E40035D509 /* iOSClientExposurePlayback */; };
+		7850404728ACE7F60035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404628ACE7F60035D509 /* iOSClientExposurePlayback */; };
+		7850404928ACE7F60035D509 /* iOSClientCast in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404828ACE7F60035D509 /* iOSClientCast */; };
+		7850404B28ACE7F60035D509 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404A28ACE7F60035D509 /* iOSClientExposureDownload */; };
 		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
 		78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */; };
 		78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C8278D751400BBD3F5 /* ContentView.swift */; };
@@ -229,6 +233,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7850404328ACE7E40035D509 /* iOSClientExposurePlayback in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +241,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7850404B28ACE7F60035D509 /* iOSClientExposureDownload in Frameworks */,
+				7850404928ACE7F60035D509 /* iOSClientCast in Frameworks */,
+				7850404728ACE7F60035D509 /* iOSClientExposurePlayback in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,6 +527,7 @@
 			);
 			name = SDKSampleAppTvOS;
 			packageProductDependencies = (
+				7850404228ACE7E40035D509 /* iOSClientExposurePlayback */,
 			);
 			productName = SDKSampleAppTvOS;
 			productReference = 783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */;
@@ -539,6 +548,9 @@
 			);
 			name = SDKSampleSwiftUI;
 			packageProductDependencies = (
+				7850404628ACE7F60035D509 /* iOSClientExposurePlayback */,
+				7850404828ACE7F60035D509 /* iOSClientCast */,
+				7850404A28ACE7F60035D509 /* iOSClientExposureDownload */,
 			);
 			productName = SDKSampleSwiftUI;
 			productReference = 78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */;
@@ -893,22 +905,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = MU9N7V8YCY;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Eyevinn.STSWE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.Eyevinn.STSWE tvos";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 11.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -926,13 +938,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Eyevinn.STSWE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.Eyevinn.STSWE tvos";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 11.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};
@@ -941,8 +953,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"SDKSampleSwiftUI/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = SDKSampleSwiftUI/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -952,6 +965,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1120,9 +1134,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SDKSampleApp/SDKSampleApp.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = QZ78HR3RWF;
+				DEVELOPMENT_TEAM = "";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -1141,9 +1155,9 @@
 					"$(inherited)",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.togethertv.watch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.togethertv.watch";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1175,7 +1189,7 @@
 					"$(inherited)",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.togethertv.watch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.togethertv.watch";
 				SWIFT_VERSION = 5.0;
@@ -1231,7 +1245,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SDKSampleAppUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1240,7 +1255,10 @@
 				);
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.udaya.SDKSampleAppUITests;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = SDKSampleApp;
@@ -1373,6 +1391,26 @@
 			productName = iOSClientCast;
 		};
 		7850404028ACCCD10035D509 /* iOSClientExposureDownload */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */;
+			productName = iOSClientExposureDownload;
+		};
+		7850404228ACE7E40035D509 /* iOSClientExposurePlayback */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */;
+			productName = iOSClientExposurePlayback;
+		};
+		7850404628ACE7F60035D509 /* iOSClientExposurePlayback */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */;
+			productName = iOSClientExposurePlayback;
+		};
+		7850404828ACE7F60035D509 /* iOSClientCast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */;
+			productName = iOSClientCast;
+		};
+		7850404A28ACE7F60035D509 /* iOSClientExposureDownload */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */;
 			productName = iOSClientExposureDownload;

@@ -56,9 +56,9 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
     
     public func startPlayback() {
         
-        let newpPlayerViewController = reset()
+        newPlayerViewController.delegate = self
         
-        /* if let oldPlayerViewController = self.playerViewController {
+        if let oldPlayerViewController = self.playerViewController {
          oldPlayerViewController.removeFromParent()
          oldPlayerViewController.viewIfLoaded?.removeFromSuperview()
          }
@@ -67,16 +67,17 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
          
          self.playerViewController = newPlayerViewController
          
-         addChild(newPlayerViewController)
+        addChild(newPlayerViewController)
          
          
          if isViewLoaded {
-         view.addSubview(newPlayerViewController.view)
-         } */
+             view.addSubview(newPlayerViewController.view)
+         }
+        
         
         self.player = Player(environment: environment, sessionToken: sessionToken)
         
-        self.playerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newpPlayerViewController)
+        self.playerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newPlayerViewController)
         self.playerViewController?.delegate = self
         
         self.player.startPlayback(playable: playable)
@@ -126,11 +127,11 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
                 
                 
                 
-                /* let extenalMediaInfo = self?.createExternalMediaInfo()
+                let extenalMediaInfo = self?.createExternalMediaInfo()
                  
                  let playerItem = newPlayerViewController.player?.currentItem
-                 if self?.pushNextCuePoint != nil || self?.pushNextCuePoint != 0  {
-                 playerItem?.nextContentProposal = self?.setProposal()
+                    if self?.pushNextCuePoint != nil || self?.pushNextCuePoint != 0  {
+                        playerItem?.nextContentProposal = self?.setProposal()
                  }
                  
                  playerItem?.externalMetadata = extenalMediaInfo ?? []
@@ -148,7 +149,7 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
                   playerItem?.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
                   } */
                  
-                 newPlayerViewController.player?.replaceCurrentItem(with: playerItem) */
+                 newPlayerViewController.player?.replaceCurrentItem(with: playerItem)
             }
         
             .onPlaybackStartWithAds{ [weak self] vodDuration, adDuration, totalDuration, adMarkers in

@@ -203,22 +203,28 @@ extension AssetListTableViewController {
         // self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
         // self.getExposureAsset(assetId: playable.assetId, playable: playable)
         
-        
-        // Use below implementation to see the detailed Player View
-        let destinationViewController = PlayerViewController()
-        destinationViewController.environment = StorageProvider.storedEnvironment
-        destinationViewController.sessionToken = StorageProvider.storedSessionToken
-        
-        /// Optional playback properties
-        let properties = PlaybackProperties(autoplay: true,
-                                            playFrom: .bookmark,
-                                            language: .custom(text: "fr", audio: "en"),
-                                            maxBitrate: 300000)
-        
-        destinationViewController.playbackProperties = properties
-        destinationViewController.playable = playable
-        
-        self.navigationController?.pushViewController(destinationViewController, animated: false)
+        let _ = self.getExposureAsset(assetId: playable.assetId, playable: playable) { asset in
+            
+            // Use below implementation to see the detailed Player View
+            
+            let destinationViewController = PlayerViewController()
+            
+            destinationViewController.environment = StorageProvider.storedEnvironment
+            destinationViewController.sessionToken = StorageProvider.storedSessionToken
+
+            if let asset = asset {
+                destinationViewController.newAssetType = asset.type
+            }
+            
+            /// Optional playback properties
+            let properties = PlaybackProperties(autoplay: true,
+                                                playFrom: .defaultBehaviour)
+            
+            destinationViewController.playbackProperties = properties
+            destinationViewController.playable = playable
+            
+            self.navigationController?.pushViewController(destinationViewController, animated: false)
+        }
         
     }
 
@@ -226,23 +232,29 @@ extension AssetListTableViewController {
     
     /// Fetch the Asset  details to pass to the player  : Optional
     /// - Parameters:
-    ///   - assetId: asset Id
+    ///   - assetId: asset id
     ///   - playable: playable
-    private func getExposureAsset(assetId: String, playable: Playable) {
+    private func getExposureAsset(assetId: String, playable: Playable, completion: @escaping (Asset?)->Void) {
         guard let env = StorageProvider.storedEnvironment, let session = StorageProvider.storedSessionToken else {
             return
         }
         
         let query = "fieldSet=ALL&&&onlyPublished=true"
-        ExposureApi<Asset>(environment: env, endpoint: "/content/asset/\(assetId)", query: query, method: .get, sessionToken: session)
+        ExposureApi<Asset>(environment: env, endpoint: "/content/asset/"+assetId, query: query, method: .get, sessionToken: session)
             .request()
             .validate()
             .response{ [weak self] in
+
                 if let asset = $0.value {
-                    self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
+                    completion(asset)
+                    // self?.showMiniPlayer(environment: env, session: session, playable: playable, asset: asset)
+                    
+                } else {
+                    completion(nil)
                 }
                 if let error = $0.error {
                     print("Error on fetching Asset " , error)
+                    completion(nil)
                 }
             }
     }

@@ -90,8 +90,6 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     
     func updateControlBarsVisibility() {
         
-        debugPrint(" Update Control bar visibility ")
-        
         if miniMediaControlsViewEnabled, miniMediaControlsViewController.active {
             _miniMediaControlsHeightConstraint.constant = miniMediaControlsViewController.minHeight
             view.bringSubviewToFront(_miniMediaControlsContainerView)

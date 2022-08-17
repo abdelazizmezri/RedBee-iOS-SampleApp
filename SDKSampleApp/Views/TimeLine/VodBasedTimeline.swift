@@ -71,7 +71,7 @@ class VodBasedTimeline: UIView {
         let label = UILabel()
         label.text = " "
         label.font = label.font.withSize(11)
-        label.textColor = .gray
+        label.textColor = .white
         return label
     }()
     
@@ -93,7 +93,7 @@ class VodBasedTimeline: UIView {
         let label = UILabel()
         label.text = " "
         label.font = label.font.withSize(11)
-        label.textColor = .gray
+        label.textColor = .white
         return label
     }()
     
@@ -193,25 +193,28 @@ extension VodBasedTimeline {
     }
     
     public func startLoop() {
-        
+    
+        isAdPlaying = false
         if let duration = currentDuration() {
             playheadSlider.maximumValue = Float(duration)
             playheadSlider.minimumValue = 0
         }
-
-        timer = DispatchSource.makeTimerSource(queue: self.timerQueue)
+        
+        
+        self.timer = DispatchSource.makeTimerSource(queue: timerQueue)
         timer?.schedule(wallDeadline: .now(), repeating: .milliseconds(1000))
         timer?.setEventHandler { [weak self] in
             guard let `self` = self else { return }
             DispatchQueue.main.async {
                 self.updateLoop()
-
+                
             }
         }
         timer?.resume()
     }
     
     public func stopLoop() {
+        isAdPlaying = false
         timer?.setEventHandler{}
         timer?.cancel()
     }
@@ -227,65 +230,84 @@ extension VodBasedTimeline {
     
     
     fileprivate func updateLoop() {
-
-              let playHeadPosition = currentPlayheadPosition()
-              let duration = currentDuration()
-              
-              if let playhead = playHeadPosition, let duration = duration, duration > 0 {
-                  isHidden = false
-                  playheadSlider.isHidden = false
-                  
-                  // Chek if there are any Ad Breaks before the playhead position
-                  var updatePlayhead = playhead
-                  for marker in adMarkers {
-                      
-                      if let endOffset = marker.endOffset , let offset = marker.offset {
-                          let adDuration = endOffset - offset
-                          if endOffset <= playhead {
-                              updatePlayhead = updatePlayhead - Int64(adDuration)
-                          }
-                      }
-                  }
-                  
-                  if !isAdPlaying {
-                      updateTimelabels(playhead: updatePlayhead, duration: duration)
-                      self.onCurrentTime(playhead)
-                  }
-                  
-                  updatePlayheadSlider(playhead: playhead, duration: duration)
-                  
-              }
-              else {
-                  isHidden = true
-              }
+        
+        let playHeadPosition = currentPlayheadPosition()
+        let duration = currentDuration()
+        
+        if let playhead = playHeadPosition, let duration = duration, duration > 0 {
+            isHidden = false
+            playheadSlider.isHidden = false
+            
+            // Chek if there are any Ad Breaks before the playhead position
+            var updatePlayhead = playhead
+            for marker in adMarkers {
+                
+                if let endOffset = marker.endOffset , let offset = marker.offset {
+                    let adDuration = endOffset - offset
+                    if endOffset <= playhead {
+                        updatePlayhead = updatePlayhead - Int64(adDuration)
+                    }
+                }
+            }
+            
+            if !isAdPlaying {
+                updateTimelabels(playhead: updatePlayhead, duration: duration)
+                self.onCurrentTime(playhead)
+            }
+            
+            
+            updatePlayheadSlider(playhead: playhead, duration: duration)
+        }
+        else {
+            isHidden = true
+        }
     }
     
     fileprivate func updateTimelabels(playhead: Int64, duration: Int64) {
-        
+
+        // if the ads are available vodContentDuration will be in miliseconds , otherwise it will be in microseconds
         if let vodDuration = vodContentDuration() {
-                    rightTimeLabel.text = timeFormat(time: vodDuration )
+            if adMarkers.count != 0 {
+                rightTimeLabel.text = timeFormat(time: vodDuration )
+            } else {
+                rightTimeLabel.text = timeFormat(time: vodDuration / 1000 )
+            }
+            
         } else {
-            rightTimeLabel.text = timeFormat(time: duration)
+            rightTimeLabel.text = timeFormat(time: duration )
         }
+        
+        /* if playhead <= duration {
+         rightTimeLabel.text = timeFormat(time: duration - playhead)
+         } */
         
         guard !isSliding else { return }
         leftTimeLabel.text = timeFormat(time: playhead)
     }
     
     fileprivate func updatePlayheadSlider(playhead: Int64, duration: Int64) {
+        
         guard !isSliding else { return }
         
-       
         if playhead <= duration {
             
             let progress = Float(playhead) / Float(duration)
             lastPlayheadSliderValue = progress
-            playheadSlider.setValue(progress, animated: false)
-        
+            DispatchQueue.main.async {
+                self.playheadSlider.setNeedsLayout()
+                self.playheadSlider.layoutIfNeeded()
+                self.playheadSlider.setValue(progress, animated: false)
+            }
+            
+            
         }
         else {
             lastPlayheadSliderValue = 1
-            playheadSlider.setValue(1, animated: false)
+            DispatchQueue.main.async {
+                self.playheadSlider.setNeedsLayout()
+                self.playheadSlider.layoutIfNeeded()
+                self.playheadSlider.setValue(1, animated: false)
+            }
         }
     }
     
@@ -316,15 +338,11 @@ extension VodBasedTimeline {
                     
                     if let duration = currentDuration() {
                         let sliderPosition = Int64(sender.value * Float(duration))
-                        
-                        
-                        leftTimeLabel.text = timeFormat(time: sliderPosition - adDuration )
-                        
                         let currentTime = timeFormat(time: sliderPosition)
                         
                         let trackRect = playheadSlider.trackRect(forBounds: playheadSlider.bounds)
                         let thumbRect = playheadSlider.thumbRect(forBounds: playheadSlider.bounds, trackRect: trackRect, value: playheadSlider.value)
-
+                        
                         spriteViewCenterXConstraint.constant = (thumbRect.maxX + thumbRect.minX)/2
                         
                         onScrubbing(currentTime)
@@ -335,6 +353,11 @@ extension VodBasedTimeline {
                 onPlayheadStartAction(false)
                 spriteViewCenterXConstraintConstant = Float(spriteViewCenterXConstraint.constant)
                 spriteImageView.image = nil
+                
+                //                if let duration = vodContentDuration() {
+                //                    let sliderPosition = Int64(sender.value * Float(duration))
+                //                }
+                
             default:
                 break
             }

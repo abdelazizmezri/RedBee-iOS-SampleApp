@@ -83,9 +83,13 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     
     override func loadView() {
         super.loadView()
-        
         setUpLayout()
         setupPlayerControls()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.vodBasedTimeline.isHidden = true
+        self.programBasedTimeline.isHidden = true
     }
     
     override func viewDidLoad() {
@@ -110,16 +114,10 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
         showCastButtonInPlayer() // Hide player controls & Show cast button if there is any active cast session 
     }
     
-    override func didMove(toParent parent: UIViewController?) {
-        if let player = self.player, player.tech.isPlaying {
-            if playable is ProgramPlayable || playable is ChannelPlayable {
-                programBasedTimeline.stopLoop()
-            } else if playable is AssetPlayable {
-                vodBasedTimeline.stopLoop()
-            }
-            player.stop()
-
-        }
+    override func viewDidDisappear(_ animated: Bool) {
+        self.vodBasedTimeline.stopLoop()
+        self.programBasedTimeline.stopLoop()
+        self.resumeBackgroundAudio()
     }
     
     @objc func dissmissKeyboard() {
@@ -137,6 +135,7 @@ extension PlayerViewController {
     
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
+    
         player = Player(environment: environment, sessionToken: sessionToken)
         let avPlayerLayer = player.configure(playerView: playerView)
 
@@ -164,9 +163,7 @@ extension PlayerViewController {
                 // Check if we are playing a Catchup Program by checking the playback type : playback type will be `VOD` for catchups even if the asset type is `LIVE_EVENT`
                 if self.newAssetType == AssetType.LIVE_EVENT || self.newAssetType == AssetType.EVENT || self.newAssetType == AssetType.TV_CHANNEL {
                     
-                    self.programBasedTimeline.isHidden = false
-                    self.vodBasedTimeline.isHidden = true
-                    
+   
                     if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
                         self.programBasedTimeline.playbackType = "LIVE"
                         self.playbackType = "LIVE"
@@ -236,13 +233,8 @@ extension PlayerViewController {
             }
 
             .onPlaybackStartWithAds { [weak self] vodDuration, adDuration, totalDurationInMs, adMarkers   in
-
-
                 guard let `self` = self else { return }
-                
                 self.adsDuration = 0
-              
-                
                 self.adsDuration = self.adsDuration ?? 0 + adDuration
                 self.checkedAdsDuration = false
                 self.vodBasedTimeline.adMarkers.removeAll()
@@ -275,15 +267,24 @@ extension PlayerViewController {
             .onWillPresentInterstitial { [weak self] contractRestrictionService, clickThroughUrl, adTrackingUrls, adClipDuration, noOfAds, adIndex in
 
                 guard let `self` = self else { return }
-                self.vodBasedTimeline.pausedTimer()
-                guard let policy = contractRestrictionService.contractRestrictionsPolicy else { return }
-                self.vodBasedTimeline.canFastForward = policy.fastForwardEnabled
-                self.vodBasedTimeline.canRewind = policy.rewindEnabled
                 
-                self.vodBasedTimeline.adDuration =  self.vodBasedTimeline.adDuration + adClipDuration
-                // self.vodBasedTimeline.onAdStart = true
+                
+                self.vodBasedTimeline.pausedTimer()
+                self.programBasedTimeline.pausedTimer()
+ 
+                self.programBasedTimeline.isHidden = true
                 self.vodBasedTimeline.isHidden = true
-
+                
+                
+                self.vodBasedTimeline.adDuration = self.vodBasedTimeline.adDuration + adClipDuration
+                self.vodBasedTimeline.canFastForward = contractRestrictionService.contractRestrictionsPolicy?.fastForwardEnabled ?? false
+                self.vodBasedTimeline.canRewind = contractRestrictionService.contractRestrictionsPolicy?.rewindEnabled ?? false
+                
+                
+                self.programBasedTimeline.adDuration = self.programBasedTimeline.adDuration + adClipDuration
+                self.programBasedTimeline.canFastForward = contractRestrictionService.contractRestrictionsPolicy?.fastForwardEnabled ?? false
+                self.programBasedTimeline.canRewind = contractRestrictionService.contractRestrictionsPolicy?.rewindEnabled ?? false
+                
                 self.showToastMessage(message:" Ad Counter \(adIndex ) / \(noOfAds)", duration: 5)
                 
             }
@@ -292,14 +293,16 @@ extension PlayerViewController {
                 guard let `self` = self else { return }
 
                 self.vodBasedTimeline.resumeTimer()
-                guard let policy = contractRestrictionService.contractRestrictionsPolicy else { return }
-                self.vodBasedTimeline.canFastForward = policy.fastForwardEnabled
-                self.vodBasedTimeline.canRewind = policy.rewindEnabled
-                // self?.vodBasedTimeline.startLoop()
-                // self.vodBasedTimeline.onAdStop = true
+                self.programBasedTimeline.resumeTimer()
+                
+                self.programBasedTimeline.isHidden = false
                 self.vodBasedTimeline.isHidden = false
                 
-                // print(" Player Time Range " , self.player.seekableTimeRanges )
+                self.vodBasedTimeline.canFastForward = contractRestrictionService.contractRestrictionsPolicy?.fastForwardEnabled ?? true
+                self.vodBasedTimeline.canRewind = contractRestrictionService.contractRestrictionsPolicy?.rewindEnabled ?? true
+                
+                self.programBasedTimeline.canFastForward = contractRestrictionService.contractRestrictionsPolicy?.fastForwardEnabled ?? true
+                self.programBasedTimeline.canRewind = contractRestrictionService.contractRestrictionsPolicy?.rewindEnabled ?? true
             }
         
         
@@ -417,6 +420,7 @@ extension PlayerViewController {
             
         }
         
+    
         vodBasedTimeline.onSeek = { [weak self] offset in
             self?.player.seek(toPosition: offset)
         }
@@ -428,17 +432,15 @@ extension PlayerViewController {
                     self?.updateSpriteImage(image)
                 })
             }
-            
         }
         
         vodBasedTimeline.currentPlayheadPosition = { [weak self] in
             return self?.player.playheadPosition
         }
-        vodBasedTimeline.currentDuration = { [weak self] in
-            return self?.player.duration
-        }
         
-        player.playerItem?.currentTime()
+        vodBasedTimeline.currentDuration = { [weak self] in
+            return self?.player.playerItem?.duration.milliseconds
+        }
         
         vodBasedTimeline.startOverTrigger = { [weak self] in
             self?.player.seek(toPosition:0)
@@ -465,20 +467,23 @@ extension PlayerViewController {
                 if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
                     self.chromecast(playable: playable, in: environment, sessionToken: sessionToken, currentplayheadTime: self.player.playheadTime)
                 } else {
-                    
-                    vodBasedTimeline.isHidden = true
-                    programBasedTimeline.isHidden = true
                     player.startPlayback(playable: playable, properties:playbackProperties )
                     
                 }
                 
             }
         }
+        
+        DispatchQueue.main.async {
+            self.updateTimeLine()
+        }
+        
     }
     
     
     /// Update time line depend on the asset type the player is playing
     fileprivate func updateTimeLine() {
+        
         if let assetType = newAssetType {
             switch assetType {
             case .TV_CHANNEL:
@@ -527,6 +532,7 @@ extension PlayerViewController {
     fileprivate func handleLive() {
         vodBasedTimeline.isHidden = true
         vodBasedTimeline.stopLoop()
+        
         programBasedTimeline.isHidden = false
         programBasedTimeline.startLoop()
     }

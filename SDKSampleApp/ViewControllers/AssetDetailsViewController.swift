@@ -472,7 +472,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             
             destinationViewController.environment = StorageProvider.storedEnvironment
             destinationViewController.sessionToken = StorageProvider.storedSessionToken
-            
+
             if let asset = asset {
                 destinationViewController.newAssetType = asset.type
             }
