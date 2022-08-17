@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
         
         
-        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "8A71C1D4")) // Set your chrome cast app id here
+        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "")) // Set your chrome cast app id here
         options.physicalVolumeButtonsWillControlDeviceVolume = true
         GCKCastContext.setSharedInstanceWith(options)
         GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
