@@ -28,6 +28,7 @@
 		7838DCDE27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
 		7850403B28ACC9BA0035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */; };
 		7850403E28ACCA1D0035D509 /* iOSClientCast in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403D28ACCA1D0035D509 /* iOSClientCast */; };
+		7850404128ACCCD10035D509 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404028ACCCD10035D509 /* iOSClientExposureDownload */; };
 		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
 		78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */; };
 		78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C8278D751400BBD3F5 /* ContentView.swift */; };
@@ -244,6 +245,7 @@
 			files = (
 				7850403B28ACC9BA0035D509 /* iOSClientExposurePlayback in Frameworks */,
 				7850403E28ACCA1D0035D509 /* iOSClientCast in Frameworks */,
+				7850404128ACCCD10035D509 /* iOSClientExposureDownload in Frameworks */,
 				78D62BB22816CB5800CE84A1 /* LNPopupController-Static in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -561,6 +563,7 @@
 				78D62BB12816CB5800CE84A1 /* LNPopupController-Static */,
 				7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */,
 				7850403D28ACCA1D0035D509 /* iOSClientCast */,
+				7850404028ACCCD10035D509 /* iOSClientExposureDownload */,
 			);
 			productName = SDKSampleApp;
 			productReference = 78C24FB525139845001ED9E3 /* SDKSampleApp.app */;
@@ -643,6 +646,7 @@
 				78D62BB02816CB5800CE84A1 /* XCRemoteSwiftPackageReference "LNPopupController" */,
 				7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */,
 				7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */,
+				7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */,
 			);
 			productRefGroup = 78C24FB625139845001ED9E3 /* Products */;
 			projectDirPath = "";
@@ -1339,6 +1343,14 @@
 				kind = branch;
 			};
 		};
+		7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		78D62BB02816CB5800CE84A1 /* XCRemoteSwiftPackageReference "LNPopupController" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LNPopupController";
@@ -1359,6 +1371,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */;
 			productName = iOSClientCast;
+		};
+		7850404028ACCCD10035D509 /* iOSClientExposureDownload */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */;
+			productName = iOSClientExposureDownload;
 		};
 		78D62BB12816CB5800CE84A1 /* LNPopupController-Static */ = {
 			isa = XCSwiftPackageProductDependency;

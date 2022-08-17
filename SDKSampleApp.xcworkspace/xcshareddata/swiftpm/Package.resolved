@@ -11,12 +11,30 @@
         }
       },
       {
+        "package": "iOSClientDownload",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientDownload",
+        "state": {
+          "branch": null,
+          "revision": "03e9b5035a8ff1bb302658890ff43be11fb8edd1",
+          "version": "3.0.200"
+        }
+      },
+      {
         "package": "iOSClientExposure",
         "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposure",
         "state": {
           "branch": null,
           "revision": "5f7396a6caaf8380ca7c845792c73ddb3bb8b164",
           "version": "3.1.100"
+        }
+      },
+      {
+        "package": "iOSClientExposureDownload",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git",
+        "state": {
+          "branch": "master",
+          "revision": "5a0de68358c0e7199be3b59fd5dc6e273785b75d",
+          "version": null
         }
       },
       {
@@ -42,7 +60,7 @@
         "repositoryURL": "https://github.com/LeoNatan/LNPopupController",
         "state": {
           "branch": "master",
-          "revision": "1622fa1f6970ba5c34648d81abd9f2ba4eba8e42",
+          "revision": "9f44dd1ce6d9946210deea4d19b305df0d39503e",
           "version": null
         }
       }
