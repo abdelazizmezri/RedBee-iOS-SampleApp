@@ -2,11 +2,47 @@
   "object": {
     "pins": [
       {
+        "package": "iOSClientCast",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientCast.git",
+        "state": {
+          "branch": "master",
+          "revision": "6bbf18f546719f1ebd79b958fb0e9ca4d50d8d36",
+          "version": null
+        }
+      },
+      {
+        "package": "iOSClientExposure",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposure",
+        "state": {
+          "branch": null,
+          "revision": "5f7396a6caaf8380ca7c845792c73ddb3bb8b164",
+          "version": "3.1.100"
+        }
+      },
+      {
+        "package": "iOSClientExposurePlayback",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback",
+        "state": {
+          "branch": "master",
+          "revision": "cdc69ce0161dbf9ce0bbb48cf3b9b5a0dbbb0273",
+          "version": null
+        }
+      },
+      {
+        "package": "iOSClientPlayer",
+        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientPlayer",
+        "state": {
+          "branch": null,
+          "revision": "6193cb1ffbe03145eacab47fed1ab11e7c7eb7c9",
+          "version": "3.0.800"
+        }
+      },
+      {
         "package": "LNPopupController",
         "repositoryURL": "https://github.com/LeoNatan/LNPopupController",
         "state": {
           "branch": "master",
-          "revision": "e8d646a44a8569d23c7418f1de39de2e58cb90da",
+          "revision": "1622fa1f6970ba5c34648d81abd9f2ba4eba8e42",
           "version": null
         }
       }

@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import Exposure
-import ExposurePlayback
-import ExposureDownload
+import iOSClientExposure
+import iOSClientExposurePlayback
+import iOSClientExposureDownload
 
 fileprivate enum DownloadState: String {
     
@@ -48,16 +48,44 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         tableView.register(AssetListTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .white
-        
+
         // Check if this asset is available in downloads
         if self.enigmaDownloadManager.getDownloadedAsset(assetId: assetId) != nil {
-            downloadState = DownloadState.downloaded
+            if let offlineMediaAsset = self.enigmaDownloadManager.getDownloadedAsset(assetId: assetId) {
+                switch offlineMediaAsset.downloadState {
+                case .cancel:
+                    downloadState = .cancelled
+                case .suspend:
+                    downloadState = .suspended
+                case .completed:
+                    downloadState = .downloaded
+                case .started:
+                    downloadState = .downloading
+                case .notDownloaded:
+                    downloadState = .notDownloaded
+                }
+            }
         }
     }
     
     func refreshTableView() {
         if self.enigmaDownloadManager.getDownloadedAsset(assetId: assetId) != nil {
-            downloadState = DownloadState.downloaded
+            if let offlineMediaAsset = self.enigmaDownloadManager.getDownloadedAsset(assetId: assetId) {
+                switch offlineMediaAsset.downloadState {
+                case .cancel:
+                    downloadState = .cancelled
+                case .suspend:
+                    downloadState = .suspended
+                case .completed:
+                    downloadState = .downloaded
+                case .started:
+                    downloadState = .downloading
+                case .notDownloaded:
+                    downloadState = .notDownloaded
+                }
+                
+            }
+            
         }
         tableView.reloadData()
     }
@@ -157,10 +185,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     
     func suspendOrCancelDownload(assetId: String, indexPath: IndexPath) {
         
-        guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment provided ")
-            return
-        }
+        guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else { return }
          
         let task = self.enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
         let cell = tableView.cellForRow(at: indexPath) as! AssetListTableViewCell
@@ -199,11 +224,9 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     /// Select the Video track
     /// - Parameter indexPath: indexPath
     func selectVideoTrack(indexPath: IndexPath) {
-        guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment providec ")
-            return
-        }
+        guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else { return }
         
+
         self.enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session) { [weak self] info in
             if let downloadInfo = info {
                 
@@ -255,9 +278,9 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         let cell = tableView.cellForRow(at: indexPath) as! AssetListTableViewCell
         
         guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment provided ")
             return
         }
+        
         
         let message = "Choose option"
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
@@ -306,90 +329,73 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             
         case .notDownloaded:
             
-            // Developers should fetch AvailabilityKeys related the currently logged user before checking if an asset is available to download for the user
-            GetAvailabilityKeys(environment: environment, sessionToken: session)
-                       .request()
-                       .validate()
-                        .response { result in
-                            
-                            if let error = result.error {
-                                print("Error " , error)
-                            }
-                            
-                            if let keys = result.value {
-                                self.enigmaDownloadManager.isAvailableToDownload(assetId: self.assetId, environment: environment, availabilityKeys: keys.availabilityKeys ?? [] ) { [weak self] isAvailableToDownload in
-                                    if isAvailableToDownload {
-                                        
-                                         task.addAllAdditionalMedia()
-                                            
-                                            // task.addAudios(hlsNames: ["French"])
-                                            // .addSubtitles(hlsNames: ["Arabic", "French"])
-                                        
-                                        task.onCanceled { task, url in
-                                            print("📱 Media Download canceled",task.configuration.identifier,url)
-                                        }
-                                        .onPrepared { _ in
-                                            print("📱 Media Download prepared")
-                                            cell.downloadStateLabel.text = "Media Download prepared"
-                                            self?.downloadState = DownloadState.prepared
-                                            
-                                            task.resume()
-                                        }
-                                        .onSuspended { _ in
-                                            print("📱 Media Download Suspended")
-                                            cell.downloadStateLabel.text = "Media Download Suspended"
-                                            self?.downloadState = DownloadState.suspended
-                                        }
-                                        .onResumed { _ in
-                                            print("📱 Media Download Resumed ")
-                                            cell.downloadStateLabel.text = "Media Download Resumed"
-                                            self?.downloadState = DownloadState.downloading
-                                            
-                                        }
-                                        .onProgress { _, progress in
-                                            print("📱 Percent", progress.current*100,"%")
-                                            cell.downloadStateLabel.text = "Downloading"
-                                            cell.downloadProgressView.progress = Float(progress.current)
-                                            self?.downloadState = DownloadState.downloading
-                                        }
-                                        .onError {_, url, error in
-                                            print("📱 Download error: \(error)",url ?? "")
-                                            cell.downloadStateLabel.text = "Download error"
-                                            cell.downloadProgressView.progress = 0
-                                            
-                                            task.cancel()
-                                            
-                                            if let assetId = self?.assetId {
-                                                let _ = self?.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
-                                            }
-                                            
-                                            
-                                        }
-                                        .onCompleted { _, url in
-                                            print("📱 Download completed: \(url)")
-                                            cell.downloadStateLabel.text = "Download completed"
-                                            // self?.tableView.reloadData()
-                                            
-                                            self?.downloadState = DownloadState.downloaded
-                                        }.prepare(lazily: false)
-                                        
-                                
-                                        // If there is a video track , start downloading the sepcific
-                                        if let videoTrack = videoTrack {
-                                            task.use(bitrate: Int64(exactly: videoTrack))
-                                        }
-                                       
-                                    } else {
-                                        print("Not available to download ")
-                                        self?.popupAlert(title: nil, message: message, actions: [cancelAction], preferedStyle: .actionSheet)
-                                    }
-                            }
-                            } else {
-                                print("No availability Keys , start downloading anyway  ")
-                                self.popupAlert(title: nil, message: "Sorry you can not download this asset", actions: [cancelAction], preferedStyle: .actionSheet)
-                                
-                                
-                            }
+            enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, sessionToken: session) { [weak self ] isAvailableToDownload in
+
+                if isAvailableToDownload {
+                    
+                      // task.addAllAdditionalMedia()
+                        
+                        // task.addAudios(hlsNames: ["French"])
+                        // .addSubtitles(hlsNames: ["Arabic", "French"])
+                    
+                    task.onCanceled { task, url in
+                        print("📱 Media Download canceled",task.configuration.identifier,url)
+                    }
+                    .onPrepared { _ in
+                        print("📱 Media Download prepared")
+                        cell.downloadStateLabel.text = "Media Download prepared"
+                        self?.downloadState = DownloadState.prepared
+                        
+                        task.resume()
+                    }
+                    .onSuspended { _ in
+                        print("📱 Media Download Suspended")
+                        cell.downloadStateLabel.text = "Media Download Suspended"
+                        self?.downloadState = DownloadState.suspended
+                    }
+                    .onResumed { _ in
+                        print("📱 Media Download Resumed ")
+                        cell.downloadStateLabel.text = "Media Download Resumed"
+                        self?.downloadState = DownloadState.downloading
+                        
+                    }
+                    .onProgress { _, progress in
+                        print("📱 Percent", progress.current,"%")
+                        cell.downloadStateLabel.text = "Downloading"
+                        cell.downloadProgressView.progress = Float(progress.current)
+                        self?.downloadState = DownloadState.downloading
+                    }
+                    .onError {_, url, error in
+                        print("📱 Download error: \(error)",url ?? "")
+                        cell.downloadStateLabel.text = "Download error"
+                        cell.downloadProgressView.progress = 0
+                        
+                        task.cancel()
+                        
+                        if let assetId = self?.assetId {
+                            let _ = self?.enigmaDownloadManager.removeDownloadedAsset(assetId: assetId, sessionToken: session, environment: environment)
+                        }
+                        
+                        
+                    }
+                    .onCompleted { _, url in
+                        print("📱 Download completed: \(url)")
+                        cell.downloadStateLabel.text = "Download completed"
+                        // self?.tableView.reloadData()
+                        
+                        self?.downloadState = DownloadState.downloaded
+                    }.prepare(lazily: false)
+                    
+            
+                    // If there is a video track , start downloading the sepcific
+                    if let videoTrack = videoTrack {
+                        task.use(bitrate: Int64(exactly: videoTrack))
+                    }
+                   
+                } else {
+                    self?.popupAlert(title: nil, message: message, actions: [cancelAction], preferedStyle: .actionSheet)
+                }
+                
             }
             
         default:
@@ -403,7 +409,6 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     func showDownloadInfo() {
         
         guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-            print("No Session token or enviornment providec ")
             return
         }
         
@@ -424,6 +429,9 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
 //
 //
 //        }
+        
+        
+
 //
          // Get download info related to the asset
         enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session ) { [ weak self] info in
@@ -456,24 +464,31 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         
         // Fetching asset details is optional. You can directly call `showStickyPlayer`
         // self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
-        self.getExposureAsset(assetId: playable.assetId, playable: playable)
+        let _ = self.getExposureAsset(assetId: playable.assetId, playable: playable) { asset in
+            
+            // Use below implementation to see the detailed Player View
+            
+            let destinationViewController = PlayerViewController()
+            
+            destinationViewController.environment = StorageProvider.storedEnvironment
+            destinationViewController.sessionToken = StorageProvider.storedSessionToken
+            
+            if let asset = asset {
+                destinationViewController.newAssetType = asset.type
+            }
+            
+            /// Optional playback properties
+            let properties = PlaybackProperties(autoplay: true,
+                                                playFrom: .beginning,
+                                                language: .custom(text: "fr", audio: "en"))
+            
+            destinationViewController.playbackProperties = properties
+            destinationViewController.playable = playable
+            
+            self.navigationController?.pushViewController(destinationViewController, animated: false)
+        }
         
-        // Use below implementation to see the detailed Player View
-        
-        /* let destinationViewController = PlayerViewController()
-        
-        destinationViewController.environment = StorageProvider.storedEnvironment
-        destinationViewController.sessionToken = StorageProvider.storedSessionToken
-        
-        /// Optional playback properties
-        let properties = PlaybackProperties(autoplay: true,
-                                            playFrom: .beginning,
-                                            language: .custom(text: "fr", audio: "en"))
-        
-        destinationViewController.playbackProperties = properties
-        destinationViewController.playable = playable
-        
-        self.navigationController?.pushViewController(destinationViewController, animated: false) */
+       
         
       
     }
@@ -483,7 +498,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     /// - Parameters:
     ///   - assetId: asset id
     ///   - playable: playable
-    private func getExposureAsset(assetId: String, playable: Playable) {
+    private func getExposureAsset(assetId: String, playable: Playable, completion: @escaping (Asset?)->Void) {
         guard let env = StorageProvider.storedEnvironment, let session = StorageProvider.storedSessionToken else {
             return
         }
@@ -495,10 +510,15 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             .response{ [weak self] in
                 
                 if let asset = $0.value {
-                    self?.showMiniPlayer(environment: env, session: session, playable: playable, asset: asset)
+                    completion(asset)
+                    // self?.showMiniPlayer(environment: env, session: session, playable: playable, asset: asset)
+                    
+                } else {
+                    completion(nil)
                 }
                 if let error = $0.error {
                     print("Error on fetching Asset " , error)
+                    completion(nil)
                 }
             }
     }

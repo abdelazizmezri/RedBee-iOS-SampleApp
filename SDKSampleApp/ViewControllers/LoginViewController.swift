@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Exposure
+import iOSClientExposure
 import GoogleCast
 
 class LoginViewController: UIViewController {
@@ -176,9 +176,9 @@ extension LoginViewController {
                 }
                 
                 if let credentials = $0.value {
+                    
                     StorageProvider.store(environment: self?.environment)
                     StorageProvider.store(sessionToken: credentials.sessionToken)
-                    
                     
                     let navigationController = MainNavigationController()
                     let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)

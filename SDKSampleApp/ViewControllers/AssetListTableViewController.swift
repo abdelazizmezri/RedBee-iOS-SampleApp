@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import Exposure
-import ExposurePlayback
-import ExposureDownload
+import iOSClientExposure
+import iOSClientExposurePlayback
+import iOSClientExposureDownload
 import LNPopupController
 
 class AssetListTableViewController: UITableViewController, EnigmaDownloadManager {
@@ -71,7 +71,8 @@ extension AssetListTableViewController {
         
         if selectedAsssetType == "LIVE_EVENTS_USING_EVENT_ENDPOINT" {
             self.loadEvents(environment: environment)
-        } else {
+        }
+        else {
             // MOVIE / TV_CHANNEL
             let query = ""
             loadAssets(query: query, environment: environment, endpoint: "/content/asset?assetType=\(selectedAsssetType!)&pageSize=100&pageNumber=1", method: HTTPMethod.get)
@@ -159,7 +160,8 @@ extension AssetListTableViewController {
     fileprivate func showOptions(asset: Asset) {
         if asset.type == AssetType.MOVIE {
             let destinationVC = AssetDetailsViewController()
-            destinationVC.assetId = asset.assetId
+            destinationVC.assetId =  asset.assetId
+
             self.navigationController?.pushViewController(destinationVC, animated: false)
         } else {
             let gotoEPG = UIAlertAction(title: "Go to EPG View", style: .default, handler: {
@@ -194,16 +196,16 @@ extension AssetListTableViewController {
     /// - Parameters:
     ///   - playable: channelPlayable / AssetPlayable
     ///   - asset: asset
-    func handlePlay(playable : Playable, asset: Asset) {
+    func handlePlay(playable : Playable, asset: Asset?) {
         
+        // Use showStickyPlayer to see the sticky player ( ex : Audio / Podcast apps )
         // Fetching asset details is optional. You can directly call `showStickyPlayer`
         // self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
-        self.getExposureAsset(assetId: playable.assetId, playable: playable)
+        // self.getExposureAsset(assetId: playable.assetId, playable: playable)
         
         
         // Use below implementation to see the detailed Player View
-        
-        /* let destinationViewController = PlayerViewController()
+        let destinationViewController = PlayerViewController()
         destinationViewController.environment = StorageProvider.storedEnvironment
         destinationViewController.sessionToken = StorageProvider.storedSessionToken
         
@@ -217,7 +219,7 @@ extension AssetListTableViewController {
         destinationViewController.playable = playable
         
         self.navigationController?.pushViewController(destinationViewController, animated: false)
-        */
+        
     }
 
     
@@ -236,7 +238,6 @@ extension AssetListTableViewController {
             .request()
             .validate()
             .response{ [weak self] in
-                
                 if let asset = $0.value {
                     self?.showStickyPlayer(environment: env, session: session, playable: playable, asset: asset)
                 }

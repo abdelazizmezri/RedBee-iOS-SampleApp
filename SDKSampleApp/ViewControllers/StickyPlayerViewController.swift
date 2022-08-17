@@ -6,15 +6,15 @@
 //
 
 import UIKit
-import Player
-import ExposurePlayback
-import Exposure
+import iOSClientPlayer
+import iOSClientExposure
+import iOSClientExposurePlayback
 import AVKit
 import AVFoundation
 import MediaPlayer
 import LNPopupController
+import iOSClientCast
 import GoogleCast
-import Cast
 
 class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     
@@ -36,7 +36,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     
     lazy var descriptionLabel : UILabel = {
         let label = UILabel()
-        label.text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        label.text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
         label.numberOfLines = 10
         label.textAlignment = .left
         label.font = UIFont.preferredFont(forTextStyle: .body)
@@ -99,7 +99,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     var nextButton: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 60)
-        button.setImage(UIImage(systemName: "forward.end.fill"), for: .normal)
+        button.setImage(UIImage(systemName: "goforward.15"), for: .normal)
         button.addTarget(self, action: #selector(playPause), for: .touchUpInside)
         return button
     }()
@@ -107,7 +107,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     var previousButton: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 60)
-        button.setImage(UIImage(systemName: "backward.end.fill"), for: .normal)
+        button.setImage(UIImage(systemName: "gobackward.15"), for: .normal)
         button.addTarget(self, action: #selector(playPause), for: .touchUpInside)
         return button
     }()
@@ -126,7 +126,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         
         airplayButton.showsVolumeSlider = false
         
-        descriptionLabel.text = asset?.localized?.first?.description
+        // descriptionLabel.text = asset?.localized?.first?.description
         
         castButton = GCKUICastButton(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
         castButton.tintColor = UIColor.gray
@@ -157,7 +157,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
-        StickyPlayerViewController.player = Player(environment: environment, sessionToken: sessionToken)
+        StickyPlayerViewController.player = Player(environment: environment, sessionToken: sessionToken, analyticsBaseUrl: "https://eventsink.api.redbee.dev")
         
         
         let _ = StickyPlayerViewController.player.configure(playerView: playerView)
@@ -285,6 +285,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
             .onMediaType { [weak self] type in
                 
                 guard let `self` = self else { return }
+                self.showToastMessage(message: "Media Type : \(type)", duration: 4)
                 
                 self.mediaType = type
                 self.setUpUI()
@@ -294,7 +295,6 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         // External playback
             .onAirplayStatusChanged { [weak self] player, source, active in
                 print(" Airplay status changed " , active )
-                
             }
         
         // Playback Progress
@@ -323,6 +323,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         }
         
         vodBasedTimeline.currentPlayheadPosition = { [weak self] in
+            self?.updateProgress(program: nil)
             return StickyPlayerViewController.player.playheadPosition
         }
         vodBasedTimeline.currentDuration = { [weak self] in
@@ -339,40 +340,51 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     // Update progress in Mini Player
     fileprivate func updateProgress(program: Program?) {
         
-        let playheadTime = StickyPlayerViewController.player.playheadTime
-        var programStart = program?.startDate?.millisecondsSince1970
-        var programEnd = program?.endDate?.millisecondsSince1970
-        
-        // When playing a channel (no Epg ) , channel stream does not have any start Date, so we will use the startTime
-        if programStart == nil {
-            if let startTime = program?.startTime, let startTimeInUnix = Int(startTime) {
-                programStart = Date(timeIntervalSince1970: TimeInterval(Int(startTimeInUnix))).millisecondsSince1970
-            }
-        }
-        
-        // If the program End time is missing we matched the end time to the current live time
-        if programEnd == nil {
+        if program != nil {
             let playheadTime = StickyPlayerViewController.player.playheadTime
-            let timeBehindLive = StickyPlayerViewController.player.timeBehindLive
-            programEnd = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
-        }
-        
-        if let start = programStart, let end = programEnd {
+            var programStart = program?.startDate?.millisecondsSince1970
+            var programEnd = program?.endDate?.millisecondsSince1970
             
-            if let playhead = playheadTime {
-                if start <= playhead && playhead <= end {
-                    let progress = Float(playhead - start) / Float(end - start)
-                    self.popupItem.progress = progress
-                    
+            // When playing a channel (no Epg ) , channel stream does not have any start Date, so we will use the startTime
+            if programStart == nil {
+                if let startTime = program?.startTime, let startTimeInUnix = Int(startTime) {
+                    programStart = Date(timeIntervalSince1970: TimeInterval(Int(startTimeInUnix))).millisecondsSince1970
                 }
-            } else {
-                let progress = Float(start) / Float(end - start)
+            }
+            
+            // If the program End time is missing we matched the end time to the current live time
+            if programEnd == nil {
+                let playheadTime = StickyPlayerViewController.player.playheadTime
+                let timeBehindLive = StickyPlayerViewController.player.timeBehindLive
+                programEnd = playheadTime != nil && timeBehindLive != nil ? playheadTime! - timeBehindLive! : nil
+            }
+            
+            if let start = programStart, let end = programEnd {
+                
+                if let playhead = playheadTime {
+                    if start <= playhead && playhead <= end {
+                        let progress = Float(playhead - start) / Float(end - start)
+                        self.popupItem.progress = progress
+                        
+                    }
+                } else {
+                    let progress = Float(start) / Float(end - start)
+                    self.popupItem.progress = progress
+                }
+            }
+            else {
+                self.popupItem.progress = 1.0
+            }
+        } else {
+            
+            if let duration = StickyPlayerViewController.player.duration {
+                let progress = Float(StickyPlayerViewController.player.playheadPosition) / Float(duration)
                 self.popupItem.progress = progress
+            } else {
+                self.popupItem.progress = 1.0
             }
         }
-        else {
-            self.popupItem.progress = 1.0
-        }
+
     }
     
     
@@ -463,7 +475,7 @@ extension StickyPlayerViewController {
                 }
             } else {
                 // Show place holder image
-                imageView.image = UIImage(named: "placeholder.png")
+                imageView.image = nil
             }
             
             view.addSubview(descriptionLabel)
@@ -497,6 +509,13 @@ extension StickyPlayerViewController {
 
         
         let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 0, width: 24, height: 24) )
+        volumeView.tintColor = .systemBlue
+        
+        if let routeButton = volumeView.subviews.last as? UIButton, 
+           let routeButtonTemplateImage  = routeButton.currentImage?.withRenderingMode(.alwaysTemplate) {
+                volumeView.setRouteButtonImage(routeButtonTemplateImage, for: .normal)
+        }
+        
         volumeView.showsVolumeSlider = false
         
         
@@ -591,7 +610,9 @@ extension StickyPlayerViewController {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         // Add handler for Play Command
-        commandCenter.playCommand.addTarget { [unowned self] event in
+        commandCenter.playCommand.addTarget { [weak self] event in
+            
+            guard let `self` = self else { return .commandFailed }
             
             if !StickyPlayerViewController.player.isPlaying {
                 StickyPlayerViewController.player.play()
@@ -605,7 +626,10 @@ extension StickyPlayerViewController {
         }
         
         // Add handler for Pause Command
-        commandCenter.pauseCommand.addTarget { [unowned self] event in
+        commandCenter.pauseCommand.addTarget { [weak self] event in
+            
+            guard let `self` = self else { return .commandFailed }
+            
             if StickyPlayerViewController.player.isPlaying {
                 
                 self.popupItem.leadingBarButtonItems = [self.playButtonMiniPlayer]
@@ -618,13 +642,13 @@ extension StickyPlayerViewController {
         }
         
         // Add handler for Next Track Command
-        commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+        commandCenter.nextTrackCommand.addTarget { [weak self] event in
             print(" Start playing next track")
             return .commandFailed
         }
         
         // Add handler for previous Track Command
-        commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+        commandCenter.previousTrackCommand.addTarget { [weak self] event in
             print(" Stop playing previous track")
             return .commandFailed
         }
@@ -781,7 +805,7 @@ extension StickyPlayerViewController: GCKRemoteMediaClientListener, GCKSessionMa
     }
     
     
-    func chromecast(playable: Playable, in environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, currentplayheadTime : Int64?) {
+    func chromecast(playable: Playable, in environment: iOSClientExposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, currentplayheadTime : Int64?) {
         
         
         guard let session = GCKCastContext.sharedInstance().sessionManager.currentCastSession else { return }

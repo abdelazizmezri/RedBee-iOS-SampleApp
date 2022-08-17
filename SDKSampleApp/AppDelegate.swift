@@ -6,10 +6,10 @@
 //
 
 import UIKit
-import Cast
+import iOSClientCast
 import GoogleCast
-import ExposureDownload
-import Download
+import iOSClientExposureDownload
+import iOSClientDownload
 import AVFoundation
 
 @UIApplicationMain
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
         
         
-        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "")) // Set your chrome cast app id here
+        let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "8A71C1D4")) // Set your chrome cast app id here
         options.physicalVolumeButtonsWillControlDeviceVolume = true
         GCKCastContext.setSharedInstanceWith(options)
         GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
@@ -148,12 +148,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                     ccViewController.assign(audio: tracksUpdated.audio)
                     ccViewController.assign(text: tracksUpdated.subtitles)
                     ccViewController.onDidSelectAudio = { [weak self] track in
-                        guard let `self` = self, let track = track as? Cast.Track else { return }
+                        guard let `self` = self, let track = track as? iOSClientCast.Track else { return }
                         self.castChannel.use(audioTrack: track)
                     }
                     ccViewController.onDidSelectText = { [weak self] track in
                         guard let `self` = self else { return }
-                        if let track = track as? Cast.Track {
+                        if let track = track as? iOSClientCast.Track {
                             self.castChannel.use(textTrack: track)
                         }
                         else {
@@ -323,5 +323,5 @@ extension AppDelegate {
 
 class ExposureSessionManager {
     static let shared = ExposureSessionManager()
-    let manager = Download.SessionManager<ExposureDownloadTask>()
+    let manager = iOSClientDownload.SessionManager<ExposureDownloadTask>()
 }

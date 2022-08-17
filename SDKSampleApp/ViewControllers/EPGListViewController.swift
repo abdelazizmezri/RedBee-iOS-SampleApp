@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-import Exposure
-import ExposurePlayback
+import iOSClientExposure
+import iOSClientExposurePlayback
 
 
 class EPGListViewController: UITableViewController  {

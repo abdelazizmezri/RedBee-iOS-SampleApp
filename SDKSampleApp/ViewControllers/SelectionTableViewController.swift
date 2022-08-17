@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Exposure
+import iOSClientExposure
 
 class SelectionTableViewController: UITableViewController {
     

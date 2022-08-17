@@ -30,7 +30,7 @@ class EnviornmentViewController: UIViewController {
         if let loginViewController = storyboard.instantiateViewController(withIdentifier: "loginVC") as? LoginViewController {
             
             // Add your prestage url
-            loginViewController.enviornmentUrl = ""
+            loginViewController.enviornmentUrl = "https://wl-beta.enigmatv.io"
             self.present(loginViewController, animated: true, completion: nil)
         }
         
@@ -43,7 +43,7 @@ class EnviornmentViewController: UIViewController {
         if let loginViewController = storyboard.instantiateViewController(withIdentifier: "loginVC") as? LoginViewController {
             
             // Add your production url
-            loginViewController.enviornmentUrl = ""
+            loginViewController.enviornmentUrl = "https://wl.enigmatv.io"
             self.present(loginViewController, animated: true, completion: nil)
         }
         

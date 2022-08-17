@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import ExposureDownload
-import ExposurePlayback
-import Exposure
+import iOSClientExposureDownload
+import iOSClientExposure
+import iOSClientExposurePlayback
 
 class DownloadListTableViewController: UITableViewController, EnigmaDownloadManager {
     
@@ -36,16 +36,18 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
         // If you want to fetch all the downloaded Media , regardless of the user you can use `enigmaDownloadManager.getDownloadedAssets()`
         
         // This will fetch all the downloaded media related to the current user
-        downloadedAssets = enigmaDownloadManager.getDownloadedAssets(accountId: session.accountId)
+        downloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+        
+        // downloadedAssets = enigmaDownloadManager.getDownloadedAssets(accountId: session.accountId )
         
         // This will fetch all the downloaded media related to the current user from the exposure backend
-        /* GetAllDownloads(environment: environment, sessionToken: session )
+        GetAllDownloads(environment: environment, sessionToken: session )
         .request()
         .validate()
         .response { _ in
             
             // Handle your response here
-        } */
+        }
         
         
         tableView.reloadData()
@@ -199,11 +201,25 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                     destinationViewController.environment = StorageProvider.storedEnvironment
                     destinationViewController.sessionToken = StorageProvider.storedSessionToken
                     
+                    
+                    // Optional remeber previously selected audios & subs 
+                    var sub = ""
+                    var audio = ""
+                    
+                    let defaults = UserDefaults.standard
+                    if let selectedSubtitleTrack = defaults.object(forKey: "selectedSubtitleTrack") as? String {
+                        sub = selectedSubtitleTrack
+                    }
+                    
+                    if let selectedAudioTrack = defaults.object(forKey: "selectedAudioTrack") as? String {
+                        audio = selectedAudioTrack
+                    }
+                    
                     /// Optional playback properties
                     let properties = PlaybackProperties(autoplay: true,
-                                                        playFrom: .bookmark,
-                                                        language: .custom(text: "fr", audio: "en"),
-                                                        maxBitrate: 300000)
+                                                        playFrom: .beginning ,
+                                                        language: .custom(text: sub, audio: audio))
+                    
                     
                     destinationViewController.playbackProperties = properties
                     destinationViewController.offlineMediaPlayable = OfflineMediaPlayable(assetId: asset.assetId, entitlement: entitlement, url: urlAsset.url)

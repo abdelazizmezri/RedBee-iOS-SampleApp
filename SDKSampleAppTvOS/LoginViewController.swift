@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 import TVUIKit
-import Exposure
-import ExposurePlayback
+import iOSClientExposure
+import iOSClientExposurePlayback
 
 class LoginViewController: UIViewController {
     

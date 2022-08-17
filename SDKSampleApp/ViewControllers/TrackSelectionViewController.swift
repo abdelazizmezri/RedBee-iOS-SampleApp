@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import Player
-import Cast
+import iOSClientPlayer
+import iOSClientCast
 
 class TrackSelectionViewController: UIViewController {
     
@@ -92,10 +92,17 @@ class TrackSelectionViewController: UIViewController {
 // MARK: - Player Audio / Sub selection
 extension TrackSelectionViewController {
     func assign(audio: MediaGroup?) {
+        
+        
+        // print(" audio " , audio?.tracks)
+
         audioViewModels = prepareViewModels(for: audio)
         selectedAudio = (0..<audioViewModels.count).compactMap { index -> IndexPath? in
             let vm = audioViewModels[index]
             if audio?.selectedTrack?.extendedLanguageTag == vm.model?.extendedLanguageTag {
+                
+                print(" ")
+                
                 return IndexPath(row: index, section: 0)
             }
             return nil
@@ -103,6 +110,9 @@ extension TrackSelectionViewController {
     }
     
     func assign(text: MediaGroup?) {
+        
+        // print(" text group " , text?.tracks )
+        
         textViewModels = prepareViewModels(for: text)
         selectedText = (0..<textViewModels.count).compactMap { index -> IndexPath? in
             let vm = textViewModels[index]
@@ -128,7 +138,7 @@ extension TrackSelectionViewController {
 
 // MARK: - Chrome Cast Audio / Sub selection
 extension TrackSelectionViewController {
-    func assign(audio: [Cast.Track]) {
+    func assign(audio: [iOSClientCast.Track]) {
         audioViewModels = audio.map{ TrackSelectionViewModel(model: $0) }
         selectedAudio = (0..<audio.count).flatMap { index -> IndexPath? in
             let vm = audio[index]
@@ -139,7 +149,7 @@ extension TrackSelectionViewController {
             }.last
     }
     
-    func assign(text: [Cast.Track]) {
+    func assign(text: [iOSClientCast.Track]) {
         textViewModels = text.map{ TrackSelectionViewModel(model: $0) }
         let off = TrackSelectionViewModel(model: nil)
         textViewModels.append(off)
@@ -186,7 +196,8 @@ extension TrackSelectionViewController: UITableViewDelegate {
         if tableView == subtitlesTableView {
             cell.accessibilityIdentifier = "Text-\(indexPath.row)"
         }
-        
+
+        // print(" Celll id " , track.id )
         cell.backgroundColor = ColorState.active.accentedBackground
         cell.textLabel?.textColor = ColorState.active.text
         cell.textLabel?.text = track.displayName

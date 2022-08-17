@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import Exposure
-import ExposurePlayback
-import Player
+import iOSClientExposure
+import iOSClientExposurePlayback
+import iOSClientPlayer
 import AVFoundation
 import GoogleCast
-import Cast
+import iOSClientCast
 import AVKit
 
 class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPictureInPictureControllerDelegate {
@@ -24,10 +24,14 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     var program: Program?
     var channel: Asset?
     
+    var newAssetType: AssetType?
+    
     let audioSession = AVAudioSession.sharedInstance()
     var offlineMediaPlayable: OfflineMediaPlayable?
     var playbackProperties = PlaybackProperties()
     fileprivate(set) var player: Player<HLSNative<ExposureContext>>!
+    
+    fileprivate(set) var avPlayerLayer: AVPlayerLayer? = nil
     
     /// Main ContentView which holds player view & player control views
     let mainContentView: UIStackView = {
@@ -64,7 +68,18 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     var castChannel: Channel = Channel()
     var castSession: GCKCastSession?
     
+    var adsDuration: Int64?
+    var checkedAdsDuration: Bool = false
+    
+    var playbackType : String = "VOD"
+    
     private var pictureInPictureController: AVPictureInPictureController?
+    
+    
+    /// Hide status bar when player if in full screen mode
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     
     override func loadView() {
         super.loadView()
@@ -78,6 +93,9 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
         
         self.view.backgroundColor = .black
         self.title = channel?.assetId
+        
+        self.vodBasedTimeline.isHidden = true
+        self.programBasedTimeline.isHidden = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dissmissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -100,6 +118,7 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
                 vodBasedTimeline.stopLoop()
             }
             player.stop()
+
         }
     }
     
@@ -115,22 +134,22 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
 // MARK: - Setup Player
 extension PlayerViewController {
     
+    
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
         player = Player(environment: environment, sessionToken: sessionToken)
         let avPlayerLayer = player.configure(playerView: playerView)
-        
+
         pictureInPictureController = AVPictureInPictureController(playerLayer: avPlayerLayer)
         pictureInPictureController?.delegate = self
+        
+        
         
         // The preparation and loading process can be followed by listening to associated events.
         player
             .onPlaybackCreated{ [weak self] player, source in
                 // Fires once the associated MediaSource has been created.
                 // Playback is not ready to start at this point.
-                self?.updateTimeLine(streamingInfo: source.streamingInfo)
-                
-                
             }
             .onPlaybackPrepared{ player, source in
                 // Published when the associated MediaSource completed asynchronous loading of relevant properties.
@@ -138,6 +157,41 @@ extension PlayerViewController {
             }
             .onPlaybackReady{ player, source in
                 // When this event fires starting playback is possible (playback can optionally be set to autoplay instead)
+
+                self.programBasedTimeline.seekableTimeRanges = self.player.seekableTimeRanges
+                
+
+                // Check if we are playing a Catchup Program by checking the playback type : playback type will be `VOD` for catchups even if the asset type is `LIVE_EVENT`
+                if self.newAssetType == AssetType.LIVE_EVENT || self.newAssetType == AssetType.EVENT || self.newAssetType == AssetType.TV_CHANNEL {
+                    
+                    self.programBasedTimeline.isHidden = false
+                    self.vodBasedTimeline.isHidden = true
+                    
+                    if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                        self.programBasedTimeline.playbackType = "LIVE"
+                        self.playbackType = "LIVE"
+                    } else {
+                        self.programBasedTimeline.playbackType = "VOD"
+                        self.playbackType = "VOD"
+                    }
+                } else {
+                    if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                        
+                        self.programBasedTimeline.isHidden = false
+                        self.vodBasedTimeline.isHidden = true
+                        
+                        self.programBasedTimeline.playbackType = "LIVE"
+                        self.playbackType = "LIVE"
+                    } else {
+                        
+                        self.programBasedTimeline.isHidden = true
+                        self.vodBasedTimeline.isHidden = false
+                        
+                        self.programBasedTimeline.playbackType = "VOD"
+                        self.playbackType = "VOD"
+                    }
+                }
+                
                 player.play()
             }
         
@@ -147,7 +201,8 @@ extension PlayerViewController {
                 // This is a one-time event.
                 guard let `self` = self else { return }
                 
-                if let currentItem = player.playerItem ,
+                // subtitle styling
+                /* if let currentItem = player.playerItem ,
                   let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
                             kCMTextMarkupAttribute_CharacterBackgroundColorARGB as String: [0,0,1,0.3]
                             ]), let textStyle2:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
@@ -157,13 +212,14 @@ extension PlayerViewController {
                     ]) {
                     
                     currentItem.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
-                }
+                } */
                 
-                self.togglePlayPauseButton(paused: false)
+                
             }
             .onPlaybackPaused{ [weak self] player, source in
                 // Fires when the playback pauses for some reason
                 guard let `self` = self else { return }
+                
                 self.togglePlayPauseButton(paused: true)
             }
             .onPlaybackResumed{ [weak self] player, source in
@@ -175,9 +231,77 @@ extension PlayerViewController {
                 // Published once the player.stop() method is called.
                 // This is considered a user action
             }
-            .onPlaybackCompleted{ player, source in
+            .onPlaybackCompleted { player, source in
                 // Published when playback reached the end of the current media.
             }
+
+            .onPlaybackStartWithAds { [weak self] vodDuration, adDuration, totalDurationInMs, adMarkers   in
+
+
+                guard let `self` = self else { return }
+                
+                self.adsDuration = 0
+              
+                
+                self.adsDuration = self.adsDuration ?? 0 + adDuration
+                self.checkedAdsDuration = false
+                self.vodBasedTimeline.adMarkers.removeAll()
+                self.vodBasedTimeline.vodContentDuration = {
+                    return ( totalDurationInMs - adDuration  )
+                }
+                
+                // playback starts with ads which includes total actual clip duration (excluding ads ) & ad positions in the timeline
+                if adMarkers.count != 0 {
+                    
+                    self.vodBasedTimeline.adMarkers = adMarkers
+                    self.vodBasedTimeline.showAdTickMarks(adMarkers: adMarkers, totalDuration: totalDurationInMs, vodDuration: totalDurationInMs - adDuration )
+                    
+                    self.programBasedTimeline.adMarkers = adMarkers
+                    self.programBasedTimeline.showAdTickMarks(adMarkers: adMarkers, totalDuration: totalDurationInMs, vodDuration: totalDurationInMs - adDuration )
+                } else {
+                    self.vodBasedTimeline.clearAdMarkerCache()
+                    self.programBasedTimeline.clearAdMarkerCache()
+                }
+                
+                // Clear sprite image cache
+                self.updateSpriteImage(nil)
+                
+            }
+        
+            .onServerSideAdShouldSkip { [weak self] skipTime in
+                guard let `self` = self else { return }
+                self.player.seek(toPosition: skipTime )
+            }
+            .onWillPresentInterstitial { [weak self] contractRestrictionService, clickThroughUrl, adTrackingUrls, adClipDuration, noOfAds, adIndex in
+
+                guard let `self` = self else { return }
+                self.vodBasedTimeline.pausedTimer()
+                guard let policy = contractRestrictionService.contractRestrictionsPolicy else { return }
+                self.vodBasedTimeline.canFastForward = policy.fastForwardEnabled
+                self.vodBasedTimeline.canRewind = policy.rewindEnabled
+                
+                self.vodBasedTimeline.adDuration =  self.vodBasedTimeline.adDuration + adClipDuration
+                // self.vodBasedTimeline.onAdStart = true
+                self.vodBasedTimeline.isHidden = true
+
+                self.showToastMessage(message:" Ad Counter \(adIndex ) / \(noOfAds)", duration: 5)
+                
+            }
+        
+            .onDidPresentInterstitial { [weak self] contractRestrictionService  in
+                guard let `self` = self else { return }
+
+                self.vodBasedTimeline.resumeTimer()
+                guard let policy = contractRestrictionService.contractRestrictionsPolicy else { return }
+                self.vodBasedTimeline.canFastForward = policy.fastForwardEnabled
+                self.vodBasedTimeline.canRewind = policy.rewindEnabled
+                // self?.vodBasedTimeline.startLoop()
+                // self.vodBasedTimeline.onAdStop = true
+                self.vodBasedTimeline.isHidden = false
+                
+                // print(" Player Time Range " , self.player.seekableTimeRanges )
+            }
+        
         
         // Besides playback control events Player also publishes several status related events.
         player
@@ -191,13 +315,13 @@ extension PlayerViewController {
                 // Fires when a new entitlement is received, such as after attempting to start playback
                 guard let `self` = self else { return }
 
+                
                 self.activateSprites(sprites: source.sprites)
                 self.update(contractRestrictions: entitlement)
                 
             }
             .onBitrateChanged{ player, source, bitrate in
                 // Published whenever the current bitrate changes
-                //self?.updateQualityIndicator(with: bitrate)
             }
             .onBufferingStarted{ player, source in
                 // Fires whenever the buffer is unable to keep up with playback
@@ -207,6 +331,9 @@ extension PlayerViewController {
             }
             .onDurationChanged{ player, source in
                 // Published when the active media received an update to its duration property
+            }
+            .onPlaybackScrubbed{ [weak self] player, source, timestamp in
+                //
             }
         
         // Error handling can be done by listening to associated event.
@@ -222,35 +349,72 @@ extension PlayerViewController {
                 self.popupAlert(title: error.domain , message: message, actions: [okAction], preferedStyle: .alert)
             }
             
-            .onWarning{ [weak self] player, source, warning in
+            .onWarning{ [weak self] player,  source, warning in
                 guard let `self` = self else { return }
-                self.showToastMessage(message: warning.message, duration: 5)
+                // self.showToastMessage(message: warning.message, duration: 5)
+            }
+            .onAirplayStatusChanged { context , source , status  in
+              // onAirplayStatusChanged
             }
         
         // Media Type
-            .onMediaType { [weak self] type in
-                // Media Type : audio / video
-            }
+        .onMediaType { [weak self] type in
+            // Media Type : audio / video
+        }
         
-        // Playback Progress
         programBasedTimeline.onSeek = { [weak self] offset in
-            self?.player.seek(toTime: offset)
+            
+            guard let `self` = self else { return }
+            
+            if self.newAssetType == AssetType.LIVE_EVENT  || self.newAssetType == AssetType.EVENT  ||  self.newAssetType == AssetType.TV_CHANNEL {
+                if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                    self.programBasedTimeline.playbackType = "LIVE"
+                    self.playbackType = "LIVE"
+                } else {
+                    self.programBasedTimeline.playbackType = "VOD"
+                    self.playbackType = "VOD"
+                }
+            } else {
+                if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                    self.programBasedTimeline.playbackType = "LIVE"
+                    self.playbackType = "LIVE"
+                } else {
+                    self.programBasedTimeline.playbackType = "VOD"
+                    self.playbackType = "VOD"
+                }
+            }
+            
+            self.player.seek(toPosition: offset)
         }
         
         programBasedTimeline.currentPlayheadTime = { [weak self] in
-            return self?.player.playheadTime
+            self?.programBasedTimeline.seekableTimeRanges = self?.player.seekableTimeRanges
+            return self?.player.playerItem?.currentTime().milliseconds ?? self?.player.playheadTime
         }
         
         programBasedTimeline.timeBehindLiveEdge = { [weak self] in
             return self?.player.timeBehindLive
         }
         programBasedTimeline.goLiveTrigger = { [weak self] in
-            self?.player.seekToLive()
+            if let start = self?.player.seekableTimeRanges.first?.start , let duration = self?.player.seekableTimeRanges.last?.duration {
+                if let liveTime =  (start + duration).milliseconds {
+                    self?.player.seek(toPosition: liveTime)
+                }
+            }
         }
         programBasedTimeline.startOverTrigger = { [weak self] in
             if let programStartTime = self?.player.currentProgram?.startDate?.millisecondsSince1970 {
                 self?.player.seek(toTime: programStartTime)
             }
+        }
+        
+        programBasedTimeline.onScrubbing = { [weak self] time in
+            if let assetId = self?.playable?.assetId {
+                let _ = self?.player.getSprite(time: time, assetId: assetId,callback: { image,_,_  in
+                    self?.updateSpriteImage(image)
+                })
+            }
+            
         }
         
         vodBasedTimeline.onSeek = { [weak self] offset in
@@ -259,7 +423,8 @@ extension PlayerViewController {
         
         vodBasedTimeline.onScrubbing = { [weak self] time in
             if let assetId = self?.playable?.assetId {
-                let _ = self?.player.getSprite(time: time, assetId: assetId,callback: { image in
+                let _ = self?.player.getSprite(time: time, assetId: assetId,callback: { image, startTime, endTime in
+                    guard let image = image else { return }
                     self?.updateSpriteImage(image)
                 })
             }
@@ -273,12 +438,15 @@ extension PlayerViewController {
             return self?.player.duration
         }
         
+        player.playerItem?.currentTime()
+        
         vodBasedTimeline.startOverTrigger = { [weak self] in
             self?.player.seek(toPosition:0)
         }
         
         // Start the playback
         self.startPlayBack(properties: playbackProperties)
+        
     }
     
     /// Start the playback with given properties
@@ -288,87 +456,101 @@ extension PlayerViewController {
         
         nowPlaying = playable
         
-        
         if let offlineMediaPlayable = offlineMediaPlayable {
-            player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
+            player.startPlayback(offlineMediaPlayable: offlineMediaPlayable )
         } else {
             if let playable = playable {
                 
-                
+                // Check for cast session
                 if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
                     self.chromecast(playable: playable, in: environment, sessionToken: sessionToken, currentplayheadTime: self.player.playheadTime)
                 } else {
                     
                     vodBasedTimeline.isHidden = true
                     programBasedTimeline.isHidden = true
+                    player.startPlayback(playable: playable, properties:playbackProperties )
                     
-                    player.startPlayback(playable: playable, properties: properties)
                 }
                 
             }
         }
     }
     
+    
+    /// Update time line depend on the asset type the player is playing
+    fileprivate func updateTimeLine() {
+        if let assetType = newAssetType {
+            switch assetType {
+            case .TV_CHANNEL:
+                handleLive()
+            case .MOVIE:
+                handleVod()
+            case .LIVE_EVENT:
+                handleLive()
+            case .TV_SHOW:
+                handleVod()
+            case .EPISODE:
+                handleVod()
+            case .CLIP:
+                handleVod()
+            case .AD:
+                handleVod()
+            case .COLLECTION:
+                handleVod()
+            case .OTHER:
+                handleVod()
+            case .PODCAST:
+                handleVod()
+            case .PODCAST_EPISODE:
+                handleVod()
+            case .EVENT:
+                handleLive()
+            @unknown default:
+                handleVod()
+            }
+        } else {
+            handleVod()
+        }
+            
+    }
+    
+    /// handle vod ( MOVIE, CLIP, EPISODE etc )
+    fileprivate func handleVod() {
+        programBasedTimeline.isHidden = true
+        programBasedTimeline.stopLoop()
+        vodBasedTimeline.isHidden = false
+        vodBasedTimeline.startLoop()
+    }
+    
+    
+    /// Handle Live ( Channel / Program / Live Event )
+    fileprivate func handleLive() {
+        vodBasedTimeline.isHidden = true
+        vodBasedTimeline.stopLoop()
+        programBasedTimeline.isHidden = false
+        programBasedTimeline.startLoop()
+    }
+    
     func activateSprites(sprites: [Sprites]?) {
         if let playable = playable, let sprites = sprites , let width = sprites.first?.width {
             let _ = self.player.activateSprites(assetId: playable.assetId, width: width, quality: .medium) {  spritesData, error in
-                // print(" Sprites Have been Activated " , spritesData )
+                 // print(" Sprites have been Activated " , spritesData )
             }
         }
     }
     
     func updateSpriteImage(_ image: UIImage?) {
         if let image = image {
-             self.vodBasedTimeline.spriteImageView.image = image
+            self.vodBasedTimeline.spriteImageView.image = image
+            self.programBasedTimeline.spriteImageView.image = image
         } else {
+            self.vodBasedTimeline.spriteImageView.image = nil
+            self.programBasedTimeline.spriteImageView.image = nil
             // self.vodBasedTimeline.spriteImageView.image = nil
         }
         
     }
     
-    func updateTimeLine(streamingInfo: StreamInfo?) {
-        
-        guard let streamingInfo = streamingInfo else {
-            // print("Streaming Info is empty :: Using PlayV1 ")
-            // let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
-            //     (alert: UIAlertAction!) -> Void in
-            // })
-            
-            // let message = "Streaming Info is missing in the play response : You are using a older version of the SDK"
-            // self.popupAlert(title: "Error" , message: message, actions: [okAction], preferedStyle: .alert)
-            
-            vodBasedTimeline.isHidden = false
-            vodBasedTimeline.startLoop()
-            programBasedTimeline.isHidden = true
-            programBasedTimeline.stopLoop()
-            
-            return
-        }
-        if streamingInfo.live == true && streamingInfo.staticProgram == false {
-            vodBasedTimeline.isHidden = true
-            vodBasedTimeline.stopLoop()
-            programBasedTimeline.isHidden = false
-            programBasedTimeline.startLoop()
-        }
-        
-        // This is a catchup program
-        else if streamingInfo.live == false && streamingInfo.staticProgram == false {
-            vodBasedTimeline.isHidden = true
-            vodBasedTimeline.stopLoop()
-            programBasedTimeline.isHidden = false
-            programBasedTimeline.startLoop()
-        }
-        // This is a vod asset
-        else if streamingInfo.staticProgram == true {
-            vodBasedTimeline.isHidden = false
-            vodBasedTimeline.startLoop()
-            programBasedTimeline.isHidden = true
-            programBasedTimeline.stopLoop()
-        }
-        else {
-            print("something else")
-        }
-    }
     
     func update(withProgram program: Program?) {
         self.program = program
@@ -515,23 +697,106 @@ extension PlayerViewController {
         
         controls.onSeekingTime = { [weak self] seekDelta in
             guard let `self` = self else { return }
+            
+            if self.newAssetType == AssetType.LIVE_EVENT {
+                if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                    self.programBasedTimeline.playbackType = "LIVE"
+                    self.playbackType = "LIVE"
+                } else {
+                    self.programBasedTimeline.playbackType = "VOD"
+                    self.playbackType = "VOD"
+                }
+            } else {
+                if self.player.playerItem?.accessLog()?.events.first?.playbackType == "LIVE" || self.player.playerItem?.accessLog()?.events.first?.playbackType == "Live"{
+                    self.programBasedTimeline.playbackType = "LIVE"
+                    self.playbackType = "LIVE"
+                } else {
+                    self.programBasedTimeline.playbackType = "VOD"
+                    self.playbackType = "VOD"
+                }
+            }
+            
+            
+            print(" Seek delta " , seekDelta * 1000 )
+            
+            
             if let currentTime = self.player.playheadTime {
-                self.player.seek(toTime: currentTime + seekDelta * 1000)
+                
+                print(" Current Time " , currentTime )
+                
+                print(" Should seek to " , currentTime/1000 + ( seekDelta * 1000) )
+                
+                let Ctime = currentTime
+                let seek = seekDelta * 1000
+                
+                self.player.seek(toTime: Ctime + seek )
             }
         }
         
         controls.onCC = { [weak self] in
             guard let `self` = self else { return }
             let trackSelectionVC = TrackSelectionViewController()
+            
+            
+//            print(" Audio Tracks  " , self.player.audioTracks)
+//            print(" Audio Tracks displayName " , self.player.audioGroup )
+            
+            
+            print(" Selected selectedTextTrack " , self.player.selectedTextTrack )
+            
+            print(" Selected selectedAudioTrack " , self.player.selectedAudioTrack )
+            
             trackSelectionVC.assign(audio: self.player.audioGroup)
             trackSelectionVC.assign(text: self.player.textGroup)
             
+            let textGroupFirstTrack = self.player.textGroup?.tracks.first
+            print(" Track name )" , textGroupFirstTrack?.name )
+            print(" Track title",  textGroupFirstTrack?.title  )
+            print(" Track displayName",  textGroupFirstTrack?.displayName  )
+            print(" Track extendedLanguageTag ",  textGroupFirstTrack?.extendedLanguageTag  )
+            
+            
             trackSelectionVC.onDidSelectAudio = { [weak self] track in
-                guard let `self` = self, let track = track as? MediaTrack else { return }
+                
+                
+                guard let `self` = self, let track = track as? MediaTrack else {
+                    self?.player.selectAudio(track: nil)
+                    UserDefaults.standard.removeObject(forKey: "selectedAudioTrack")
+                    return
+                    
+                }
+                
+                let textGroupFirstTrack = self.player.textGroup?.tracks.first
+                print(" Audio name )" , track.name )
+                print(" Audio title",  track.title  )
+                print(" Audio displayName",  track.displayName  )
+                print(" Audio extendedLanguageTag ",  track.extendedLanguageTag  )
+                
+                let language = track.extendedLanguageTag
+                
+               
+                UserDefaults.standard.set(language, forKey: "selectedAudioTrack")
                 self.player.selectAudio(track: track)
+                
+                // self.player.selectAudio(title: track.title)
+                
+                // self.player.selectAudio(track: track)
             }
             trackSelectionVC.onDidSelectText = { [weak self] track in
-                guard let `self` = self, let track = track as? MediaTrack else { return }
+                
+              
+                
+                guard let `self` = self, let track = track as? MediaTrack else {
+                    self?.player.selectText(track: nil)
+                    UserDefaults.standard.removeObject(forKey: "selectedSubtitleTrack")
+                    return
+                }
+                
+               
+                
+
+                let language = track.extendedLanguageTag
+                UserDefaults.standard.set(language, forKey: "selectedSubtitleTrack")
                 self.player.selectText(track: track)
             }
             trackSelectionVC.onDismissed = { [weak trackSelectionVC] in
@@ -544,7 +809,11 @@ extension PlayerViewController {
         
         controls.onNextProgram = { [weak self] in
             guard let `self` = self else { return }
-            self.player.nextProgram()
+            
+            let newPlayable = AssetPlayable(assetId: "fa44dacc-1193-4e85-898b-4b89b7be2e0c_82162E", assetType: AssetType.MOVIE)
+            self.player.startPlayback(playable: newPlayable, properties: PlaybackProperties())
+            
+            /* self.player.nextProgram() */
         }
         
         controls.onPreviousProgram = { [weak self] in
@@ -566,6 +835,10 @@ extension PlayerViewController {
                 }
             }
         }
+    }
+    
+    @objc func clickedAd() {
+        self.player.trackClickedAd(adTrackingUrls: ["ads"])
     }
 }
 
@@ -713,7 +986,7 @@ extension PlayerViewController: GCKSessionManagerListener {
     }
     
     
-    func chromecast(playable: Playable, in environment: Exposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, localTime: Int64? = nil, currentplayheadTime : Int64?) {
+    func chromecast(playable: Playable, in environment: iOSClientExposure.Environment, sessionToken: SessionToken, localOffset: Int64? = nil, localTime: Int64? = nil, currentplayheadTime : Int64?) {
         
 
         guard let session = GCKCastContext.sharedInstance().sessionManager.currentCastSession else { return }
@@ -741,6 +1014,10 @@ extension PlayerViewController: GCKSessionManagerListener {
             mediaLoadRequestDataBuilder.credentials = "\(sessionToken.value)"
             mediaLoadRequestDataBuilder.queueData = queueDataBuilder.build()
             mediaLoadRequestDataBuilder.customData = customData
+            
+            
+//            print(" sessionToken.value \(sessionToken.value)")
+//            print(" Session \(sessionToken)")
             
 //            if let playheadTime = currentplayheadTime {
 //                mediaLoadRequestDataBuilder.startTime = TimeInterval(playheadTime/1000)

@@ -18,6 +18,10 @@ class TrackSelectionViewModel: Equatable {
         return model?.displayName ?? "None"
     }
     
+    var id : Int? {
+        return model?.id
+    }
+    
     public static func == (lhs: TrackSelectionViewModel, rhs: TrackSelectionViewModel) -> Bool {
         return lhs.model?.extendedLanguageTag == rhs.model?.extendedLanguageTag
     }

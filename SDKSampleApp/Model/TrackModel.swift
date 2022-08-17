@@ -6,21 +6,26 @@
 //
 
 import Foundation
-import Player
-import Cast
+import iOSClientPlayer
+import iOSClientCast
 
 protocol TrackModel {
     var displayName: String { get }
     var extendedLanguageTag: String? { get }
+    var id: Int? { get }
 }
 
 
 
 extension MediaTrack: TrackModel {
-    var displayName: String { return name }
+    var displayName: String { return  "\(name) - \(title ?? "")"  }
+    var id : Int? { return mediaTrackId }
 }
 
-extension Cast.Track: TrackModel {
+
+
+extension iOSClientCast.Track: TrackModel {
     var displayName: String { return label }
     var extendedLanguageTag: String? { return language }
+    var id: Int? { return  trackId }
 }
