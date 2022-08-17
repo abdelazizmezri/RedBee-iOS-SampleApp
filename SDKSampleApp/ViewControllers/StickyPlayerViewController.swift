@@ -157,7 +157,7 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
-        StickyPlayerViewController.player = Player(environment: environment, sessionToken: sessionToken, analyticsBaseUrl: "https://eventsink.api.redbee.dev")
+        StickyPlayerViewController.player = Player(environment: environment, sessionToken: sessionToken)
         
         
         let _ = StickyPlayerViewController.player.configure(playerView: playerView)
@@ -294,7 +294,6 @@ class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         
         // External playback
             .onAirplayStatusChanged { [weak self] player, source, active in
-                print(" Airplay status changed " , active )
             }
         
         // Playback Progress
