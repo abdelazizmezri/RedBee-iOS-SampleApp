@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 import TVUIKit
-import Exposure
-import ExposurePlayback
+import iOSClientExposure
+import iOSClientExposurePlayback
 
 class LoginViewController: UIViewController {
     
@@ -79,7 +79,6 @@ class LoginViewController: UIViewController {
             .validate()
             .responseData{ data, error in
                 if let error = error {
-                    print("Error on Logout " , error.localizedDescription )
                     StorageProvider.store(environment: nil)
                     StorageProvider.store(sessionToken: nil)
                  
@@ -155,7 +154,7 @@ class LoginViewController: UIViewController {
             
             // When using white labeled Asset End point, you should get pushNextCuePoint value
             // Pass pushNextCuePoint value
-            playerVC.pushNextCuePoint = 1398000 // dummy value
+            playerVC.pushNextCuePoint = 10000 // dummy value : 10s
             
             DispatchQueue.main.async {
                 self.present(playerVC, animated: false) {

@@ -1,11 +1,19 @@
 {
-  "commitish" : "b504c34e92879100f2adad3c29c90b9bfc17293c",
+  "commitish" : "b37f8bcba50b5a393f4674c6f9f414567d442690",
   "iOS" : [
     {
-      "hash" : "fdf99fae1b14d620c0423754a6181c72cc38bb10e248366e0269d1e16e1478d7",
-      "name" : "Cast",
-      "linking" : "dynamic",
-      "swiftToolchainVersion" : "5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)"
+      "swiftToolchainVersion" : "5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)",
+      "hash" : "2ac2384d84a72fe325f462d1eecbccd273485aec1cd13961c41fbb82351856cd",
+      "name" : "iOSClientCast",
+      "container" : "iOSClientCast.xcframework",
+      "identifier" : "ios-x86_64-simulator"
+    },
+    {
+      "swiftToolchainVersion" : "5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)",
+      "hash" : "8cfb9f1e13085ca8a4a366073db646ace89887fe3615f7bbd1207bdcbec6549f",
+      "name" : "iOSClientCast",
+      "container" : "iOSClientCast.xcframework",
+      "identifier" : "ios-arm64"
     }
   ]
 }

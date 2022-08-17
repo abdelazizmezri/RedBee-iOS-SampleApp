@@ -7,7 +7,7 @@
 
 import Foundation
 import GoogleCast
-import Exposure
+import iOSClientExposure
 
 let kCastControlBarsAnimationDuration: TimeInterval = 0.20
 
@@ -53,9 +53,7 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+
         sessionManager = GCKCastContext.sharedInstance().sessionManager
         sessionManager.add(self)
         
@@ -91,6 +89,7 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     }
     
     func updateControlBarsVisibility() {
+        
         if miniMediaControlsViewEnabled, miniMediaControlsViewController.active {
             _miniMediaControlsHeightConstraint.constant = miniMediaControlsViewController.minHeight
             view.bringSubviewToFront(_miniMediaControlsContainerView)
@@ -119,7 +118,23 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     }
     
     func miniMediaControlsViewController(_ miniMediaControlsViewController: GCKUIMiniMediaControlsViewController, shouldAppear: Bool) {
+
+        debugPrint(" miniMediaControlsViewController ")
+        
         updateControlBarsVisibility()
+        
+    }
+    
+    
+    
+    /// Mini Controller
+    func miniControllerDidTransitFromtheSuperView( ) {
+        
+        print(" Google cast mini controller has transit from the super view ")
+        
+        print(" Super view did disapper from the stack ")
+        
+        
     }
     
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Exposure
+import iOSClientExposure
 
 
 /// Responsible for managing persistence of the exposure credentials

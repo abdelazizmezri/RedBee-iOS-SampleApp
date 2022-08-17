@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 import TVUIKit
-import Player
-import Exposure
-import ExposurePlayback
+import iOSClientPlayer
+import iOSClientExposure
+import iOSClientExposurePlayback
 import AVFoundation
 import AVKit
 
@@ -21,13 +21,20 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
     var sessionToken: SessionToken!
     var playerAssetDataSource: PlayerAssetDataSource!
     var newPlayerViewController = AVPlayerViewController()
+    
+    
+    @objc dynamic var playerViewController: AVPlayerViewController?
+    
     var assetViewModel: AssetViewModel?
     var properties: PlaybackProperties!
     
     var pushNextCuePoint: Int64?
     var contentProposalViewController: ContentProposalViewController?
     
-    @objc dynamic var playerViewController: AVPlayerViewController?
+    var avInterstitialTimeRange = [AVInterstitialTimeRange]() // Store all ad breaks as AVInterstitialTimeRange
+    var adBreaks = [AVInterstitialTimeRange: Bool]() // Store all adbreaks with isAlreadyWatched - true : false
+    private var scubbedPosition: CMTime = CMTime(milliseconds: 0)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,30 +55,57 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
     }
     
     public func startPlayback() {
-    
-        if let oldPlayerViewController = self.playerViewController {
-            oldPlayerViewController.removeFromParent()
-            oldPlayerViewController.viewIfLoaded?.removeFromSuperview()
-        }
         
-        self.contentProposalViewController = ContentProposalViewController()
-        
-        self.playerViewController = newPlayerViewController
-        
-        addChild(newPlayerViewController)
-        
-        
-        if isViewLoaded {
-            view.addSubview(newPlayerViewController.view)
-        }
-
-        self.player = Player(environment: environment, sessionToken: sessionToken)
-        newPlayerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newPlayerViewController)
         newPlayerViewController.delegate = self
-
+        
+        if let oldPlayerViewController = self.playerViewController {
+         oldPlayerViewController.removeFromParent()
+         oldPlayerViewController.viewIfLoaded?.removeFromSuperview()
+         }
+         
+         self.contentProposalViewController = ContentProposalViewController()
+         
+         self.playerViewController = newPlayerViewController
+         
+        addChild(newPlayerViewController)
+         
+         
+         if isViewLoaded {
+             view.addSubview(newPlayerViewController.view)
+         }
+        
+        
+        self.player = Player(environment: environment, sessionToken: sessionToken)
+        
+        self.playerViewController = self.player.configureWithDefaultSkin(avPlayerViewController: newPlayerViewController)
+        self.playerViewController?.delegate = self
+        
         self.player.startPlayback(playable: playable)
         
         self.playBackMonitoring(newPlayerViewController)
+    }
+    
+    
+    // reset by removing the playerViewController & creating a new one
+    public func reset() -> AVPlayerViewController {
+        
+        if let playerViewController = self.playerViewController {
+            print("PlayerViewController - reset old view")
+            playerViewController.removeFromParent()
+            playerViewController.viewIfLoaded?.removeFromSuperview()
+        }
+        
+        let newAVPlayerViewController = AVPlayerViewController()
+        self.playerViewController = newAVPlayerViewController
+        if let playerViewController = playerViewController {
+            print("PlayerViewController - reset new view created")
+            addChild(playerViewController)
+            if isViewLoaded {
+                view.addSubview(playerViewController.view)
+            }
+            playerViewController.delegate = self
+        }
+        return newAVPlayerViewController
     }
     
     private func playBackMonitoring(_ newPlayerViewController: AVPlayerViewController) {
@@ -88,36 +122,76 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
             .onPlaybackReady{  player, source in
                 print(" On playback ready ")
             }
+        
             .onPlaybackStarted { [weak self] player, source in
                 
-                let extenalMediaInfo = self?.createExternalMediaInfo()
                 
-                let playerItem = newPlayerViewController.player?.currentItem
-                if self?.pushNextCuePoint != nil || self?.pushNextCuePoint != 0  {
-                    playerItem?.nextContentProposal = self?.setProposal()
+                
+                let extenalMediaInfo = self?.createExternalMediaInfo()
+                 
+                 let playerItem = newPlayerViewController.player?.currentItem
+                    if self?.pushNextCuePoint != nil || self?.pushNextCuePoint != 0  {
+                        playerItem?.nextContentProposal = self?.setProposal()
+                 }
+                 
+                 playerItem?.externalMetadata = extenalMediaInfo ?? []
+                 
+                 // Customising subtitles
+                 /* if let currentItem = player.playerItem ,
+                  let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                  kCMTextMarkupAttribute_CharacterBackgroundColorARGB as String: [0,0,1,0.3]
+                  ]), let textStyle2:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                  kCMTextMarkupAttribute_ForegroundColorARGB as String: [1,0,1,1.0]
+                  ]), let textStyleSize3: AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
+                  kCMTextMarkupAttribute_RelativeFontSize as String: 200
+                  ]) {
+                  
+                  playerItem?.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
+                  } */
+                 
+                 newPlayerViewController.player?.replaceCurrentItem(with: playerItem)
+            }
+        
+            .onPlaybackStartWithAds{ [weak self] vodDuration, adDuration, totalDuration, adMarkers in
+                print("on playback start with ads \(adMarkers)")
+
+                self?.player.playerItem?.interstitialTimeRanges = adMarkers.compactMap({ MarkerPoint in
+                    if let startOffset = MarkerPoint.offset, let endOffset = MarkerPoint.endOffset {
+                        let timeRange = CMTimeRange(
+                            start: CMTime(milliseconds: Int64(startOffset)),
+                            end: CMTime(milliseconds: Int64(endOffset))
+                        )
+                        
+                        self?.avInterstitialTimeRange.append(AVInterstitialTimeRange(timeRange: timeRange))
+                        return AVInterstitialTimeRange(timeRange: timeRange)
+                    }
+                    return nil
+                })
+                
+                if let playerViewController = self?.playerViewController {
+                    // force a re-render to fix timeline not renderinging the new duration/admarkers correctly
+                    playerViewController.showsPlaybackControls = false
+                    playerViewController.showsPlaybackControls = true
                 }
                 
-                playerItem?.externalMetadata = extenalMediaInfo ?? []
-                
-                // Customising subtitles
-                /* if let currentItem = player.playerItem ,
-                  let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
-                            kCMTextMarkupAttribute_CharacterBackgroundColorARGB as String: [0,0,1,0.3]
-                            ]), let textStyle2:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
-                                kCMTextMarkupAttribute_ForegroundColorARGB as String: [1,0,1,1.0]
-                    ]), let textStyleSize3: AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
-                        kCMTextMarkupAttribute_RelativeFontSize as String: 200
-                    ]) {
-                    
-                    playerItem?.textStyleRules = [textStyle, textStyle1, textStyle2, textStyleSize3]
-                } */
-                
-                newPlayerViewController.player?.replaceCurrentItem(with: playerItem)
+            }
+            .onWillPresentInterstitial{ [weak self] _ , _, _,_, _ , _    in
+                print("On will present interstitial")
+                self?.playerViewController?.requiresLinearPlayback = true;
+            }
+            .onDidPresentInterstitial{ [weak self] _ in
+                print("On did present interstitial")
+                self?.playerViewController?.requiresLinearPlayback = false;
+            }
+            .onServerSideAdShouldSkip{ [weak self] skipTime in
+                print( "On server-side ad should skip")
+                self?.player.seek(toPosition: Int64(skipTime))
             }
         
             .onPlaybackAborted { [weak self] player, source in
-                let _ = self?._dismiss()
+                print(" On playback aborted")
             }
+        
     }
     
     func playerViewControllerShouldDismiss(_ playerViewController: AVPlayerViewController) -> Bool {
@@ -151,7 +225,132 @@ class PlayerViewController: UIViewController, AVPlayerViewControllerDelegate {
         }
         return false
     }
+}
+
+extension PlayerViewController {
     
+    func playerViewController(_ playerViewController: AVPlayerViewController, willPresent interstitial: AVInterstitialTimeRange) {
+         
+        // playerViewController.requiresLinearPlayback = true
+        
+        print(" willPresent interstitial start \(interstitial.timeRange.start)  & End \(interstitial.timeRange.end)" )
+         
+        // playerViewController.requiresLinearPlayback = true
+         // Check if the ad is already watched or not
+         /* if self.adBreaks[interstitial] == false {
+             DispatchQueue.main.async {
+                 // Disable player ff / rw
+                 playerViewController.requiresLinearPlayback = true
+                 playerViewController.isSkipForwardEnabled = false
+                 playerViewController.isSkipBackwardEnabled = false
+                 
+                 // assign the interstitial as already watched ad
+                 self.adBreaks[interstitial] = true
+             }
+         } else {
+             DispatchQueue.main.async {
+                 playerViewController.player?.seek(to: interstitial.timeRange.end)
+             }
+             
+         } */
+     }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, didPresent interstitial: AVInterstitialTimeRange) {
+        // interstitial is finished presenting , assign the interstitial as already watched ad
+        
+        print(" didPresent interstitial start \(interstitial.timeRange.start)  & End \(interstitial.timeRange.end)" )
+        
+        // playerViewController.requiresLinearPlayback = false
+        
+        // playerViewController.requiresLinearPlayback = false
+        
+        /* self.adBreaks[interstitial] = true
+        
+        DispatchQueue.main.async {
+            
+            // Check if there is already seeked / scubbedPosition available that user intiated before ad break
+            if self.scubbedPosition != CMTime.zero {
+                playerViewController.player?.seek(to: self.scubbedPosition )
+                
+                // assign scubbedPosition to zero
+                self.scubbedPosition = CMTime.zero
+            }
+            
+            // Enabled player ff / rw
+            playerViewController.requiresLinearPlayback = false
+            playerViewController.isSkipForwardEnabled = true
+            playerViewController.isSkipBackwardEnabled = true
+        } */
+    }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController,
+    willResumePlaybackAfterUserNavigatedFrom oldTime: CMTime,
+                              to targetTime: CMTime) {
+        print("willResumePlaybackAfterUserNavigatedFrom")
+        if let targetTimeInMs = targetTime.milliseconds {
+            print("player should seek " , targetTimeInMs)
+            self.player.seek(toPosition: targetTimeInMs)
+        }
+    }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, timeToSeekAfterUserNavigatedFrom oldTime: CMTime, to targetTime: CMTime) -> CMTime {
+        
+        print( "timeToSeekAfterUserNavigatedFrom \(oldTime.milliseconds) & target Time \(targetTime.milliseconds) " )
+        
+        
+        
+        
+//
+        
+//        let seekRange = CMTimeRange(start: oldTime, end: targetTime)
+//
+//        if let adTimeRanges = playerViewController.player?.currentItem?.interstitialTimeRanges {
+//            // Iterate over the defined interstitial time ranges.
+//            for interstitialRange in adTimeRanges {
+//                // If the current interstitial content is contained within the
+//                // user's seek range, return the interstitial content's start time.
+//                if seekRange.containsTimeRange(interstitialRange.timeRange) {
+//
+//                    print(" AD is inside the seek time range yes " )
+//
+//                    return interstitialRange.timeRange.start
+//                }
+//            }
+//        }
+
+        
+        // Define time range of the user's seek operation
+        /* let seekRange = CMTimeRange(start: oldTime, end: targetTime)
+        
+        let _ = self.avInterstitialTimeRange.compactMap {
+            
+        }
+        
+        // Iterate over the defined interstitial time ranges.
+        for interstitialRange in self.avInterstitialTimeRange {
+            // If the current interstitial content is contained within the
+            // user's seek range, return the interstitial content's start time.
+            if seekRange.containsTimeRange(interstitialRange.timeRange) {
+                // Check if the ad is already watched or not , if not seek to the start / offset value of the ad
+                if self.adBreaks[interstitialRange] == false {
+                    // store user's scubbedPosition / targetTime, so that we can seek to this position when the ad break is over
+                    self.scubbedPosition = targetTime
+                    return interstitialRange.timeRange.start
+                } else {
+                    // Ad is already watched
+                    // assign scubbedPosition to zero
+                    self.scubbedPosition = CMTime.zero
+                    
+                    return targetTime
+                    
+                }
+            }
+        }
+         */
+        // No Ads found. Return the target time.
+        // self.scubbedPosition = CMTime.zero
+        return targetTime
+    }
 }
 
 
@@ -173,7 +372,7 @@ extension PlayerViewController {
             return nil
             
         }
-
+        
         // Set up Next content Image
         let image = UIImage(named: "dummy")
         
@@ -212,20 +411,20 @@ extension PlayerViewController {
          
          // Fetch next asset's details
          self.playerAssetDataSource.onDataUpdated = { viewModel in
-             self.assetViewModel = viewModel
-
-             if let assetDuration = viewModel?.asset.duration, let pushNextCuepoint = nextContent.upNext?.pushNextCuepoint {
-                 self.pushNextCuePoint = pushNextCuepoint
-             } else {
-                 self.pushNextCuePoint = 0
-             }
-             DispatchQueue.main.async {
-                 self.startPlayback()
-             }
+         self.assetViewModel = viewModel
+         
+         if let assetDuration = viewModel?.asset.duration, let pushNextCuepoint = nextContent.upNext?.pushNextCuepoint {
+         self.pushNextCuePoint = pushNextCuepoint
+         } else {
+         self.pushNextCuePoint = 0
+         }
+         DispatchQueue.main.async {
+         self.startPlayback()
+         }
          }
          
          */
-
+        
         
     }
     

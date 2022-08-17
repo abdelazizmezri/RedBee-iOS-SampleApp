@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ExposurePlayback
+import iOSClientExposurePlayback
 
 struct AssetView: View {
     

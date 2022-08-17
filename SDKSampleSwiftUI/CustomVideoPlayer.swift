@@ -7,8 +7,8 @@
 
 import UIKit
 import SwiftUI
-import Exposure
-import ExposurePlayback
+import iOSClientExposure
+import iOSClientExposurePlayback
 
 struct CustomVideoPlayer: UIViewControllerRepresentable {
     

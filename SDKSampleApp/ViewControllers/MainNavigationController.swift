@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Exposure
+import iOSClientExposure
 
 
 /// Handles the main navigation in the app

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Exposure
+import iOSClientExposure
 
 class EnvironmentViewController: UIViewController {
     

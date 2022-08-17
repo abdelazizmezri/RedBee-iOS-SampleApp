@@ -6,9 +6,9 @@
 //
 
 import UIKit
-import Exposure
-import ExposurePlayback
-import Player
+import iOSClientExposure
+import iOSClientExposurePlayback
+import iOSClientPlayer
 import AVFoundation
 import AVKit
 
@@ -500,6 +500,5 @@ extension PlayerViewController {
         
     }
 }
-
 
 
