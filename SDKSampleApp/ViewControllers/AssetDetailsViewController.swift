@@ -10,6 +10,7 @@ import UIKit
 import iOSClientExposure
 import iOSClientExposurePlayback
 import iOSClientExposureDownload
+import LNPopupController
 
 fileprivate enum DownloadState: String {
     
@@ -241,7 +242,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                     
                     for (_,video) in (downloadInfo.videos).enumerated() {
                         
-                        let action = UIAlertAction(title: "bitrate - \(video.bitrate)", style: .default, handler: {
+                        let action = UIAlertAction(title: "bitrate - \(video.bitrate )", style: .default, handler: {
                             (alert: UIAlertAction!) -> Void in
                         
                             self?.downloadAsset(indexPath: indexPath , videoTrack: video.bitrate , audios: downloadInfo.audios , subtitles: downloadInfo.subtitles )
@@ -273,6 +274,8 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
     /// - Parameters:
     ///   - indexPath: indexPath
     ///   - videoTrack: Selected videoTrack
+    ///   - audios: audios
+    ///   - subtitles: subtitles
     func downloadAsset(indexPath: IndexPath, videoTrack: Int?, audios: [Audios]?, subtitles: [Subtitles]?) {
         
         let cell = tableView.cellForRow(at: indexPath) as! AssetListTableViewCell
@@ -389,7 +392,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             
                     // If there is a video track , start downloading the sepcific
                     if let videoTrack = videoTrack {
-                        task.use(bitrate: Int64(exactly: videoTrack))
+                        task.use(bitrate: Int64(exactly: videoTrack), presentationSize: CGSize(width: 1920, height: 1080))
                     }
                    
                 } else {
@@ -440,8 +443,9 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                 // print("AUDIO DOWNLOAD INFO ", downloadInfo.audios )
                 // print("VIDEOS DOWNLOAD INFO " , downloadInfo.videos )
                 // print("SUBS DOWNLOAD INDO ", downloadInfo.subtitles )
+
                 
-                let message = "Video : \(downloadInfo.videos) \n\n Audios : \(downloadInfo.audios) \n\n Subtitles: \(downloadInfo.subtitles) \n\n DownloadCount : \(downloadInfo.downloadCount) \n\n MaxDownloadCount: \(downloadInfo.maxDownloadCount)"
+                let message = "Asset ID : \(self?.assetId) \n\n Video : \(downloadInfo.videos) \n\n Audios : \(downloadInfo.audios) \n\n Subtitles: \(downloadInfo.subtitles) \n\n DownloadCount : \(downloadInfo.downloadCount) \n\n MaxDownloadCount: \(downloadInfo.maxDownloadCount)"
                 
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
                     (alert: UIAlertAction!) -> Void in
@@ -479,8 +483,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             
             /// Optional playback properties
             let properties = PlaybackProperties(autoplay: true,
-                                                playFrom: .beginning,
-                                                language: .custom(text: "fr", audio: "en"))
+                                                playFrom: .beginning, maxBitrate: 5200000)
             
             destinationViewController.playbackProperties = properties
             destinationViewController.playable = playable

@@ -15,6 +15,7 @@ import GoogleCast
 import iOSClientCast
 import AVKit
 
+
 class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPictureInPictureControllerDelegate {
     
     var environment: Environment!
@@ -73,9 +74,10 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     
     var playbackType : String = "VOD"
     
+    var isOfflineMedia: Bool = false
+
     private var pictureInPictureController: AVPictureInPictureController?
-    
-    
+
     /// Hide status bar when player if in full screen mode
     override var prefersStatusBarHidden: Bool {
         return true
@@ -117,7 +119,9 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     override func viewDidDisappear(_ animated: Bool) {
         self.vodBasedTimeline.stopLoop()
         self.programBasedTimeline.stopLoop()
+        self.player.stop()
         self.resumeBackgroundAudio()
+        
     }
     
     @objc func dissmissKeyboard() {
@@ -130,19 +134,22 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
 }
 
 // MARK: - Setup Player
-extension PlayerViewController {
-    
-    
+extension PlayerViewController: AVPlayerViewControllerDelegate {
+        
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
         /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
     
+        
         player = Player(environment: environment, sessionToken: sessionToken)
         let avPlayerLayer = player.configure(playerView: playerView)
 
+
         pictureInPictureController = AVPictureInPictureController(playerLayer: avPlayerLayer)
         pictureInPictureController?.delegate = self
-        
-        
+        if #available(iOS 14.2, *) {
+            pictureInPictureController?.canStartPictureInPictureAutomaticallyFromInline = true
+        }
+
         
         // The preparation and loading process can be followed by listening to associated events.
         player
@@ -156,7 +163,6 @@ extension PlayerViewController {
             }
             .onPlaybackReady{ player, source in
                 // When this event fires starting playback is possible (playback can optionally be set to autoplay instead)
-
                 self.programBasedTimeline.seekableTimeRanges = self.player.seekableTimeRanges
                 
 
@@ -180,7 +186,6 @@ extension PlayerViewController {
                         self.programBasedTimeline.playbackType = "LIVE"
                         self.playbackType = "LIVE"
                     } else {
-                        
                         self.programBasedTimeline.isHidden = true
                         self.vodBasedTimeline.isHidden = false
                         
@@ -188,16 +193,16 @@ extension PlayerViewController {
                         self.playbackType = "VOD"
                     }
                 }
-                
-                player.play()
+
             }
         
         // Once playback is in progress the Player continuously publishes events related media status and user interaction.
             .onPlaybackStarted{ [weak self] player, source in
+                
                 // Published once the playback starts for the first time.
                 // This is a one-time event.
                 guard let `self` = self else { return }
-                
+
                 // subtitle styling
                 /* if let currentItem = player.playerItem ,
                   let textStyle = AVTextStyleRule(textMarkupAttributes: [kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection as String: 10]), let textStyle1:AVTextStyleRule = AVTextStyleRule(textMarkupAttributes: [
@@ -216,7 +221,6 @@ extension PlayerViewController {
             .onPlaybackPaused{ [weak self] player, source in
                 // Fires when the playback pauses for some reason
                 guard let `self` = self else { return }
-                
                 self.togglePlayPauseButton(paused: true)
             }
             .onPlaybackResumed{ [weak self] player, source in
@@ -225,6 +229,7 @@ extension PlayerViewController {
                 self.togglePlayPauseButton(paused: false)
             }
             .onPlaybackAborted{ player, source in
+
                 // Published once the player.stop() method is called.
                 // This is considered a user action
             }
@@ -233,6 +238,7 @@ extension PlayerViewController {
             }
 
             .onPlaybackStartWithAds { [weak self] vodDuration, adDuration, totalDurationInMs, adMarkers   in
+                
                 guard let `self` = self else { return }
                 self.adsDuration = 0
                 self.adsDuration = self.adsDuration ?? 0 + adDuration
@@ -257,6 +263,52 @@ extension PlayerViewController {
                 
                 // Clear sprite image cache
                 self.updateSpriteImage(nil)
+                
+            }
+        
+            .onDateRangeMetadataChanged { metadataGroups, indexesOfNewGroups, indexesOfModifiedGroups in
+                
+                /* for metadataGroup in metadataGroups {
+
+                    for metadata in metadataGroup.items {
+          
+                        if let value = metadata.value as? String {
+                            
+                            if let decodedData = Data(base64Encoded: value) {
+                                
+                   
+                                if let decodedString = String(data: decodedData, encoding: .utf8) {
+                                    print(" decoded Tracking Event  ==> ")
+                                    print(decodedString)
+                                    print("\n")
+                                }
+
+                                do {
+                                    let eventDictionery = try JSONDecoder().decode( [String: [String]].self, from: decodedData)
+                                    for(key, value ) in eventDictionery {
+                                        
+                                        if key ==  "breakStart" {
+                                           print("breakStart value ==> ", value )
+                                        }
+                                        if key == "clickTracking" {
+                                            print(" clickTracking value ==>> " , value )
+                                        }
+                                        if key == "clickThrough" {
+                                            print(" clickThrough value ==>> " , value )
+                                        }
+                                    }
+                                } catch {
+                                    print(" json decoding error " , error )
+                                }
+                            }
+                        }
+                    }
+                 } */
+
+            }
+        
+            .onTimedMetadataChanged { context, source, metadataItems in
+                guard let metadataItems = metadataItems else { return }
                 
             }
         
@@ -343,7 +395,7 @@ extension PlayerViewController {
         player
             .onError{ [weak self] player, source, error in
                 guard let `self` = self else { return }
-                
+
                 let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
                     (alert: UIAlertAction!) -> Void in
                 })
@@ -354,10 +406,24 @@ extension PlayerViewController {
             
             .onWarning{ [weak self] player,  source, warning in
                 guard let `self` = self else { return }
+   
                 // self.showToastMessage(message: warning.message, duration: 5)
             }
             .onAirplayStatusChanged { context , source , status  in
-              // onAirplayStatusChanged
+                ///  onAirplayStatusChanged 
+                
+                /// Switch to online playback as when airplaying user must have a wifi connection
+                /* if self.isOfflineMedia == true && status == true {
+                    
+                    let  currentplayheadPosition = self.player.playheadPosition
+                    self.player.stop()
+                    
+                    if let assetId = self.offlineMediaPlayable?.assetId {
+                        let properties = PlaybackProperties(autoplay: true, playFrom: .customPosition(position: currentplayheadPosition))
+                        let playable = AssetPlayable(assetId: assetId)
+                        self.player.startPlayback(playable: playable, properties: properties)
+                    }
+                } */
             }
         
         // Media Type
@@ -457,20 +523,24 @@ extension PlayerViewController {
     func startPlayBack(properties: PlaybackProperties = PlaybackProperties() ) {
         
         nowPlaying = playable
-        
+
         if let offlineMediaPlayable = offlineMediaPlayable {
+            
+            isOfflineMedia = true
             player.startPlayback(offlineMediaPlayable: offlineMediaPlayable )
         } else {
             if let playable = playable {
+                
+                isOfflineMedia = false
                 
                 // Check for cast session
                 if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
                     self.chromecast(playable: playable, in: environment, sessionToken: sessionToken, currentplayheadTime: self.player.playheadTime)
                 } else {
-                    player.startPlayback(playable: playable, properties:playbackProperties )
+    
+                    player.startPlayback(playable: playable, properties: properties)
                     
                 }
-                
             }
         }
         
@@ -521,6 +591,7 @@ extension PlayerViewController {
     
     /// handle vod ( MOVIE, CLIP, EPISODE etc )
     fileprivate func handleVod() {
+        
         programBasedTimeline.isHidden = true
         programBasedTimeline.stopLoop()
         vodBasedTimeline.isHidden = false
@@ -722,16 +793,8 @@ extension PlayerViewController {
                 }
             }
             
-            
-            print(" Seek delta " , seekDelta * 1000 )
-            
-            
             if let currentTime = self.player.playheadTime {
-                
-                print(" Current Time " , currentTime )
-                
-                print(" Should seek to " , currentTime/1000 + ( seekDelta * 1000) )
-                
+
                 let Ctime = currentTime
                 let seek = seekDelta * 1000
                 
@@ -743,24 +806,8 @@ extension PlayerViewController {
             guard let `self` = self else { return }
             let trackSelectionVC = TrackSelectionViewController()
             
-            
-//            print(" Audio Tracks  " , self.player.audioTracks)
-//            print(" Audio Tracks displayName " , self.player.audioGroup )
-            
-            
-            print(" Selected selectedTextTrack " , self.player.selectedTextTrack )
-            
-            print(" Selected selectedAudioTrack " , self.player.selectedAudioTrack )
-            
             trackSelectionVC.assign(audio: self.player.audioGroup)
             trackSelectionVC.assign(text: self.player.textGroup)
-            
-            let textGroupFirstTrack = self.player.textGroup?.tracks.first
-            print(" Track name )" , textGroupFirstTrack?.name )
-            print(" Track title",  textGroupFirstTrack?.title  )
-            print(" Track displayName",  textGroupFirstTrack?.displayName  )
-            print(" Track extendedLanguageTag ",  textGroupFirstTrack?.extendedLanguageTag  )
-            
             
             trackSelectionVC.onDidSelectAudio = { [weak self] track in
                 
@@ -771,35 +818,19 @@ extension PlayerViewController {
                     return
                     
                 }
-                
-                let textGroupFirstTrack = self.player.textGroup?.tracks.first
-                print(" Audio name )" , track.name )
-                print(" Audio title",  track.title  )
-                print(" Audio displayName",  track.displayName  )
-                print(" Audio extendedLanguageTag ",  track.extendedLanguageTag  )
-                
+              
                 let language = track.extendedLanguageTag
                 
                
                 UserDefaults.standard.set(language, forKey: "selectedAudioTrack")
                 self.player.selectAudio(track: track)
-                
-                // self.player.selectAudio(title: track.title)
-                
-                // self.player.selectAudio(track: track)
             }
             trackSelectionVC.onDidSelectText = { [weak self] track in
-                
-              
-                
                 guard let `self` = self, let track = track as? MediaTrack else {
                     self?.player.selectText(track: nil)
                     UserDefaults.standard.removeObject(forKey: "selectedSubtitleTrack")
                     return
                 }
-                
-               
-                
 
                 let language = track.extendedLanguageTag
                 UserDefaults.standard.set(language, forKey: "selectedSubtitleTrack")
@@ -816,10 +847,10 @@ extension PlayerViewController {
         controls.onNextProgram = { [weak self] in
             guard let `self` = self else { return }
             
-            let newPlayable = AssetPlayable(assetId: "fa44dacc-1193-4e85-898b-4b89b7be2e0c_82162E", assetType: AssetType.MOVIE)
-            self.player.startPlayback(playable: newPlayable, properties: PlaybackProperties())
-            
-            /* self.player.nextProgram() */
+            /* let newPlayable = AssetPlayable(assetId: "25384_929372c", assetType: AssetType.MOVIE)
+            self.player.startPlayback(playable: newPlayable, properties: PlaybackProperties(autoplay: true, playFrom: .defaultBehaviour)) */
+            self.player.nextProgram()
+           
         }
         
         controls.onPreviousProgram = { [weak self] in
@@ -885,6 +916,31 @@ extension PlayerViewController {
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         //Handle PIP did start event
     }
+    
+    /// Enable the audio session for player
+    fileprivate func enableAudioSeesionForPlayer() {
+        do {
+            if #available(iOS 11.0, *) {
+                try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback, policy: .longForm)
+            }
+            else {
+                try audioSession.setCategory(AVAudioSession.Category.playback)
+            }
+            try audioSession.setActive(true)
+        } catch {
+            print("Setting category to AVAudioSessionCategoryPlayback failed.")
+        }
+    }
+    
+    
+    /// Disable player audio session & continue the background playback
+    fileprivate func resumeBackgroundAudio() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false)
+        } catch {
+            print ("setActive(false) ERROR : \(error)")
+        }
+    }
 }
 
 
@@ -940,33 +996,6 @@ extension PlayerViewController {
     }
 }
 
-extension PlayerViewController {
-    /// Enable the audio session for player
-    fileprivate func enableAudioSeesionForPlayer() {
-        do {
-            if #available(iOS 11.0, *) {
-                try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback, policy: AVAudioSession.RouteSharingPolicy.longFormAudio)
-            }
-            else {
-                try audioSession.setCategory(AVAudioSession.Category.playback)
-            }
-            try audioSession.setActive(true)
-        } catch {
-            print("Setting category to AVAudioSessionCategoryPlayback failed.")
-        }
-    }
-    
-    
-    /// Disable player audio session & continue the background playback
-    fileprivate func resumeBackgroundAudio() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false)
-        } catch {
-            print ("setActive(false) ERROR : \(error)")
-        }
-    }
-}
-
 
 // MARK: - Chrome cast
 extension PlayerViewController: GCKSessionManagerListener {
@@ -989,6 +1018,10 @@ extension PlayerViewController: GCKSessionManagerListener {
         let currentplayheadTime = self.player.playheadTime
         self.chromecast(playable: playable, in: env, sessionToken: token, currentplayheadTime : currentplayheadTime)
         
+    }
+    
+    func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKSession, withError error: Error?) {
+        //
     }
     
     
@@ -1021,9 +1054,6 @@ extension PlayerViewController: GCKSessionManagerListener {
             mediaLoadRequestDataBuilder.queueData = queueDataBuilder.build()
             mediaLoadRequestDataBuilder.customData = customData
             
-            
-//            print(" sessionToken.value \(sessionToken.value)")
-//            print(" Session \(sessionToken)")
             
 //            if let playheadTime = currentplayheadTime {
 //                mediaLoadRequestDataBuilder.startTime = TimeInterval(playheadTime/1000)

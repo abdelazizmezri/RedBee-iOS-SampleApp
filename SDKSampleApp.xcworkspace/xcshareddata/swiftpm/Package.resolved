@@ -2,66 +2,84 @@
   "object": {
     "pins": [
       {
+        "package": "CwlCatchException",
+        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
+        "state": {
+          "branch": null,
+          "revision": "35f9e770f54ce62dd8526470f14c6e137cef3eea",
+          "version": "2.1.1"
+        }
+      },
+      {
+        "package": "CwlPreconditionTesting",
+        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
+        "state": {
+          "branch": null,
+          "revision": "c21f7bab5ca8eee0a9998bbd17ca1d0eb45d4688",
+          "version": "2.1.0"
+        }
+      },
+      {
         "package": "iOSClientCast",
         "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientCast.git",
         "state": {
           "branch": "master",
-          "revision": "6bbf18f546719f1ebd79b958fb0e9ca4d50d8d36",
+          "revision": "4248537980710dcd1dcc8eb0e29941c5661b8cca",
           "version": null
-        }
-      },
-      {
-        "package": "iOSClientDownload",
-        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientDownload",
-        "state": {
-          "branch": null,
-          "revision": "03e9b5035a8ff1bb302658890ff43be11fb8edd1",
-          "version": "3.0.200"
-        }
-      },
-      {
-        "package": "iOSClientExposure",
-        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposure",
-        "state": {
-          "branch": null,
-          "revision": "5f7396a6caaf8380ca7c845792c73ddb3bb8b164",
-          "version": "3.1.100"
-        }
-      },
-      {
-        "package": "iOSClientExposureDownload",
-        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git",
-        "state": {
-          "branch": "master",
-          "revision": "5a0de68358c0e7199be3b59fd5dc6e273785b75d",
-          "version": null
-        }
-      },
-      {
-        "package": "iOSClientExposurePlayback",
-        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback",
-        "state": {
-          "branch": "master",
-          "revision": "cdc69ce0161dbf9ce0bbb48cf3b9b5a0dbbb0273",
-          "version": null
-        }
-      },
-      {
-        "package": "iOSClientPlayer",
-        "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientPlayer",
-        "state": {
-          "branch": null,
-          "revision": "6193cb1ffbe03145eacab47fed1ab11e7c7eb7c9",
-          "version": "3.0.800"
         }
       },
       {
         "package": "LNPopupController",
         "repositoryURL": "https://github.com/LeoNatan/LNPopupController",
         "state": {
+          "branch": null,
+          "revision": "e163eb3b7748f55664bc1db03d2331e979ff8161",
+          "version": "2.9.2"
+        }
+      },
+      {
+        "package": "Lottie",
+        "repositoryURL": "https://github.com/airbnb/lottie-ios.git",
+        "state": {
           "branch": "master",
-          "revision": "9f44dd1ce6d9946210deea4d19b305df0d39503e",
+          "revision": "a4622b4d6fdbe76cc5487bc27e84029abaf07217",
           "version": null
+        }
+      },
+      {
+        "package": "MUXSDKStats",
+        "repositoryURL": "https://github.com/muxinc/mux-stats-sdk-avplayer.git",
+        "state": {
+          "branch": "master",
+          "revision": "066edf7eb045426d409d4712ae18140b8026020a",
+          "version": null
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
+          "version": "9.2.1"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "bd86ca0141e3cfb333546de5a11ede63f0c4a0e6",
+          "version": "4.0.0"
+        }
+      },
+      {
+        "package": "MuxCore",
+        "repositoryURL": "https://github.com/muxinc/stats-sdk-objc.git",
+        "state": {
+          "branch": null,
+          "revision": "5479badb758bf9b9e8336958cc0f0308f1b3b45d",
+          "version": "4.1.0"
         }
       }
     ]
