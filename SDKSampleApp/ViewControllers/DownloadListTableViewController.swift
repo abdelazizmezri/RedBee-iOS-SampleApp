@@ -10,6 +10,7 @@ import UIKit
 import iOSClientExposureDownload
 import iOSClientExposure
 import iOSClientExposurePlayback
+import SwiftUI
 
 class DownloadListTableViewController: UITableViewController, EnigmaDownloadManager {
     
@@ -28,26 +29,36 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
     
     func refreshTableView() {
         guard let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment else {
-          print("No Session token or enviornment provided ")
-          return
+            print("No Session token or enviornment provided ")
+            return
         }
-        
         
         // If you want to fetch all the downloaded Media , regardless of the user you can use `enigmaDownloadManager.getDownloadedAssets()`
         
         // This will fetch all the downloaded media related to the current user
-        downloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+        // downloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+        
+        downloadedAssets = enigmaDownloadManager.getDownloadedAssets(userId: session.userId)
         
         // downloadedAssets = enigmaDownloadManager.getDownloadedAssets(accountId: session.accountId )
         
         // This will fetch all the downloaded media related to the current user from the exposure backend
-        GetAllDownloads(environment: environment, sessionToken: session )
-        .request()
-        .validate()
-        .response { _ in
-            
-            // Handle your response here
-        }
+        /* GetAllDownloads(environment: environment, sessionToken: session )
+         .request()
+         .validate()
+         .response { result in
+         
+         // Handle your response here
+         if let value = result.value, let allDownloads = value as? AllDownloads, let assets = allDownloads.assets {
+         for abc in assets {
+         if let downloads = abc.downloads {
+         for download in downloads {
+         print(" user id " , download.userId )
+         }
+         }
+         }
+         }
+         } */
         
         
         tableView.reloadData()
@@ -68,18 +79,18 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
-            cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+        cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+        
+        cell.selectionStyle = .none
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .black
+        cell.detailTextLabel?.textColor = .black
+        
+        if let asset = downloadedAssets?[indexPath.row] {
             
-            cell.selectionStyle = .none
-            cell.backgroundColor = .white
-            cell.textLabel?.textColor = .black
-            cell.detailTextLabel?.textColor = .black
-            
-            if let asset = downloadedAssets?[indexPath.row] {
-                
             cell.textLabel?.text = asset.assetId
             cell.detailTextLabel?.text = asset.downloadState.rawValue // show download state of the offline media record
             
@@ -194,37 +205,54 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                 let downloadedAsset = self.enigmaDownloadManager.getDownloadedAsset(assetId: asset.assetId)
                 let urlAsset = downloadedAsset?.urlAsset
                 
-                if let entitlement = downloadedAsset?.entitlement, let urlAsset = urlAsset {
-                    
-
-                    let destinationViewController = PlayerViewController()
-                    destinationViewController.environment = StorageProvider.storedEnvironment
-                    destinationViewController.sessionToken = StorageProvider.storedSessionToken
+                
+                if let entitlement = downloadedAsset?.entitlement, let urlAsset = urlAsset, let format = downloadedAsset?.format {
                     
                     
-                    // Optional remeber previously selected audios & subs 
-                    var sub = ""
-                    var audio = ""
-                    
-                    let defaults = UserDefaults.standard
-                    if let selectedSubtitleTrack = defaults.object(forKey: "selectedSubtitleTrack") as? String {
-                        sub = selectedSubtitleTrack
+                    if format == "MP3" || format == "mp3" {
+                        
+                        // Navigate to audio only player
+                        
+                        let destinationViewController = AudioPlayerViewController()
+                        destinationViewController.fileUrl = urlAsset.url
+                        self.navigationController?.pushViewController(destinationViewController, animated: false)
+                        
+                        // Play with AudioEngine
+                        //                        let destinationViewController = AudioPlayerWithAVAudioEngine()
+                        //                        destinationViewController.fileUrl = urlAsset.url
+                        //                        self.navigationController?.pushViewController(destinationViewController, animated: false)
+                        
+                        
+                    } else {
+                        let destinationViewController = PlayerViewController()
+                        destinationViewController.environment = StorageProvider.storedEnvironment
+                        destinationViewController.sessionToken = StorageProvider.storedSessionToken
+                        
+                        // Optional remeber previously selected audios & subs
+                        var sub = ""
+                        var audio = ""
+                        
+                        let defaults = UserDefaults.standard
+                        if let selectedSubtitleTrack = defaults.object(forKey: "selectedSubtitleTrack") as? String {
+                            sub = selectedSubtitleTrack
+                        }
+                        
+                        if let selectedAudioTrack = defaults.object(forKey: "selectedAudioTrack") as? String {
+                            audio = selectedAudioTrack
+                        }
+                        
+                        /// Optional playback properties
+                        let properties = PlaybackProperties(autoplay: true,
+                                                            playFrom: .beginning ,
+                                                            language: .custom(text: sub, audio: audio))
+                        
+                        
+                        destinationViewController.playbackProperties = properties
+                        destinationViewController.offlineMediaPlayable = OfflineMediaPlayable(assetId: asset.assetId, entitlement: entitlement, url: urlAsset.url)
+                        
+                        self.navigationController?.pushViewController(destinationViewController, animated: false)
                     }
                     
-                    if let selectedAudioTrack = defaults.object(forKey: "selectedAudioTrack") as? String {
-                        audio = selectedAudioTrack
-                    }
-                    
-                    /// Optional playback properties
-                    let properties = PlaybackProperties(autoplay: true,
-                                                        playFrom: .beginning ,
-                                                        language: .custom(text: sub, audio: audio))
-                    
-                    
-                    destinationViewController.playbackProperties = properties
-                    destinationViewController.offlineMediaPlayable = OfflineMediaPlayable(assetId: asset.assetId, entitlement: entitlement, url: urlAsset.url)
-                    
-                    self.navigationController?.pushViewController(destinationViewController, animated: false)
                     
                 }
             }

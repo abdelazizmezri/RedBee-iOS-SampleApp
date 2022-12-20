@@ -10,7 +10,6 @@ import UIKit
 import iOSClientExposure
 import iOSClientExposurePlayback
 import iOSClientExposureDownload
-import LNPopupController
 
 class AssetListTableViewController: UITableViewController, EnigmaDownloadManager {
     
@@ -160,7 +159,7 @@ extension AssetListTableViewController {
     fileprivate func showOptions(asset: Asset) {
         if asset.type == AssetType.MOVIE {
             let destinationVC = AssetDetailsViewController()
-            destinationVC.assetId =  asset.assetId
+            destinationVC.assetId = asset.assetId
 
             self.navigationController?.pushViewController(destinationVC, animated: false)
         } else {

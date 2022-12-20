@@ -12,9 +12,9 @@ import iOSClientExposurePlayback
 import AVKit
 import AVFoundation
 import MediaPlayer
-import LNPopupController
 import iOSClientCast
 import GoogleCast
+import LNPopupController
 
 class StickyPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     
@@ -510,7 +510,7 @@ extension StickyPlayerViewController {
         let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 0, width: 24, height: 24) )
         volumeView.tintColor = .systemBlue
         
-        if let routeButton = volumeView.subviews.last as? UIButton, 
+        if let routeButton = volumeView.subviews.last as? UIButton,
            let routeButtonTemplateImage  = routeButton.currentImage?.withRenderingMode(.alwaysTemplate) {
                 volumeView.setRouteButtonImage(routeButtonTemplateImage, for: .normal)
         }

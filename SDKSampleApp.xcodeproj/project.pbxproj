@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7807B3F328DDAF7300404897 /* MUXSDKStats in Frameworks */ = {isa = PBXBuildFile; productRef = 7807B3F228DDAF7300404897 /* MUXSDKStats */; };
 		781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C373F25187CA60094C2C6 /* UIViewController+Extension.swift */; };
 		781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781C3872251A1AF70094C2C6 /* RootViewController.swift */; };
 		7825E70E27633DB000DC4FA7 /* ContentProposalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E70D27633DB000DC4FA7 /* ContentProposalViewController.swift */; };
@@ -15,7 +16,6 @@
 		7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */; };
 		7825E71D2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
 		7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7825E71C2763405400DC4FA7 /* AssetViewModel.swift */; };
-		7834099B2796BF4D001831D5 /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78856FEF27906DED00CA6563 /* SwiftRefinements.swift */; };
 		783703E9274E2CDE00EC1F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783703E8274E2CDE00EC1F26 /* AppDelegate.swift */; };
 		783703EE274E2CDE00EC1F26 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 783703EC274E2CDE00EC1F26 /* Main.storyboard */; };
 		783703F0274E2CE700EC1F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 783703EF274E2CE700EC1F26 /* Assets.xcassets */; };
@@ -26,13 +26,20 @@
 		7838DCDC27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
 		7838DCDD27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
 		7838DCDE27A7C5290052848A /* SampleApplication-Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */; };
-		7850403B28ACC9BA0035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */; };
+		78456DF7294AF27400BC6B65 /* LNPopupController-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 78456DF6294AF27400BC6B65 /* LNPopupController-Static */; };
+		78456DF9294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78456DF8294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift */; };
+		784FF7B529432A970098E622 /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784FF7B429432A970098E622 /* AudioPlayerViewController.swift */; };
+		784FF7B8294330020098E622 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 784FF7B7294330020098E622 /* Lottie */; };
 		7850403E28ACCA1D0035D509 /* iOSClientCast in Frameworks */ = {isa = PBXBuildFile; productRef = 7850403D28ACCA1D0035D509 /* iOSClientCast */; };
-		7850404128ACCCD10035D509 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404028ACCCD10035D509 /* iOSClientExposureDownload */; };
-		7850404328ACE7E40035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404228ACE7E40035D509 /* iOSClientExposurePlayback */; };
-		7850404728ACE7F60035D509 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404628ACE7F60035D509 /* iOSClientExposurePlayback */; };
 		7850404928ACE7F60035D509 /* iOSClientCast in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404828ACE7F60035D509 /* iOSClientCast */; };
-		7850404B28ACE7F60035D509 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7850404A28ACE7F60035D509 /* iOSClientExposureDownload */; };
+		7860867728C9D61D00BC3BA1 /* iOSClientExposure in Frameworks */ = {isa = PBXBuildFile; productRef = 7860867628C9D61D00BC3BA1 /* iOSClientExposure */; };
+		7860867928C9D61D00BC3BA1 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7860867828C9D61D00BC3BA1 /* iOSClientExposurePlayback */; };
+		7860867D28C9F68000BC3BA1 /* iOSClientExposure in Frameworks */ = {isa = PBXBuildFile; productRef = 7860867C28C9F68000BC3BA1 /* iOSClientExposure */; };
+		7860867F28C9F68000BC3BA1 /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 7860867E28C9F68000BC3BA1 /* iOSClientExposurePlayback */; };
+		7860868128C9F68000BC3BA1 /* iOSClientPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 7860868028C9F68000BC3BA1 /* iOSClientPlayer */; };
+		7860868828D088CA00BC3BA1 /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7860868728D088CA00BC3BA1 /* iOSClientExposureDownload */; };
+		7860868A28D088D000BC3BA1 /* iOSClientDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 7860868928D088D000BC3BA1 /* iOSClientDownload */; };
+		7860868F28D08AAE00BC3BA1 /* iOSClientPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 7860868E28D08AAE00BC3BA1 /* iOSClientPlayer */; };
 		78637F0B274E366500185D14 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78637F0A274E366500185D14 /* PlayerViewController.swift */; };
 		78B6D8C7278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */; };
 		78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6D8C8278D751400BBD3F5 /* ContentView.swift */; };
@@ -94,7 +101,6 @@
 		78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251A62513A135001ED9E3 /* RBMTextField.swift */; };
 		78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AA2513A143001ED9E3 /* RBMButton.swift */; };
 		78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */; };
-		78D62BB22816CB5800CE84A1 /* LNPopupController-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 78D62BB12816CB5800CE84A1 /* LNPopupController-Static */; };
 		78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
 		78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */; };
 /* End PBXBuildFile section */
@@ -169,8 +175,14 @@
 		78370415274E300300EC1F26 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7838DCB927A025AA0052848A /* AVAudioSession+Airplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAudioSession+Airplay.swift"; sourceTree = "<group>"; };
 		7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "SampleApplication-Guide.md"; sourceTree = "<group>"; };
+		78456DF8294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerWithAVAudioEngine.swift; sourceTree = "<group>"; };
+		784FF7B429432A970098E622 /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
+		7860868528D0884500BC3BA1 /* iOSClientExposureDownload */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOSClientExposureDownload; path = ../iOSClientExposureDownload; sourceTree = "<group>"; };
+		7860868628D0885000BC3BA1 /* iOSClientDownload */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOSClientDownload; path = ../iOSClientDownload; sourceTree = "<group>"; };
+		7860868D28D08A9400BC3BA1 /* iOSClientPlayer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOSClientPlayer; path = ../iOSClientPlayer; sourceTree = "<group>"; };
 		78637F0A274E366500185D14 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		78856FEF27906DED00CA6563 /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftRefinements.swift; sourceTree = "<group>"; };
+		7885470E28C9D1DA008E27E9 /* iOSClientExposure */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOSClientExposure; path = ../iOSClientExposure; sourceTree = "<group>"; };
+		7885471128C9D3E6008E27E9 /* iOSClientExposurePlayback */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOSClientExposurePlayback; path = ../iOSClientExposurePlayback; sourceTree = "<group>"; };
 		788AEFF128214E96008A4CC3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDKSampleSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78B6D8C6278D751300BBD3F5 /* SDKSampleSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSampleSwiftUIApp.swift; sourceTree = "<group>"; };
@@ -233,7 +245,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7850404328ACE7E40035D509 /* iOSClientExposurePlayback in Frameworks */,
+				7860868128C9F68000BC3BA1 /* iOSClientPlayer in Frameworks */,
+				7860867D28C9F68000BC3BA1 /* iOSClientExposure in Frameworks */,
+				7860867F28C9F68000BC3BA1 /* iOSClientExposurePlayback in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,9 +255,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7850404B28ACE7F60035D509 /* iOSClientExposureDownload in Frameworks */,
 				7850404928ACE7F60035D509 /* iOSClientCast in Frameworks */,
-				7850404728ACE7F60035D509 /* iOSClientExposurePlayback in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,10 +263,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7850403B28ACC9BA0035D509 /* iOSClientExposurePlayback in Frameworks */,
+				7860868A28D088D000BC3BA1 /* iOSClientDownload in Frameworks */,
+				7860868828D088CA00BC3BA1 /* iOSClientExposureDownload in Frameworks */,
+				7860867928C9D61D00BC3BA1 /* iOSClientExposurePlayback in Frameworks */,
+				78456DF7294AF27400BC6B65 /* LNPopupController-Static in Frameworks */,
 				7850403E28ACCA1D0035D509 /* iOSClientCast in Frameworks */,
-				7850404128ACCCD10035D509 /* iOSClientExposureDownload in Frameworks */,
-				78D62BB22816CB5800CE84A1 /* LNPopupController-Static in Frameworks */,
+				7860867728C9D61D00BC3BA1 /* iOSClientExposure in Frameworks */,
+				7860868F28D08AAE00BC3BA1 /* iOSClientPlayer in Frameworks */,
+				7807B3F328DDAF7300404897 /* MUXSDKStats in Frameworks */,
+				784FF7B8294330020098E622 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +303,11 @@
 		7828B08F282D366800B2B1FE /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				7885470E28C9D1DA008E27E9 /* iOSClientExposure */,
+				7885471128C9D3E6008E27E9 /* iOSClientExposurePlayback */,
+				7860868528D0884500BC3BA1 /* iOSClientExposureDownload */,
+				7860868628D0885000BC3BA1 /* iOSClientDownload */,
+				7860868D28D08A9400BC3BA1 /* iOSClientPlayer */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -365,7 +387,6 @@
 			isa = PBXGroup;
 			children = (
 				781C376F251887620094C2C6 /* SDKSampleApp.entitlements */,
-				78856FEF27906DED00CA6563 /* SwiftRefinements.swift */,
 				78C251862513A0DC001ED9E3 /* Model */,
 				78C2518D2513A0F7001ED9E3 /* ViewModel */,
 				78C2513625139F9E001ED9E3 /* Views */,
@@ -443,6 +464,8 @@
 				78C2512E25139F82001ED9E3 /* TrackSelectionViewController.swift */,
 				78C2513225139F8F001ED9E3 /* DownloadListTableViewController.swift */,
 				78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */,
+				784FF7B429432A970098E622 /* AudioPlayerViewController.swift */,
+				78456DF8294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -527,7 +550,9 @@
 			);
 			name = SDKSampleAppTvOS;
 			packageProductDependencies = (
-				7850404228ACE7E40035D509 /* iOSClientExposurePlayback */,
+				7860867C28C9F68000BC3BA1 /* iOSClientExposure */,
+				7860867E28C9F68000BC3BA1 /* iOSClientExposurePlayback */,
+				7860868028C9F68000BC3BA1 /* iOSClientPlayer */,
 			);
 			productName = SDKSampleAppTvOS;
 			productReference = 783703E6274E2CDE00EC1F26 /* SDKSampleAppTvOS.app */;
@@ -548,9 +573,7 @@
 			);
 			name = SDKSampleSwiftUI;
 			packageProductDependencies = (
-				7850404628ACE7F60035D509 /* iOSClientExposurePlayback */,
 				7850404828ACE7F60035D509 /* iOSClientCast */,
-				7850404A28ACE7F60035D509 /* iOSClientExposureDownload */,
 			);
 			productName = SDKSampleSwiftUI;
 			productReference = 78B6D8C4278D751300BBD3F5 /* SDKSampleSwiftUI.app */;
@@ -572,10 +595,15 @@
 			);
 			name = SDKSampleApp;
 			packageProductDependencies = (
-				78D62BB12816CB5800CE84A1 /* LNPopupController-Static */,
-				7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */,
 				7850403D28ACCA1D0035D509 /* iOSClientCast */,
-				7850404028ACCCD10035D509 /* iOSClientExposureDownload */,
+				7860867628C9D61D00BC3BA1 /* iOSClientExposure */,
+				7860867828C9D61D00BC3BA1 /* iOSClientExposurePlayback */,
+				7860868728D088CA00BC3BA1 /* iOSClientExposureDownload */,
+				7860868928D088D000BC3BA1 /* iOSClientDownload */,
+				7860868E28D08AAE00BC3BA1 /* iOSClientPlayer */,
+				7807B3F228DDAF7300404897 /* MUXSDKStats */,
+				784FF7B7294330020098E622 /* Lottie */,
+				78456DF6294AF27400BC6B65 /* LNPopupController-Static */,
 			);
 			productName = SDKSampleApp;
 			productReference = 78C24FB525139845001ED9E3 /* SDKSampleApp.app */;
@@ -655,10 +683,10 @@
 			);
 			mainGroup = 78C24FAC25139845001ED9E3;
 			packageReferences = (
-				78D62BB02816CB5800CE84A1 /* XCRemoteSwiftPackageReference "LNPopupController" */,
-				7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */,
 				7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */,
-				7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */,
+				7807B3F128DDAF7300404897 /* XCRemoteSwiftPackageReference "mux-stats-sdk-avplayer" */,
+				784FF7B6294330020098E622 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				78456DF5294AF27400BC6B65 /* XCRemoteSwiftPackageReference "LNPopupController" */,
 			);
 			productRefGroup = 78C24FB625139845001ED9E3 /* Products */;
 			projectDirPath = "";
@@ -792,7 +820,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7834099B2796BF4D001831D5 /* SwiftRefinements.swift in Sources */,
 				781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */,
 				78C2513925139FB6001ED9E3 /* PlayerControls.swift in Sources */,
 				78C2511925139F33001ED9E3 /* LoginViewController.swift in Sources */,
@@ -802,6 +829,7 @@
 				78C2514F2513A02F001ED9E3 /* UIImageView+constraint.swift in Sources */,
 				78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */,
 				7838DCBA27A025AA0052848A /* AVAudioSession+Airplay.swift in Sources */,
+				78456DF9294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift in Sources */,
 				78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */,
 				7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
 				78C2510525139E47001ED9E3 /* ColorScheme.swift in Sources */,
@@ -815,6 +843,7 @@
 				78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */,
 				78C2512F25139F82001ED9E3 /* TrackSelectionViewController.swift in Sources */,
 				78C2514A25139FF8001ED9E3 /* AssetListTableViewCell.swift in Sources */,
+				784FF7B529432A970098E622 /* AudioPlayerViewController.swift in Sources */,
 				78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */,
 				78C2518F2513A106001ED9E3 /* TrackSelectionViewModel.swift in Sources */,
 				78C251652513A085001ED9E3 /* UITableView+EmptyMessage.swift in Sources */,
@@ -905,18 +934,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8FQ2PQSFHB;
 				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.nova.tv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development is.nova.tv tvos";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -932,15 +961,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = MU9N7V8YCY;
+				DEVELOPMENT_TEAM = 8FQ2PQSFHB;
 				INFOPLIST_FILE = SDKSampleAppTvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.nova.tv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.Eyevinn.STSWE tvos";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore is.nova.tv tvos";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1044,7 +1073,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1109,7 +1138,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1134,15 +1163,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SDKSampleApp/SDKSampleApp.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 3P5CH3HLZN;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SDKSampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1157,7 +1187,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.emp.ExposurePlayback.SampleApp";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1171,13 +1201,14 @@
 				CODE_SIGN_ENTITLEMENTS = SDKSampleApp/SDKSampleApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = QZ78HR3RWF;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 3P5CH3HLZN;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SDKSampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1191,7 +1222,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.togethertv.watch";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emp.ExposurePlayback.SampleApp";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1204,7 +1235,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SDKSampleAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1226,7 +1257,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SDKSampleAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1345,9 +1376,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */ = {
+		7807B3F128DDAF7300404897 /* XCRemoteSwiftPackageReference "mux-stats-sdk-avplayer" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback";
+			repositoryURL = "https://github.com/muxinc/mux-stats-sdk-avplayer.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		78456DF5294AF27400BC6B65 /* XCRemoteSwiftPackageReference "LNPopupController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNPopupController";
+			requirement = {
+				kind = exactVersion;
+				version = 2.9.2;
+			};
+		};
+		784FF7B6294330020098E622 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -1361,64 +1408,65 @@
 				kind = branch;
 			};
 		};
-		7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		78D62BB02816CB5800CE84A1 /* XCRemoteSwiftPackageReference "LNPopupController" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LeoNatan/LNPopupController";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7850403A28ACC9BA0035D509 /* iOSClientExposurePlayback */ = {
+		7807B3F228DDAF7300404897 /* MUXSDKStats */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */;
-			productName = iOSClientExposurePlayback;
+			package = 7807B3F128DDAF7300404897 /* XCRemoteSwiftPackageReference "mux-stats-sdk-avplayer" */;
+			productName = MUXSDKStats;
+		};
+		78456DF6294AF27400BC6B65 /* LNPopupController-Static */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78456DF5294AF27400BC6B65 /* XCRemoteSwiftPackageReference "LNPopupController" */;
+			productName = "LNPopupController-Static";
+		};
+		784FF7B7294330020098E622 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 784FF7B6294330020098E622 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		7850403D28ACCA1D0035D509 /* iOSClientCast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */;
 			productName = iOSClientCast;
 		};
-		7850404028ACCCD10035D509 /* iOSClientExposureDownload */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */;
-			productName = iOSClientExposureDownload;
-		};
-		7850404228ACE7E40035D509 /* iOSClientExposurePlayback */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */;
-			productName = iOSClientExposurePlayback;
-		};
-		7850404628ACE7F60035D509 /* iOSClientExposurePlayback */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7850403928ACC9BA0035D509 /* XCRemoteSwiftPackageReference "iOSClientExposurePlayback" */;
-			productName = iOSClientExposurePlayback;
-		};
 		7850404828ACE7F60035D509 /* iOSClientCast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7850403C28ACCA1D0035D509 /* XCRemoteSwiftPackageReference "iOSClientCast" */;
 			productName = iOSClientCast;
 		};
-		7850404A28ACE7F60035D509 /* iOSClientExposureDownload */ = {
+		7860867628C9D61D00BC3BA1 /* iOSClientExposure */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7850403F28ACCCD10035D509 /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */;
+			productName = iOSClientExposure;
+		};
+		7860867828C9D61D00BC3BA1 /* iOSClientExposurePlayback */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSClientExposurePlayback;
+		};
+		7860867C28C9F68000BC3BA1 /* iOSClientExposure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSClientExposure;
+		};
+		7860867E28C9F68000BC3BA1 /* iOSClientExposurePlayback */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSClientExposurePlayback;
+		};
+		7860868028C9F68000BC3BA1 /* iOSClientPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSClientPlayer;
+		};
+		7860868728D088CA00BC3BA1 /* iOSClientExposureDownload */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = iOSClientExposureDownload;
 		};
-		78D62BB12816CB5800CE84A1 /* LNPopupController-Static */ = {
+		7860868928D088D000BC3BA1 /* iOSClientDownload */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 78D62BB02816CB5800CE84A1 /* XCRemoteSwiftPackageReference "LNPopupController" */;
-			productName = "LNPopupController-Static";
+			productName = iOSClientDownload;
+		};
+		7860868E28D08AAE00BC3BA1 /* iOSClientPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSClientPlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
