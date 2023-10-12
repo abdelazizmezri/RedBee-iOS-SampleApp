@@ -221,6 +221,7 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
             .onPlaybackPaused{ [weak self] player, source in
                 // Fires when the playback pauses for some reason
                 guard let `self` = self else { return }
+
                 self.togglePlayPauseButton(paused: true)
             }
             .onPlaybackResumed{ [weak self] player, source in
@@ -364,6 +365,8 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
                 // Update user facing program information
                 guard let `self` = self else { return }
                 self.update(withProgram: program)
+          
+                
             }
             
             .onEntitlementResponse { [weak self] player, source, entitlement  in
@@ -394,6 +397,7 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
         // Error handling can be done by listening to associated event.
         player
             .onError{ [weak self] player, source, error in
+                
                 guard let `self` = self else { return }
 
                 let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
@@ -809,8 +813,8 @@ extension PlayerViewController {
             trackSelectionVC.assign(audio: self.player.audioGroup)
             trackSelectionVC.assign(text: self.player.textGroup)
             
+
             trackSelectionVC.onDidSelectAudio = { [weak self] track in
-                
                 
                 guard let `self` = self, let track = track as? MediaTrack else {
                     self?.player.selectAudio(track: nil)
@@ -824,6 +828,7 @@ extension PlayerViewController {
                
                 UserDefaults.standard.set(language, forKey: "selectedAudioTrack")
                 self.player.selectAudio(track: track)
+                
             }
             trackSelectionVC.onDidSelectText = { [weak self] track in
                 guard let `self` = self, let track = track as? MediaTrack else {

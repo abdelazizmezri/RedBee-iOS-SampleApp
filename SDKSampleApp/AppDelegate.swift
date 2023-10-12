@@ -11,28 +11,32 @@ import GoogleCast
 import iOSClientExposureDownload
 import iOSClientDownload
 import AVFoundation
+import BackgroundTasks
+import iOSClientExposure
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListener, GCKSessionManagerListener {
-
+    
     var window: UIWindow?
     var castChannel: Channel = Channel()
     var castSession: GCKCastSession?
-
-
+    
+    
     let tabBarController = UITabBarController()
     var mainNavCtrl: UINavigationController?
     
+    let appRefreshTaskId = "com.emp.ExposurePlayback.SampleApp.analyticsFlush"
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-
+        
         application.beginReceivingRemoteControlEvents()
         
-        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0]
-        let fileName = "\(Date()).log"
-        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
-        freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
+//        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//        let documentsDirectory = paths[0]
+//        let fileName = "\(Date()).log"
+//        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
+//        freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
         
         
         let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: "")) // Set your chrome cast app id here
@@ -44,76 +48,98 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
         
         GCKCastContext.sharedInstance().sessionManager.add(self)
         
+        // Read more about the background processing for offline analytics in the documentation:
+        // https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback/blob/master/Documentation/offlineAnalytics.md
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: self.appRefreshTaskId, using: nil) { task in
+            self.handleFlusingOfflineAnalytics(task: task as! BGProcessingTask)
+            
+        }
+        
+        
         // Enable all the logs if needed
-//        let logFilter = GCKLoggerFilter()
-//        logFilter.minimumLevel = .verbose
-//        GCKLogger.sharedInstance().filter = logFilter
-//        GCKLogger.sharedInstance().delegate = self
+        //        let logFilter = GCKLoggerFilter()
+        //        logFilter.minimumLevel = .verbose
+        //        GCKLogger.sharedInstance().filter = logFilter
+        //        GCKLogger.sharedInstance().delegate = self
         
         
-//        let styler = GCKUIStyle.sharedInstance()
-//        styler.castViews.iconTintColor = .lightGray
-//        styler.castViews.mediaControl.expandedController.iconTintColor = .green
-//        styler.castViews.backgroundColor = .white
-//        styler.castViews.mediaControl.miniController.backgroundColor = .yellow
-//        styler.castViews.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 16) ?? UIFont.systemFont(ofSize: 16)
-//        styler.castViews.mediaControl.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 6) ?? UIFont.systemFont(ofSize: 6)
-//        let muteOnImage = UIImage.init(named: "volume0.png")
-//        if let muteOnImage = muteOnImage {
-//          styler.castViews.muteOnImage = muteOnImage
-//        }
-//
-//        styler.apply()
+        //        let styler = GCKUIStyle.sharedInstance()
+        //        styler.castViews.iconTintColor = .lightGray
+        //        styler.castViews.mediaControl.expandedController.iconTintColor = .green
+        //        styler.castViews.backgroundColor = .white
+        //        styler.castViews.mediaControl.miniController.backgroundColor = .yellow
+        //        styler.castViews.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        //        styler.castViews.mediaControl.headingTextFont = UIFont.init(name: "Courier-Oblique", size: 6) ?? UIFont.systemFont(ofSize: 6)
+        //        let muteOnImage = UIImage.init(named: "volume0.png")
+        //        if let muteOnImage = muteOnImage {
+        //          styler.castViews.muteOnImage = muteOnImage
+        //        }
+        //
+        //        styler.apply()
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
         let navigationController = MainNavigationController()
         
-        /* if StorageProvider.storedSessionToken != nil {
-            
-            let tabBarController = UITabBarController()
-            
-            
-            if #available(iOS 15.0, *) {
-                let appearance = UITabBarAppearance()
-                appearance.configureWithOpaqueBackground()
-                appearance.backgroundColor = .white
-                tabBarController.tabBar.standardAppearance = appearance
-                tabBarController.tabBar.scrollEdgeAppearance = tabBarController.tabBar.standardAppearance
-            }
-
-            let selectionlistViewController = SelectionTableViewController()
-            
-            let firstNav = UINavigationController(rootViewController: selectionlistViewController)
-            
-            firstNav.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: ""), tag: 0)
-            
-            let selectionlistViewController2 = LoginViewController()
-            let secondNav = UINavigationController(rootViewController: selectionlistViewController2)
-            
-            secondNav.tabBarItem = UITabBarItem(title: "Second", image: UIImage(named: ""), tag: 1)
-            
-            let tabs = [firstNav, secondNav]
-            tabBarController.setViewControllers(tabs, animated: false)
-            
-            navigationController = UINavigationController(rootViewController: tabBarController)
-            
-        } else {
-            navigationController = MainNavigationController()
-        } */
-    
         let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
-          as GCKUICastContainerViewController
+        as GCKUICastContainerViewController
         castContainerVC.miniMediaControlsItemEnabled = true
         
         window?.rootViewController = castContainerVC
         window?.makeKeyAndVisible()
         return true
     }
-
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        self.scheduleAppRefresh(minutes: 2)
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        self.cancelAllPendingBGTask()
+    }
+    
+    func cancelAllPendingBGTask() {
+        BGTaskScheduler.shared.cancelAllTaskRequests()
+    }
+    
+    func scheduleAppRefresh(minutes: Int) {
+        
+        let seconds = TimeInterval(minutes * 60)
+        
+        let request = BGProcessingTaskRequest(identifier: self.appRefreshTaskId )
+        request.earliestBeginDate = Date(timeIntervalSinceNow: seconds)
+        request.requiresNetworkConnectivity = true
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Could not schedule app refresh task \(error.localizedDescription)")
+        }
+    }
+    
+    func handleFlusingOfflineAnalytics(task: BGProcessingTask) {
+        
+        // Schedule a new refresh task : Define the minutes
+        scheduleAppRefresh(minutes: 2)
+        
+        let manager = iOSClientExposure.BackgroundAnalyticsManager()
+        manager.fushOfflineAnalytics()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
+            task.setTaskCompleted(success: true)
+        }
+        
+        task.expirationHandler = {
+            
+            self.cancelAllPendingBGTask()
+        }
+    }
+    
+    
+    
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.gckExpandedMediaControlsTriggered, object: nil)
+        
         
     }
     
@@ -144,9 +170,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                     let expandedControls = GCKCastContext.sharedInstance().defaultExpandedMediaControlsViewController
                     
                     let ccViewController = TrackSelectionViewController()
-
-                    ccViewController.assign(audio: tracksUpdated.audio)
-                    ccViewController.assign(text: tracksUpdated.subtitles)
+                    
+                    // ccViewController.assign(audio: tracksUpdated.audio)
+                    // ccViewController.assign(text: tracksUpdated.subtitles)
+                    
                     ccViewController.onDidSelectAudio = { [weak self] track in
                         guard let `self` = self, let track = track as? iOSClientCast.Track else { return }
                         self.castChannel.use(audioTrack: track)
@@ -165,9 +192,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
                     }
                     expandedControls.present(ccViewController, animated: true)
                 }
-                
-                print("Cast.Channel onTracksUpdated Audio",tracksUpdated.audio)
-                print("Cast.Channel onTracksUpdated Subs ",tracksUpdated.subtitles)
             }
             .onTimeshiftEnabled{ timeshift in
                 print("Cast.Channel onTimeshiftEnabled",timeshift)
@@ -231,7 +255,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKRemoteMediaClientListe
             }
             .onError{ error in
                 print("Cast.Channel onError",error)
-        }
+            }
         
         castChannel.pull()
     }
@@ -292,14 +316,14 @@ class ChromeCastButton: UIButton {
 
 // MARK: - Enable Background Downloads
 extension AppDelegate {
-
+    
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         if identifier == SessionConfigurationIdentifier.default.rawValue {
             print("🛏 Rejoining session \(identifier)")
             let sessionManager = ExposureSessionManager.shared.manager
             sessionManager.backgroundCompletionHandler = completionHandler
-    
+            
             sessionManager.restoreTasks { downloadTasks in
                 downloadTasks.forEach {
                     print("🛏 found",$0.taskDescription ?? "")
@@ -307,7 +331,6 @@ extension AppDelegate {
                     // self.log(downloadTask: $0)
                 }
             }
-            
             
             sessionManager.backgroundErrorCompletionHandler = { error in
                 print(" backgroundErrorCompletionHandler in app Delegate " , error )

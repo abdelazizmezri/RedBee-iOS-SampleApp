@@ -13,13 +13,16 @@ import iOSClientExposureDownload
 
 class AssetListTableViewController: UITableViewController, EnigmaDownloadManager {
     
+    var startTime: NSNumber?
+    
     var selectedAsssetType: String!
     var assets = [Asset]()
     var downloadedAssets: [OfflineMediaAsset]?
     var sessionToken: SessionToken?
     
     let cellId = "assetListTableViewCell"
-
+    
+    var assetPageNumber: Int = 1
     
     // MARK: Life Cycle
     override func viewWillAppear(_ animated: Bool) {
@@ -33,9 +36,14 @@ class AssetListTableViewController: UITableViewController, EnigmaDownloadManager
         
         self.view.backgroundColor = .clear
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(AssetListCell.self, forCellReuseIdentifier: cellId)
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .white
+        
+        let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(loadNextPageAssets))
+        let previous = UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(loadPreviousPageAssets))
+
+        navigationItem.rightBarButtonItems = [next, previous]
         
         
         self.generateTableViewContent()
@@ -46,11 +54,13 @@ class AssetListTableViewController: UITableViewController, EnigmaDownloadManager
     }
 }
 
+
+
 // MARK: - DataSource
 extension AssetListTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 80
     }
     
     /// Generate tableview content by loading assets from API
@@ -74,7 +84,7 @@ extension AssetListTableViewController {
         else {
             // MOVIE / TV_CHANNEL
             let query = ""
-            loadAssets(query: query, environment: environment, endpoint: "/content/asset?assetType=\(selectedAsssetType!)&pageSize=100&pageNumber=1", method: HTTPMethod.get)
+            self.loadAssets(query: query, environment: environment, pageNumber: assetPageNumber)
         }
     }
     
@@ -108,23 +118,28 @@ extension AssetListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell  {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? AssetListCell else { return UITableViewCell() }
         
         let asset = assets[indexPath.row]
         
+        //        cell.selectionStyle = .none
+        //        cell.backgroundColor = .white
+        //        cell.textLabel?.textColor = .black
+        //        cell.detailTextLabel?.textColor = .black
+        
+        // cell.textLabel?.text = asset.localized?.first?.title ?? asset.assetId
+        
         cell.selectionStyle = .none
-        cell.backgroundColor = .white
-        cell.textLabel?.textColor = .black
-        cell.detailTextLabel?.textColor = .black
+        cell.backgroundColor = UIColor.white
         
-        cell.textLabel?.text = asset.localized?.first?.title ?? asset.assetId
+        //
+        //        if let _ = downloadedAssets?.first(where: { $0.assetId == asset.assetId }) {
+        //            cell.detailTextLabel?.text = "Available in downloads"
+        //        } else {
+        //            cell.detailTextLabel?.text = asset.assetId
+        //        }
         
-        if let _ = downloadedAssets?.first(where: { $0.assetId == asset.assetId }) {
-            cell.detailTextLabel?.text = "Available in downloads"
-        } else {
-            cell.detailTextLabel?.text = asset.assetId
-        }
-        
+        cell.setupValues(asset)
         return cell
     }
 }
@@ -144,6 +159,14 @@ extension AssetListTableViewController {
                 self.showOptions(asset: asset)
             case AssetType.MOVIE:
                 self.showOptions(asset: asset)
+            case AssetType.TV_SHOW:
+                self.showOptions(asset: asset)
+            case AssetType.EPISODE:
+                self.showOptions(asset: asset)
+            case AssetType.EVENT:
+                self.showOptions(asset: asset)
+            case AssetType.PODCAST:
+                self.showOptions(asset: asset)
             default:
                 let playable = AssetPlayable(assetId: asset.assetId)
                 self.handlePlay(playable: playable, asset: asset)
@@ -157,10 +180,11 @@ extension AssetListTableViewController {
     ///
     /// - Parameter asset: asset
     fileprivate func showOptions(asset: Asset) {
-        if asset.type == AssetType.MOVIE {
+        if asset.type == AssetType.MOVIE ||  asset.type == AssetType.TV_SHOW ||  asset.type == AssetType.EPISODE  ||  asset.type == AssetType.EVENT || asset.type == AssetType.PODCAST {
             let destinationVC = AssetDetailsViewController()
             destinationVC.assetId = asset.assetId
-
+            
+            self.navigationController?.navigationItem.title = "Asset Details"
             self.navigationController?.pushViewController(destinationVC, animated: false)
         } else {
             let gotoEPG = UIAlertAction(title: "Go to EPG View", style: .default, handler: {
@@ -210,14 +234,17 @@ extension AssetListTableViewController {
             
             destinationViewController.environment = StorageProvider.storedEnvironment
             destinationViewController.sessionToken = StorageProvider.storedSessionToken
-
+            
             if let asset = asset {
                 destinationViewController.newAssetType = asset.type
             }
             
             /// Optional playback properties
             let properties = PlaybackProperties(autoplay: true,
-                                                playFrom: .defaultBehaviour)
+                                               playFrom: .defaultBehaviour)
+
+            
+            // let properties = PlaybackProperties(autoplay: true, playFrom: .defaultBehaviour)
             
             destinationViewController.playbackProperties = properties
             destinationViewController.playable = playable
@@ -226,7 +253,9 @@ extension AssetListTableViewController {
         }
         
     }
+    
 
+    
     
     
     /// Fetch the Asset  details to pass to the player  : Optional
@@ -243,7 +272,7 @@ extension AssetListTableViewController {
             .request()
             .validate()
             .response{ [weak self] in
-
+                
                 if let asset = $0.value {
                     completion(asset)
                     // self?.showMiniPlayer(environment: env, session: session, playable: playable, asset: asset)
@@ -274,7 +303,7 @@ extension AssetListTableViewController {
         if let player = StickyPlayerViewController.player {
             player.stop()
         }
-
+        
         demoVC.asset = asset
         
         demoVC.popupItem.title = asset.localized?.first?.title ?? asset.assetId
@@ -285,7 +314,7 @@ extension AssetListTableViewController {
         let playButton = UIBarButtonItem()
         playButton.title = "play"
         playButton.image = UIImage(systemName: "play")
-
+        
         let stopButton = UIBarButtonItem()
         stopButton.title = "stop"
         stopButton.image = UIImage(systemName: "stop")
@@ -297,15 +326,15 @@ extension AssetListTableViewController {
         demoVC.view.backgroundColor = .white
         
         // Customise popupBar appearance
-        let appearance = LNPopupBarAppearance()
-        appearance.backgroundColor = UIColor.clear
-
+        //        let appearance = LNPopupBarAppearance()
+        //        appearance.backgroundColor = UIColor.clear
+        
         navigationController?.popupBar.inheritsAppearanceFromDockingView = false
         navigationController?.popupBar.backgroundColor = .white
         navigationController?.popupBar.standardAppearance.backgroundColor = UIColor.white
         navigationController?.popupBar.progressViewStyle = .top
         navigationController?.popupBar.progressView.tintColor = .red
-        navigationController?.popupBar.standardAppearance = appearance
+        //        navigationController?.popupBar.standardAppearance = appearance
         
         
         if let urlString = asset.localized?.first?.images?.first?.url, let url = URL(string: urlString) {
@@ -320,7 +349,7 @@ extension AssetListTableViewController {
                 }
             }
         }
-
+        
         navigationController?.presentPopupBar(withContentViewController: demoVC, openPopup:true, animated: true, completion: nil)
     }
     
@@ -328,6 +357,22 @@ extension AssetListTableViewController {
 
 // MARK: Load Assets
 extension AssetListTableViewController {
+    
+    
+    @objc fileprivate func loadNextPageAssets() {
+        if assetPageNumber >= 1 {
+            self.assetPageNumber = assetPageNumber + 1
+            self.generateTableViewContent()
+        }
+    }
+    
+    @objc fileprivate func loadPreviousPageAssets() {
+        if assetPageNumber > 1 {
+            self.assetPageNumber = assetPageNumber - 1
+            self.generateTableViewContent()
+        }
+    }
+    
     /// Load the assets from the Exposure API
     ///
     /// - Parameters:
@@ -335,33 +380,35 @@ extension AssetListTableViewController {
     ///   - environment: Customer specific *Exposure* environment
     ///   - endpoint: Base exposure url. This isStaticCachupAsLiveis the customer specific URL to Exposure
     ///   - method: http method - GET
-    fileprivate func loadAssets(query: String, environment: Environment, endpoint: String, method: HTTPMethod) {
+    fileprivate func loadAssets(query: String, environment: Environment, pageNumber: Int) {
+        
+        let endpoint = "/content/asset?assetType=\(selectedAsssetType!)&pageSize=50&pageNumber=\(pageNumber)"
         
         ExposureApi<AssetList>(environment: environment,
                                endpoint: endpoint,
                                query: query,
-                               method: method)
-            .request()
-            .validate()
-            .response { [weak self] in
+                               method: .get)
+        .request()
+        .validate()
+        .response { [weak self] in
+            
+            if let value = $0.value {
+                self?.assets = value.items ?? []
                 
-                if let value = $0.value {
-                    self?.assets = value.items ?? []
-                    
-                    self?.assets.sort(by:{ $0.localized?.first?.title ?? "" < $1.localized?.first?.title ?? "" })
-                    
+                self?.assets.sort(by:{ $0.localized?.first?.title ?? "" < $1.localized?.first?.title ?? "" })
+                
+                self?.refreshTableView()
+            }
+            
+            if let error = $0.error {
+                let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
+                    (alert: UIAlertAction!) -> Void in
                     self?.refreshTableView()
-                }
+                })
                 
-                if let error = $0.error {
-                    let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
-                        (alert: UIAlertAction!) -> Void in
-                        self?.refreshTableView()
-                    })
-                    
-                    let message = "\(error.code) " + error.message + "\n" + (error.info ?? "")
-                    self?.popupAlert(title: error.domain , message: message, actions: [okAction], preferedStyle: .alert)
-                }
+                let message = "\(error.code) " + error.message + "\n" + (error.info ?? "")
+                self?.popupAlert(title: error.domain , message: message, actions: [okAction], preferedStyle: .alert)
+            }
         }
         
         
@@ -443,7 +490,7 @@ extension AssetListTableViewController {
                     self.popupAlert(title: error.domain , message: message, actions: [okAction], preferedStyle: .alert)
                 }
                 
-        }
+            }
     }
 }
 

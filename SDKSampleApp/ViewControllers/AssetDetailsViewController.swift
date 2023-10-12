@@ -64,6 +64,8 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                     downloadState = .downloading
                 case .notDownloaded:
                     downloadState = .notDownloaded
+                case .downloading :
+                    downloadState = .downloading
                 }
             }
         }
@@ -83,6 +85,8 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                     downloadState = .downloading
                 case .notDownloaded:
                     downloadState = .notDownloaded
+                case .downloading:
+                    downloadState = .downloading
                 }
                 
             }
@@ -231,9 +235,9 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
         self.enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session) { [weak self] info in
             if let downloadInfo = info {
                 
-                // print("AUDIO DOWNLOAD INFO ", downloadInfo.audios )
-                // print("VIDEOS DOWNLOAD INFO " , downloadInfo.videos )
-                // print("SUBS DOWNLOAD INDO ", downloadInfo.subtitles )
+                // print("AUDIO TRACK INFO ", downloadInfo.audios )
+                // print("VIDEOS TRACK INFO " , downloadInfo.videos )
+                // print("SUBS TRACK INFO ", downloadInfo.subtitles )
                 
                 var allVideoTracks = [UIAlertAction]()
                 
@@ -261,10 +265,22 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
                 } else {
                     
                     // No Video Tracks available so start downloading , start downloading the default video tracks
-                    self?.downloadAsset(indexPath: indexPath, videoTrack: nil, audios: nil , subtitles: nil )
+
+                    // self?.downloadAsset(indexPath: indexPath, videoTrack: nil, audios: nil , subtitles: nil )
+                    
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+                        (alert: UIAlertAction!) -> Void in
+                    })
+                    
+                    self?.popupAlert(title: "", message: "Asset does not have any downloadable info", actions: [cancelAction], preferedStyle: .actionSheet)
                 }
             } else {
-                print("Asset does not have any downloadable info")
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                })
+                
+                self?.popupAlert(title: "", message: "Asset does not have any downloadable info", actions: [cancelAction], preferedStyle: .actionSheet)
             }
         }
     }
@@ -433,17 +449,11 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
 //
 //        }
         
-        
 
 //
          // Get download info related to the asset
         enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session ) { [ weak self] info in
             if let downloadInfo = info {
-                
-                // print("AUDIO DOWNLOAD INFO ", downloadInfo.audios )
-                // print("VIDEOS DOWNLOAD INFO " , downloadInfo.videos )
-                // print("SUBS DOWNLOAD INDO ", downloadInfo.subtitles )
-
                 
                 let message = "Asset ID : \(self?.assetId) \n\n Video : \(downloadInfo.videos) \n\n Audios : \(downloadInfo.audios) \n\n Subtitles: \(downloadInfo.subtitles) \n\n DownloadCount : \(downloadInfo.downloadCount) \n\n MaxDownloadCount: \(downloadInfo.maxDownloadCount)"
                 
@@ -483,7 +493,7 @@ class AssetDetailsViewController: UITableViewController, EnigmaDownloadManager {
             
             /// Optional playback properties
             let properties = PlaybackProperties(autoplay: true,
-                                                playFrom: .beginning, maxBitrate: 5200000)
+                                                playFrom: .bookmark)
             
             destinationViewController.playbackProperties = properties
             destinationViewController.playable = playable
