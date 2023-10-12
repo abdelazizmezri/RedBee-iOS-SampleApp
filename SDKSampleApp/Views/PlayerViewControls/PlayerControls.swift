@@ -69,8 +69,8 @@ class PlayerControls: UIView {
     let rwPOSButton = RBMPlayerControlButton(titleText: "<< RW Pos",target: self, action: #selector(rewindAction))
     let ffPOSButton = RBMPlayerControlButton(titleText: "FF Pos >>",target: self, action: #selector(fastForwardAction))
     let manageTimeShift: RBMTextField = {
-        let textField = RBMTextField(placeHolderText: "10")
-        textField.text = "10"
+        let textField = RBMTextField(placeHolderText: "2")
+        textField.text = "2"
         textField.keyboardType = .numberPad
         return textField
     }()
@@ -79,8 +79,8 @@ class PlayerControls: UIView {
     let rwTimeButton = RBMPlayerControlButton(titleText: "<< RW Time",target: self, action: #selector(rewindTimeAction))
     let ffTimeButton = RBMPlayerControlButton(titleText: "FF Time >>",target: self, action: #selector(fastForwardTimeAction))
     let manageTimeShiftLabel: RBMTextField = {
-        let textField = RBMTextField(placeHolderText: "10")
-        textField.text = "10"
+        let textField = RBMTextField(placeHolderText: "2")
+        textField.text = "2"
         textField.keyboardType = .numberPad
         return textField
     }()

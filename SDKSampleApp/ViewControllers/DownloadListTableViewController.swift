@@ -19,6 +19,7 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Downloads"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .white
@@ -94,11 +95,27 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
             cell.textLabel?.text = asset.assetId
             cell.detailTextLabel?.text = asset.downloadState.rawValue // show download state of the offline media record
             
-            // Check if a download has expired
-            let expired = self.enigmaDownloadManager.isExpired(assetId: asset.assetId)
-            if expired {
-                print("Download has expired")
-            }
+            /*
+             
+             // Check if a downloaded asset has expired or not
+             // Get an expiry time of a downloaded asset
+             
+             */
+            
+            /* if let session = StorageProvider.storedSessionToken, let environment = StorageProvider.storedEnvironment {
+             
+                // Check if a download has expired
+                let _ = self.enigmaDownloadManager.isExpired(assetId: asset.assetId, environment: environment, sessionToken: session) { [weak self] expired, error in
+                    print("IS EXPIRED " , expired)
+                }
+                
+                let _ = self.enigmaDownloadManager.getExpiryTime(assetId: asset.assetId, environment: environment, sessionToken: session) { [weak self] expiryTime, error  in
+                    
+                    print(" Expiry Time " , expiryTime )
+                    
+                }
+            } */
+            
         }
         return cell
     }
@@ -106,12 +123,14 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
     func showOptions(_ row:Int ) {
         
         if let asset = self.downloadedAssets?[row] {
-            switch  asset.downloadState {
+            
+            let downloadState = asset.getDownloadState()
+
+            switch  downloadState {
             case .cancel:
                 print(" Download was canceled , delete ? ")
                 showDeleteOption(row)
             case .completed:
-                print(" Download was completed " )
                 showDownloadCompleteOptions(row)
             case .notDownloaded:
                 print(" Asset has not downloaded / Should not appear in this list . Must clean up this record if available in the local records")
@@ -121,7 +140,19 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
             case .suspend:
                 print("Download was suspended , resume ? ")
                 self.showDeleteOption(row)
+            case .downloading:
+                    let _ = asset.state { playableState in
+                    switch playableState {
+                    case .completed(entitlement: let entitlement, url: let url):
+                       print(" Playable ")
+                    case .notPlayable(entitlement: let entitlement, url: _):
+                        print(" Not playable ")
+                    }
+                }
+            case .none:
+                print(" Asset has not downloaded / Should not appear in this list . Must clean up this record if available in the local records")
             }
+            
         }
     }
     
@@ -185,12 +216,10 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                 
                 // Developers can use the same download task to refresh the licence if it has expired.
                 let task = self.enigmaDownloadManager.download(assetId: asset.assetId, using: session, in: environment)
-                task.renewLicence()
-                task.onError {_, url, error in
-                    print("📱 RefreshLicence Task failed with an error: \(error)",url ?? "")
-                }
-                .onLicenceRenewed { _, url in
-                    print("📱 RefreshLicence Task completed: \(url)")
+                
+                let _ = self.enigmaDownloadManager.renewLicense(assetId: asset.assetId, sessionToken: session, environment: environment) { [weak self ] offlineMediaAsset, error in
+                    print(" OfflineMedia Asset  " , offlineMediaAsset )
+                    print(" Error " , error )
                 }
             }
         })
@@ -218,9 +247,9 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                         self.navigationController?.pushViewController(destinationViewController, animated: false)
                         
                         // Play with AudioEngine
-                        //                        let destinationViewController = AudioPlayerWithAVAudioEngine()
-                        //                        destinationViewController.fileUrl = urlAsset.url
-                        //                        self.navigationController?.pushViewController(destinationViewController, animated: false)
+                        // let destinationViewController = AudioPlayerWithAVAudioEngine()
+                        // destinationViewController.fileUrl = urlAsset.url
+                        // self.navigationController?.pushViewController(destinationViewController, animated: false)
                         
                         
                     } else {
@@ -228,7 +257,7 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                         destinationViewController.environment = StorageProvider.storedEnvironment
                         destinationViewController.sessionToken = StorageProvider.storedSessionToken
                         
-                        // Optional remeber previously selected audios & subs
+                        // Optional : remeber previously selected audios & subs
                         var sub = ""
                         var audio = ""
                         
@@ -243,8 +272,7 @@ class DownloadListTableViewController: UITableViewController, EnigmaDownloadMana
                         
                         /// Optional playback properties
                         let properties = PlaybackProperties(autoplay: true,
-                                                            playFrom: .beginning ,
-                                                            language: .custom(text: sub, audio: audio))
+                                                            playFrom: .bookmark)
                         
                         
                         destinationViewController.playbackProperties = properties

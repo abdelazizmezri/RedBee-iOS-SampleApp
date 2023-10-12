@@ -149,19 +149,19 @@ extension TrackSelectionViewController {
             }.last
     }
     
-    func assign(text: [iOSClientCast.Track]) {
-        textViewModels = text.map{ TrackSelectionViewModel(model: $0) }
-        let off = TrackSelectionViewModel(model: nil)
-        textViewModels.append(off)
-        selectedText = (0..<text.count).flatMap { index -> IndexPath? in
-            let vm = text[index]
-            if vm.active {
-                return IndexPath(row: index, section: 0)
-            } else {
-                return IndexPath(row: text.count, section: 0)
-            }
-            }.last
-    }
+//    func assign(text: [iOSClientCast.Track]) {
+//        textViewModels = text.map{ TrackSelectionViewModel(model: $0) }
+//        let off = TrackSelectionViewModel(model: nil)
+//        textViewModels.append(off)
+//        selectedText = (0..<text.count).flatMap { index -> IndexPath? in
+//            let vm = text[index]
+//            if vm.active {
+//                return IndexPath(row: index, section: 0)
+//            } else {
+//                return IndexPath(row: text.count, section: 0)
+//            }
+//            }.last
+//    }
 }
 
 

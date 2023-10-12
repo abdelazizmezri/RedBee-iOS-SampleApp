@@ -14,7 +14,7 @@ class SelectionTableViewController: UITableViewController {
     
     /// "MOVIE", "TV_CHANNEL", "LIVE_EVENTS" : => WILL USE ASSET ENDPOINT WITH FILTER : assetType
     /// "LIVE_EVENTS_USING_EVENT_ENDPOINT" :==> WILL USE EVENT ENDPOINT IN THE EXPOSURE
-    var sections = ["MOVIE", "TV_CHANNEL", "LIVE_EVENTS", "LIVE_EVENTS_USING_EVENT_ENDPOINT", "DOWNLOADED"]
+    var sections = ["MOVIE","TV_SHOW","EPISODE","TV_CHANNEL","LIVE_EVENT","EVENT","PODCAST","DOWNLOADED", ]
     
     
     let cellIdentifier = "cellIdentifier"
@@ -52,11 +52,18 @@ class SelectionTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if sections[indexPath.row] == "DOWNLOADED"{
             let destinationViewController = DownloadListTableViewController()
+            
+            self.navigationController?.navigationItem.title = "Downloads"
+            
             self.navigationController?.pushViewController(destinationViewController, animated: false)
             tableView.deselectRow(at: indexPath, animated: true)
         } else {
             let destinationViewController = AssetListTableViewController()
             destinationViewController.selectedAsssetType = sections[indexPath.row]
+            
+            destinationViewController.title = "\(sections[indexPath.row])"
+            self.navigationController?.navigationItem.title = "\(sections[indexPath.row])"
+            
             self.navigationController?.pushViewController(destinationViewController, animated: false)
             tableView.deselectRow(at: indexPath, animated: true)
         }

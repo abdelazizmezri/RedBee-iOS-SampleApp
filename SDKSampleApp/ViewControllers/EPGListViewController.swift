@@ -18,12 +18,21 @@ class EPGListViewController: UITableViewController  {
     var channel: Asset!
     let cellIdentifier = "cellIdentifier"
     
+    var assetPageNumber: Int = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = ColorState.active.background
         
+        self.title = "\(channel.localized?.first?.title ?? "") - EPG"
+        self.tableView.register(AssetListCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = UIColor.white
+        
+        
+        let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(loadNextPageAssets))
+        let previous = UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(loadPreviousPageAssets))
+
+        navigationItem.rightBarButtonItems = [next, previous]
         
         self.generateTableViewContent()
     }
@@ -36,26 +45,35 @@ class EPGListViewController: UITableViewController  {
         return 1
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? AssetListCell else { return UITableViewCell() }
         
         let program = self.programs[indexPath.row]
         let current = Date()
         
         if let start = program.startDate, let _ = program.endDate {
             if start > current {
+                
                 cell.isUserInteractionEnabled = false
-                //cell.backgroundColor = ColorState.active.textFieldPlaceholder
-                cell.textLabel?.textColor = ColorState.active.textFieldPlaceholder
+                cell.backgroundColor = UIColor.white
+                cell.textLabel?.textColor = UIColor.red
+                cell.tintColor = UIColor.blue
+                
+                
             } else {
                 cell.isUserInteractionEnabled = true
-                cell.backgroundColor = ColorState.active.background
-                cell.textLabel?.textColor = ColorState.active.text
+                cell.backgroundColor = UIColor.white
+                cell.textLabel?.textColor = UIColor.black
+                cell.tintColor = UIColor.yellow
             }
         }
-        
-        cell.textLabel?.text = self.programs[indexPath.row].programId
         cell.selectionStyle = .none
+        guard let asset = program.asset else { return UITableViewCell() }
+        cell.setupValues(asset, programStartTime: program.startDate , programEndTime: program.endDate)
         return cell
     }
     
@@ -127,6 +145,21 @@ extension EPGListViewController {
 // MARK: - DataSource
 extension EPGListViewController {
     
+    @objc fileprivate func loadNextPageAssets() {
+        if assetPageNumber >= 1 {
+            self.assetPageNumber = assetPageNumber + 1
+
+            self.generateTableViewContent()
+        }
+    }
+    
+    @objc fileprivate func loadPreviousPageAssets() {
+        if assetPageNumber > 1 {
+            self.assetPageNumber = assetPageNumber - 1
+            self.generateTableViewContent()
+        }
+    }
+    
     /// Generate tableview content by loading assets from API
     fileprivate func generateTableViewContent() {
         guard let environment = StorageProvider.storedEnvironment, let sessionToken = StorageProvider.storedSessionToken else {
@@ -179,6 +212,7 @@ extension EPGListViewController {
             .channel(id: channel.assetId)
             .filter(starting: start, ending: end)
             .filter(onlyPublished: true)
+            .show(page: assetPageNumber, spanning: 50)
             .request()
             .validate()
             .response{
