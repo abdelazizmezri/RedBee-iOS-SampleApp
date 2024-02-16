@@ -14,8 +14,17 @@ class SelectionTableViewController: UITableViewController {
     
     /// "MOVIE", "TV_CHANNEL", "LIVE_EVENTS" : => WILL USE ASSET ENDPOINT WITH FILTER : assetType
     /// "LIVE_EVENTS_USING_EVENT_ENDPOINT" :==> WILL USE EVENT ENDPOINT IN THE EXPOSURE
-    var sections = ["MOVIE","TV_SHOW","EPISODE","TV_CHANNEL","LIVE_EVENT","EVENT","PODCAST","DOWNLOADED", ]
-    
+    enum Sections: String, CaseIterable {
+        case movie = "MOVIE"
+        case tvShow = "TV_SHOW"
+        case episode = "EPISODE"
+        case tvChannel = "TV_CHANNEL"
+        case liveEvent = "LIVE_EVENT"
+        case event = "EVENT"
+        case podcast = "PODCAST"
+        case downloaded = "DOWNLOADED"
+        case externalURL = "EXTERNAL_URL"
+    }
     
     let cellIdentifier = "cellIdentifier"
     
@@ -36,12 +45,12 @@ class SelectionTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections.count
+        return Sections.allCases.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.textLabel?.text = sections[indexPath.row]
+        cell.textLabel?.text = Sections.allCases[indexPath.row].rawValue
         cell.selectionStyle = .none
         cell.backgroundColor = .white
         cell.textLabel?.textColor = .black
@@ -50,23 +59,17 @@ class SelectionTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if sections[indexPath.row] == "DOWNLOADED"{
-            let destinationViewController = DownloadListTableViewController()
-            
-            self.navigationController?.navigationItem.title = "Downloads"
-            
-            self.navigationController?.pushViewController(destinationViewController, animated: false)
-            tableView.deselectRow(at: indexPath, animated: true)
-        } else {
-            let destinationViewController = AssetListTableViewController()
-            destinationViewController.selectedAsssetType = sections[indexPath.row]
-            
-            destinationViewController.title = "\(sections[indexPath.row])"
-            self.navigationController?.navigationItem.title = "\(sections[indexPath.row])"
-            
-            self.navigationController?.pushViewController(destinationViewController, animated: false)
-            tableView.deselectRow(at: indexPath, animated: true)
+        self.navigationController?.navigationItem.title = "\(Sections.allCases[indexPath.row])"
+        switch Sections.allCases[indexPath.row] {
+        case .downloaded:
+            self.navigationController?.pushViewController(DownloadListTableViewController(), animated: false)
+        case .externalURL:
+            self.navigationController?.pushViewController(URLViewController(), animated: false)
+        case .movie, .tvShow, .episode, .tvChannel, .liveEvent, .event, .podcast:
+            let assetListTableViewController = AssetListTableViewController()
+            assetListTableViewController.selectedAsssetType = Sections.allCases[indexPath.row].rawValue
+            self.navigationController?.pushViewController(assetListTableViewController, animated: false)
         }
-        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

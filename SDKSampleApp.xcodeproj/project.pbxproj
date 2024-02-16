@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -98,6 +98,7 @@
 		78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */; };
 		78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
 		78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */; };
+		DCDB4F4F2B7CE31A0067152A /* URLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDB4F4E2B7CE31A0067152A /* URLViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -229,6 +230,7 @@
 		78C251AA2513A143001ED9E3 /* RBMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBMButton.swift; sourceTree = "<group>"; };
 		78C251AE2513A14F001ED9E3 /* RBMPlayerControlLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBMPlayerControlLabel.swift; sourceTree = "<group>"; };
 		78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyPlayerViewController.swift; sourceTree = "<group>"; };
+		DCDB4F4E2B7CE31A0067152A /* URLViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -427,6 +429,7 @@
 				78C250FC25139E09001ED9E3 /* MainNavigationController.swift */,
 				781C3872251A1AF70094C2C6 /* RootViewController.swift */,
 				78C2510F25139EF8001ED9E3 /* SelectionTableViewController.swift */,
+				DCDB4F4E2B7CE31A0067152A /* URLViewController.swift */,
 				78C2511325139F1D001ED9E3 /* EnvironmentViewController.swift */,
 				78C2511825139F33001ED9E3 /* LoginViewController.swift */,
 				78C2511E25139F44001ED9E3 /* AssetListTableViewController.swift */,
@@ -830,6 +833,7 @@
 				78C2511025139EF8001ED9E3 /* SelectionTableViewController.swift in Sources */,
 				78C2515D2513A068001ED9E3 /* UIColor+hexColor.swift in Sources */,
 				78C2514625139FE6001ED9E3 /* ProgramBasedTimeline.swift in Sources */,
+				DCDB4F4F2B7CE31A0067152A /* URLViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1370,7 +1374,7 @@
 			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback";
 			requirement = {
 				kind = exactVersion;
-				version = 3.5.1;
+				version = 3.9.0;
 			};
 		};
 		68DED0832AD8147500FA50BF /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */ = {

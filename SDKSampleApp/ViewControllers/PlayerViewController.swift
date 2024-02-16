@@ -29,6 +29,15 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     
     let audioSession = AVAudioSession.sharedInstance()
     var offlineMediaPlayable: OfflineMediaPlayable?
+    
+    // Play via direct URL
+    fileprivate var urlPlayablePlayer: Player<HLSNative<ManifestContext>>!
+    let urlPlayableTech = HLSNative<ManifestContext>()
+    let urlPlayableContext = ManifestContext()
+    var urlPlayable: URLPlayable?
+    var shouldPlayWithUrl: Bool = false
+    
+    // Play via Exposure with assetId
     var playbackProperties = PlaybackProperties()
     fileprivate(set) var player: Player<HLSNative<ExposureContext>>!
     
@@ -42,7 +51,7 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
         return stackView
     }()
     
-    let pausePlayButton: UIButton = {
+    lazy var pausePlayButton: UIButton = {
         let button = UIButton()
         button.tintColor = ColorState.active.button
         button.addTarget(self, action: #selector(actionPausePlay(_:)), for: .touchUpInside)
@@ -86,7 +95,11 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     override func loadView() {
         super.loadView()
         setUpLayout()
-        setupPlayerControls()
+        
+        
+        if !shouldPlayWithUrl {
+            setupPlayerControls()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +120,12 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
         view.addGestureRecognizer(tapGesture)
         view.bindToKeyboard()
         
-        setupPlayer(environment, sessionToken)
+        if shouldPlayWithUrl {
+            setupURLPlayablePlayer()
+        } else {
+            setupPlayer(environment, sessionToken)
+        }
+        
         self.enableAudioSeesionForPlayer()
         
         // Google Cast
@@ -119,7 +137,11 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     override func viewDidDisappear(_ animated: Bool) {
         self.vodBasedTimeline.stopLoop()
         self.programBasedTimeline.stopLoop()
-        self.player.stop()
+        if !shouldPlayWithUrl {
+            self.player.stop()
+        } else {
+            self.urlPlayablePlayer.stop()
+        }
         self.resumeBackgroundAudio()
         
     }
@@ -133,23 +155,33 @@ class PlayerViewController: UIViewController, GCKRemoteMediaClientListener, AVPi
     }
 }
 
+// MARK: - Setup URLPlayable Player
+extension PlayerViewController {
+    fileprivate func setupURLPlayablePlayer() {
+        urlPlayablePlayer = Player(tech: urlPlayableTech, context: urlPlayableContext)
+        let _ = urlPlayablePlayer.configure(playerView: playerView)
+        
+        if let urlPlayable {
+            urlPlayablePlayer.stream(url: urlPlayable.url)
+            urlPlayablePlayer.play()
+        }
+    }
+}
+
 // MARK: - Setup Player
 extension PlayerViewController: AVPlayerViewControllerDelegate {
         
     fileprivate func setupPlayer(_ environment: Environment, _ sessionToken: SessionToken) {
-        /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
-    
         
+        /// This will configure the player with the `SessionToken` acquired in the specified `Environment`
         player = Player(environment: environment, sessionToken: sessionToken)
+        
         let avPlayerLayer = player.configure(playerView: playerView)
-
-
         pictureInPictureController = AVPictureInPictureController(playerLayer: avPlayerLayer)
         pictureInPictureController?.delegate = self
         if #available(iOS 14.2, *) {
             pictureInPictureController?.canStartPictureInPictureAutomaticallyFromInline = true
         }
-
         
         // The preparation and loading process can be followed by listening to associated events.
         player
@@ -527,11 +559,12 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
     func startPlayBack(properties: PlaybackProperties = PlaybackProperties() ) {
         
         nowPlaying = playable
-
+        
         if let offlineMediaPlayable = offlineMediaPlayable {
             
             isOfflineMedia = true
             player.startPlayback(offlineMediaPlayable: offlineMediaPlayable )
+            
         } else {
             if let playable = playable {
                 
@@ -541,7 +574,7 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
                 if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
                     self.chromecast(playable: playable, in: environment, sessionToken: sessionToken, currentplayheadTime: self.player.playheadTime)
                 } else {
-    
+                    
                     player.startPlayback(playable: playable, properties: properties)
                     
                 }
@@ -551,7 +584,6 @@ extension PlayerViewController: AVPlayerViewControllerDelegate {
         DispatchQueue.main.async {
             self.updateTimeLine()
         }
-        
     }
     
     
