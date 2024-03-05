@@ -8,37 +8,66 @@
 
 import UIKit
 import iOSClientExposure
-
+import iOSClientExposurePlayback
 
 /// Handles the main navigation in the app
 class MainNavigationController: UINavigationController {
     
+    var qrCodeData: QRCodeData?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        self.navigationBar.tintColor = ColorState.active.textFieldPlaceholder
-//        self.navigationBar.barTintColor = ColorState.active.background
-//        self.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: ColorState.active.textFieldPlaceholder]
-        
         if StorageProvider.storedSessionToken != nil {
-            let rootVC = RootViewController()
-            viewControllers = [rootVC]
+            viewControllers = [RootViewController()]
         } else {
-            let environmentViewController = EnvironmentViewController()
-            viewControllers = [environmentViewController]
-            
+            viewControllers = [EnvironmentViewController()]
         }
-    }
-    
-    
-    /// Show Enviornment view if user not logged in
-    @objc func showLoginController() {
-            // self.modalPresentationStyle = .fullScreen
-            let environmentViewController = EnvironmentViewController()
-            viewControllers = [environmentViewController]
+        tryPlayingAssetIfPossible()
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
+    }
+}
+
+// MARK: - QR Code related funcs
+
+extension MainNavigationController {
+    
+    func tryPlayingAssetIfPossible() {
+        if let qrCodeData, qrCodeData.isContentAssetAvailable {
+            showPlayerController(
+                qrCodeData: qrCodeData,
+                environment: StorageProvider.storedEnvironment
+            )
+        }
+    }
+    
+    private func showPlayerController(
+        qrCodeData: QRCodeData,
+        environment: Environment?
+    ) {
+        guard let source = qrCodeData.urlParams?.source else {
+            return
+        }
+        
+        let playerVC = PlayerViewController()
+        
+        if qrCodeData.isSourceAssetURL,
+           let sourceURL = URL(string: source) {
+            /// assetURL
+            playerVC.shouldPlayWithUrl = true
+            playerVC.urlPlayable = URLPlayable(url: sourceURL)
+            viewControllers.append(playerVC)
+        } else if let sessionToken = StorageProvider.storedSessionToken,
+                  let environment = StorageProvider.storedEnvironment {
+            /// assetID
+            playerVC.sessionToken = sessionToken
+            playerVC.environment = environment
+            playerVC.shouldPlayWithUrl = false
+            playerVC.playable = AssetPlayable(assetId: source)
+            viewControllers.append(playerVC)
+        }
+        
     }
 }

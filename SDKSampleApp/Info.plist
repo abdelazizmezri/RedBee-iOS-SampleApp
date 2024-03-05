@@ -37,6 +37,8 @@
 	<array>
 		<string>_googlecast._tcp</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to your camera to scan QR codes.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>${PRODUCT_NAME} uses the local network to discover Cast-enabled devices on your WiFi
     network.</string>

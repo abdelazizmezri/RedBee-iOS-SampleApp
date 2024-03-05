@@ -38,8 +38,6 @@ class SelectionTableViewController: UITableViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     
-
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -72,4 +70,5 @@ class SelectionTableViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
 }

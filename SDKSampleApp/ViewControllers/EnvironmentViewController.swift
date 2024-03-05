@@ -30,14 +30,14 @@ class EnvironmentViewController: UIViewController {
     
     let environmentUrlTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: "Exposure base URL")
-        textfield.text = ""
+        textfield.text = StorageProvider.storedEnvironment?.baseUrl ?? ""
         textfield.backgroundColor = ColorState.active.textFieldBackground
         return textfield
     }()
     
     let customerNameTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: NSLocalizedString("Customer Name", comment: ""))
-        textfield.text = ""
+        textfield.text = StorageProvider.storedEnvironment?.customer ?? ""
         textfield.backgroundColor = ColorState.active.textFieldBackground
         return textfield
     }()
@@ -45,13 +45,19 @@ class EnvironmentViewController: UIViewController {
     let businessUnitTextField: RBMTextField = {
         let textfield = RBMTextField(placeHolderText: NSLocalizedString("Business Unit", comment: ""))
         textfield.backgroundColor = ColorState.active.textFieldBackground
-        textfield.text = ""
+        textfield.text = StorageProvider.storedEnvironment?.businessUnit ?? ""
         return textfield
     }()
     
     let nextButton: RBMButton = {
         let button = RBMButton(titleText: NSLocalizedString("Next", comment: ""))
         button.addTarget(self, action: #selector(navigateToLogin), for: .touchUpInside)
+        return button
+    }()
+    
+    let qrCodeButton: RBMButton = {
+        let button = RBMButton(titleText: NSLocalizedString("Scan QR Code", comment: ""))
+        button.addTarget(self, action: #selector(scanQRCode), for: .touchUpInside)
         return button
     }()
     
@@ -105,6 +111,7 @@ extension EnvironmentViewController {
         view.addSubview(customerNameTextField)
         view.addSubview(businessUnitTextField)
         view.addSubview(nextButton)
+        view.addSubview(qrCodeButton)
     }
     
     fileprivate func setupAnchorsForViews() {
@@ -123,6 +130,7 @@ extension EnvironmentViewController {
             
             nextButton.anchor(top: businessUnitTextField.bottomAnchor, bottom: nil, leading: view.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top:20, left: 16, bottom:0, right: -16))
             
+            qrCodeButton.anchor(top: nextButton.bottomAnchor, bottom: nil, leading: view.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top:20, left: 16, bottom:0, right: -16))
         } else {
             
             topHolderView.anchor(top: view.topAnchor, bottom: bottomHolderView.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
@@ -136,6 +144,8 @@ extension EnvironmentViewController {
             businessUnitTextField.anchor(top: customerNameTextField.bottomAnchor, bottom: nil, leading: view.leadingAnchor, trailing: view.trailingAnchor, padding: .init(top:20, left: 16, bottom:0, right: -16))
             
             nextButton.anchor(top: businessUnitTextField.bottomAnchor, bottom: nil, leading: view.leadingAnchor, trailing: view.trailingAnchor, padding: .init(top:20, left: 16, bottom:0, right: -16))
+            
+            qrCodeButton.anchor(top: nextButton.bottomAnchor, bottom: nil, leading: view.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top:20, left: 16, bottom:0, right: -16))
         }
         
         topHolderView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
@@ -175,5 +185,13 @@ extension EnvironmentViewController {
         loginViewController.environment = environment
         self.navigationController?.pushViewController(loginViewController, animated: true)
         
+    }
+    
+    /// Navigate to QR Code Scanner View
+    @objc fileprivate func scanQRCode() {
+        let qrScannerViewController = QRScannerViewController(
+            viewModel: QRScannerViewModel()
+        )
+        self.navigationController?.pushViewController(qrScannerViewController, animated: true)
     }
 }

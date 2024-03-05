@@ -157,8 +157,12 @@ extension LoginViewController {
             (alert: UIAlertAction!) -> Void in
         })
         
-        guard let username = usernameTextField.text, let password = passwordTextField.text, username != "", password != "" else {
-            
+        guard
+            let username = usernameTextField.text,
+            let password = passwordTextField.text,
+            !username.isEmpty,
+            !password.isEmpty
+        else {
             self.popupAlert(title:NSLocalizedString("Sorry", comment: "") , message: NSLocalizedString("Please fill all fields", comment: ""), actions: [okAction], preferedStyle: .alert)
             
             return
@@ -180,12 +184,7 @@ extension LoginViewController {
                     StorageProvider.store(environment: self?.environment)
                     StorageProvider.store(sessionToken: credentials.sessionToken)
                     
-                    let navigationController = MainNavigationController()
-                    let castContainerVC = GCKCastContext.sharedInstance().createCastContainerController(for: navigationController)
-                      as GCKUICastContainerViewController
-                    castContainerVC.miniMediaControlsItemEnabled = true
-                    UIApplication.shared.keyWindow?.rootViewController = castContainerVC
-
+                    reloadAppNavigation()
                 }
         }
     }
