@@ -99,10 +99,7 @@ extension TrackSelectionViewController {
         audioViewModels = prepareViewModels(for: audio)
         selectedAudio = (0..<audioViewModels.count).compactMap { index -> IndexPath? in
             let vm = audioViewModels[index]
-            if audio?.selectedTrack?.extendedLanguageTag == vm.model?.extendedLanguageTag {
-                
-                print(" ")
-                
+            if audio?.selectedTrack?.extendedLanguageTag == vm.model?.extendedLanguageTag, audio?.selectedTrack?.displayName == vm.model?.displayName {
                 return IndexPath(row: index, section: 0)
             }
             return nil
@@ -116,7 +113,7 @@ extension TrackSelectionViewController {
         textViewModels = prepareViewModels(for: text)
         selectedText = (0..<textViewModels.count).compactMap { index -> IndexPath? in
             let vm = textViewModels[index]
-            if text?.selectedTrack?.extendedLanguageTag == vm.model?.extendedLanguageTag {
+            if text?.selectedTrack?.extendedLanguageTag == vm.model?.extendedLanguageTag, text?.selectedTrack?.displayName == vm.model?.displayName {
                 return IndexPath(row: index, section: 0)
             }
             return nil
