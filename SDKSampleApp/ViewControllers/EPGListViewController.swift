@@ -14,6 +14,10 @@ import iOSClientExposurePlayback
 
 class EPGListViewController: UITableViewController  {
     
+    var startDate: Date?
+    var endDate: Date?
+    var dateRangeSelectorButton: UIBarButtonItem!
+    
     var programs = [Program]()
     var channel: Asset!
     let cellIdentifier = "cellIdentifier"
@@ -23,18 +27,19 @@ class EPGListViewController: UITableViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dateRangeSelectorButton = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(openDateRangeSelector))
+        
         self.title = "\(channel.localized?.first?.title ?? "") - EPG"
         self.tableView.register(AssetListCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = UIColor.white
         
-        
         let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(loadNextPageAssets))
         let previous = UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(loadPreviousPageAssets))
-
-        navigationItem.rightBarButtonItems = [next, previous]
         
-        self.generateTableViewContent()
+        navigationItem.rightBarButtonItems = [next, previous, dateRangeSelectorButton]
+        
+        didSelectDateRange(startDate: Date(), endDate: Date())
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -178,7 +183,7 @@ extension EPGListViewController {
         let start = (date.subtract(days: 1) ?? date).millisecondsSince1970
         let end = (date.add(hours: 4) ?? date).millisecondsSince1970
         
-        fetchEpg(for: channel, from: start, to: end, environment: environment, sessionToken: sessionToken) { [weak self] epg, error in
+        fetchEpg(for: channel, from: startDate, to: endDate, environment: environment, sessionToken: sessionToken) { [weak self] epg, error in
             guard let `self` = self else { return }
             
             if let error = error {
@@ -200,24 +205,56 @@ extension EPGListViewController {
     ///
     /// - Parameters:
     ///   - channel: channel
-    ///   - start: start time
-    ///   - end: end time
+    ///   - start: start date
+    ///   - end: end date
     ///   - environment: environment
     ///   - sessionToken: session token
     ///   - callback: callback
-    fileprivate func fetchEpg(for channel: Asset, from start: Int64, to end: Int64, environment: Environment, sessionToken: SessionToken, callback: @escaping (ChannelEpg?, ExposureError?) -> Void) {
+    fileprivate func fetchEpg(
+        for channel: Asset,
+        from start: Date? = nil,
+        to end: Date? = nil,
+        environment: Environment,
+        sessionToken: SessionToken,
+        callback: @escaping (ChannelEpg?, ExposureError?) -> Void
+    ) {
         // Fetch Epg
-        
-        FetchEpg(environment: environment)
+        FetchEpg(environment: environment, version: .v2)
             .channel(id: channel.assetId)
-            .filter(starting: start, ending: end)
+            .filter(startDate: self.startDate ?? Date(), endDate: self.endDate ?? Date())
             .filter(onlyPublished: true)
             .show(page: assetPageNumber, spanning: 50)
             .request()
             .validate()
             .response{
                 callback($0.value,$0.error)
-        }
+            }
     }
 }
 
+// MARK: Date Range Selection
+extension EPGListViewController: DateRangeSelectorDelegate {
+    
+    @objc func openDateRangeSelector() {
+        let dateRangeSelectorViewController = DateRangeSelectorViewController()
+        dateRangeSelectorViewController.delegate = self
+        dateRangeSelectorViewController.startDate = self.startDate
+        dateRangeSelectorViewController.endDate = self.endDate
+        let navigationController = UINavigationController(rootViewController: dateRangeSelectorViewController)
+        present(navigationController, animated: true, completion: nil)
+    }
+    
+    func didSelectDateRange(startDate: Date, endDate: Date) {
+        
+        self.startDate = startDate
+        self.endDate = endDate
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yy"
+        let startDateString = dateFormatter.string(from: startDate)
+        let endDateString = dateFormatter.string(from: endDate)
+        
+        dateRangeSelectorButton.title = "\(startDateString) - \(endDateString)"
+        self.generateTableViewContent()
+    }
+}

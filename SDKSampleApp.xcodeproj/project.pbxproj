@@ -18,6 +18,9 @@
 		376FBBF92B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
 		376FBBFA2B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
 		376FBBFB2B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
+		377BA7012BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
+		377BA7022BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
+		377BA7032BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
 		68A974842A013BC500A68431 /* LNPopupController-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 68A974832A013BC500A68431 /* LNPopupController-Static */; };
 		68DED0822AD8145700FA50BF /* iOSClientExposurePlayback in Frameworks */ = {isa = PBXBuildFile; productRef = 68DED0812AD8145700FA50BF /* iOSClientExposurePlayback */; };
 		68DED0852AD8147500FA50BF /* iOSClientExposureDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 68DED0842AD8147500FA50BF /* iOSClientExposureDownload */; };
@@ -170,6 +173,7 @@
 		376FBBF32B9646E700C0AB48 /* QRCodeURLParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeURLParameters.swift; sourceTree = "<group>"; };
 		376FBBF52B96554300C0AB48 /* QRCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeData.swift; sourceTree = "<group>"; };
 		376FBBF82B9658B500C0AB48 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeSelectorViewController.swift; sourceTree = "<group>"; };
 		68DED0862AD8169000FA50BF /* AssetListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListCell.swift; sourceTree = "<group>"; };
 		780B2DEF251B6B4C003B2A94 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		780B2E03251B6B4C003B2A94 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -471,6 +475,7 @@
 				78F6D49C279163A700D2B5B2 /* StickyPlayerViewController.swift */,
 				784FF7B429432A970098E622 /* AudioPlayerViewController.swift */,
 				78456DF8294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift */,
+				377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -784,6 +789,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7825E70E27633DB000DC4FA7 /* ContentProposalViewController.swift in Sources */,
+				377BA7022BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */,
 				78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */,
 				7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */,
 				376FBBFA2B9658B500C0AB48 /* Helpers.swift in Sources */,
@@ -807,6 +813,7 @@
 				78B6D929278D846800BBD3F5 /* ProgramBasedTimeline.swift in Sources */,
 				372AA5B82B970F35009EB364 /* ErrorModel.swift in Sources */,
 				78B6D957278D84E800BBD3F5 /* UIColor+hexColor.swift in Sources */,
+				377BA7032BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */,
 				78B6D921278D842800BBD3F5 /* PlayerViewController.swift in Sources */,
 				78B6D93C278D84A600BBD3F5 /* RBMButton.swift in Sources */,
 				78B6D8F0278D7B9800BBD3F5 /* AssetView.swift in Sources */,
@@ -867,6 +874,7 @@
 				78C2512B25139F71001ED9E3 /* PlayerViewController.swift in Sources */,
 				78C251692513A092001ED9E3 /* Date+Extension.swift in Sources */,
 				78C2510B25139ED1001ED9E3 /* StorageProvider.swift in Sources */,
+				377BA7012BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */,
 				376FBBF42B9646E700C0AB48 /* QRCodeURLParameters.swift in Sources */,
 				78C251612513A077001ED9E3 /* UIViewController+Alert.swift in Sources */,
 				78C2514025139FD6001ED9E3 /* VodBasedTimeline.swift in Sources */,
@@ -1208,7 +1216,7 @@
 					"$(inherited)",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = io.enigmatv.RedBee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1243,7 +1251,7 @@
 					"$(inherited)",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = io.enigmatv.RedBee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposurePlayback.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1412,7 +1420,7 @@
 			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback";
 			requirement = {
 				kind = exactVersion;
-				version = 3.10.0;
+				version = 3.12.1;
 			};
 		};
 		68DED0832AD8147500FA50BF /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */ = {
