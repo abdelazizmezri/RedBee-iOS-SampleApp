@@ -1420,7 +1420,7 @@
 			repositoryURL = "https://github.com/EricssonBroadcastServices/iOSClientExposurePlayback";
 			requirement = {
 				kind = exactVersion;
-				version = 3.12.1;
+				version = 3.13.0;
 			};
 		};
 		68DED0832AD8147500FA50BF /* XCRemoteSwiftPackageReference "iOSClientExposureDownload" */ = {
