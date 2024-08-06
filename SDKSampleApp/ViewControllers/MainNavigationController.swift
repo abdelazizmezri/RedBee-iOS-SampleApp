@@ -18,8 +18,6 @@ class MainNavigationController: UINavigationController {
         if StorageProvider.storedSessionToken != nil {
             viewControllers = [RootViewController()]
         } else {
-            
-            //*
             let environment = Environment(baseUrl: "https://exposure.api.redbee.live", customer: "TV5MONDE", businessUnit: "TV5MONDEplus")
             let okAction = UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .cancel, handler: {
                 (alert: UIAlertAction!) -> Void in
@@ -46,7 +44,6 @@ class MainNavigationController: UINavigationController {
                         
                     }
             }
-            //*/
         }
     }
     
