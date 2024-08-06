@@ -42,7 +42,7 @@ class AssetListTableViewController: UITableViewController, EnigmaDownloadManager
         
         let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(loadNextPageAssets))
         let previous = UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(loadPreviousPageAssets))
-        
+
         navigationItem.rightBarButtonItems = [next, previous]
         
         
@@ -121,8 +121,6 @@ extension AssetListTableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? AssetListCell else { return UITableViewCell() }
         
         let asset = assets[indexPath.row]
-        
-        print(asset)
         
         //        cell.selectionStyle = .none
         //        cell.backgroundColor = .white
@@ -243,8 +241,8 @@ extension AssetListTableViewController {
             
             /// Optional playback properties
             let properties = PlaybackProperties(autoplay: true,
-                                                playFrom: .defaultBehaviour)
-            
+                                               playFrom: .defaultBehaviour)
+
             
             // let properties = PlaybackProperties(autoplay: true, playFrom: .defaultBehaviour)
             
@@ -256,7 +254,7 @@ extension AssetListTableViewController {
         
     }
     
-    
+
     
     
     

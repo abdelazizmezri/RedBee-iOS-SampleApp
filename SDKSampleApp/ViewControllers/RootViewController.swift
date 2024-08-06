@@ -41,7 +41,7 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     override func loadView() {
         super.loadView()
         
-        //addLogoutBarButtonItem()
+        addLogoutBarButtonItem()
         
         _miniMediaControlsHeightConstraint.constant = 75
         _miniMediaControlsHeightConstraint.priority = UILayoutPriority(rawValue: 1000)
@@ -137,7 +137,7 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
     
 }
 
-/*extension RootViewController {
+extension RootViewController {
     /// Add left bar button item
     fileprivate func addLogoutBarButtonItem() {
         let button = UIButton()
@@ -202,4 +202,4 @@ class RootViewController: UIViewController, GCKUIMiniMediaControlsViewController
         }
     }
     
-}*/
+}

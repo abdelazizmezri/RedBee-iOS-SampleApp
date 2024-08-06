@@ -84,6 +84,8 @@ class AssetListCell: UITableViewCell {
             self.descriptionLabel.text = asset.assetId
         }
         
+        
+        
         guard let imageUrl = asset.localized?.first?.images?.first?.url, let url = URL(string: imageUrl) else { return }
         
         self.assetPosterImage.image = nil
@@ -117,5 +119,7 @@ class AssetListCell: UITableViewCell {
         assetPosterImage.anchor(top: contentView.topAnchor, bottom: nil, leading: nil, trailing: contentView.trailingAnchor, padding: .init(top: 10, left: 10, bottom: 0, right: -10))
         assetPosterImage.widthAnchor.constraint(equalToConstant: 60).isActive = true
         assetPosterImage.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        
     }
 }
