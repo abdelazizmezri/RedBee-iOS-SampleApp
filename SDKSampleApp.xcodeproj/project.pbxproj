@@ -7,17 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		37224BBC2B909D320005FCBE /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37224BBB2B909D320005FCBE /* QRScannerViewController.swift */; };
 		372AA5B62B970F35009EB364 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372AA5B52B970F35009EB364 /* ErrorModel.swift */; };
 		372AA5B72B970F35009EB364 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372AA5B52B970F35009EB364 /* ErrorModel.swift */; };
 		372AA5B82B970F35009EB364 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372AA5B52B970F35009EB364 /* ErrorModel.swift */; };
-		376FBBF02B963BF500C0AB48 /* QRScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBEF2B963BF500C0AB48 /* QRScannerViewModel.swift */; };
-		376FBBF22B9646D400C0AB48 /* QRCodeParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF12B9646D400C0AB48 /* QRCodeParameter.swift */; };
-		376FBBF42B9646E700C0AB48 /* QRCodeURLParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF32B9646E700C0AB48 /* QRCodeURLParameters.swift */; };
-		376FBBF62B96554300C0AB48 /* QRCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF52B96554300C0AB48 /* QRCodeData.swift */; };
-		376FBBF92B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
-		376FBBFA2B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
-		376FBBFB2B9658B500C0AB48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376FBBF82B9658B500C0AB48 /* Helpers.swift */; };
 		377BA7012BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
 		377BA7022BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
 		377BA7032BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */; };
@@ -84,8 +76,6 @@
 		78C2510525139E47001ED9E3 /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510425139E47001ED9E3 /* ColorScheme.swift */; };
 		78C2510B25139ED1001ED9E3 /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510A25139ED1001ED9E3 /* StorageProvider.swift */; };
 		78C2511025139EF8001ED9E3 /* SelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2510F25139EF8001ED9E3 /* SelectionTableViewController.swift */; };
-		78C2511425139F1D001ED9E3 /* EnvironmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2511325139F1D001ED9E3 /* EnvironmentViewController.swift */; };
-		78C2511925139F33001ED9E3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2511825139F33001ED9E3 /* LoginViewController.swift */; };
 		78C2511F25139F44001ED9E3 /* AssetListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2511E25139F44001ED9E3 /* AssetListTableViewController.swift */; };
 		78C2512325139F54001ED9E3 /* AssetDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2512225139F54001ED9E3 /* AssetDetailsViewController.swift */; };
 		78C2512725139F64001ED9E3 /* EPGListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2512625139F64001ED9E3 /* EPGListViewController.swift */; };
@@ -166,13 +156,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		37224BBB2B909D320005FCBE /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		372AA5B52B970F35009EB364 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
-		376FBBEF2B963BF500C0AB48 /* QRScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewModel.swift; sourceTree = "<group>"; };
-		376FBBF12B9646D400C0AB48 /* QRCodeParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeParameter.swift; sourceTree = "<group>"; };
-		376FBBF32B9646E700C0AB48 /* QRCodeURLParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeURLParameters.swift; sourceTree = "<group>"; };
-		376FBBF52B96554300C0AB48 /* QRCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeData.swift; sourceTree = "<group>"; };
-		376FBBF82B9658B500C0AB48 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		377BA7002BA09A6B005DB8BB /* DateRangeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeSelectorViewController.swift; sourceTree = "<group>"; };
 		68DED0862AD8169000FA50BF /* AssetListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListCell.swift; sourceTree = "<group>"; };
 		780B2DEF251B6B4C003B2A94 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -224,8 +208,6 @@
 		78C2510425139E47001ED9E3 /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		78C2510A25139ED1001ED9E3 /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
 		78C2510F25139EF8001ED9E3 /* SelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTableViewController.swift; sourceTree = "<group>"; };
-		78C2511325139F1D001ED9E3 /* EnvironmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentViewController.swift; sourceTree = "<group>"; };
-		78C2511825139F33001ED9E3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		78C2511E25139F44001ED9E3 /* AssetListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListTableViewController.swift; sourceTree = "<group>"; };
 		78C2512225139F54001ED9E3 /* AssetDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDetailsViewController.swift; sourceTree = "<group>"; };
 		78C2512625139F64001ED9E3 /* EPGListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPGListViewController.swift; sourceTree = "<group>"; };
@@ -300,16 +282,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		376FBBF72B96556200C0AB48 /* QRCode */ = {
-			isa = PBXGroup;
-			children = (
-				376FBBF12B9646D400C0AB48 /* QRCodeParameter.swift */,
-				376FBBF52B96554300C0AB48 /* QRCodeData.swift */,
-				376FBBF32B9646E700C0AB48 /* QRCodeURLParameters.swift */,
-			);
-			path = QRCode;
-			sourceTree = "<group>";
-		};
 		7825E6EE276339F400DC4FA7 /* Push Next Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,7 +410,6 @@
 				78C2510325139E3C001ED9E3 /* Theme */,
 				78C2510A25139ED1001ED9E3 /* StorageProvider.swift */,
 				781C373F25187CA60094C2C6 /* UIViewController+Extension.swift */,
-				376FBBF82B9658B500C0AB48 /* Helpers.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -457,13 +428,10 @@
 		78C2510E25139EEF001ED9E3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				37224BBB2B909D320005FCBE /* QRScannerViewController.swift */,
 				78C250FC25139E09001ED9E3 /* MainNavigationController.swift */,
 				781C3872251A1AF70094C2C6 /* RootViewController.swift */,
 				78C2510F25139EF8001ED9E3 /* SelectionTableViewController.swift */,
 				DCDB4F4E2B7CE31A0067152A /* URLViewController.swift */,
-				78C2511325139F1D001ED9E3 /* EnvironmentViewController.swift */,
-				78C2511825139F33001ED9E3 /* LoginViewController.swift */,
 				78C2511E25139F44001ED9E3 /* AssetListTableViewController.swift */,
 				78C2512225139F54001ED9E3 /* AssetDetailsViewController.swift */,
 				78C2512625139F64001ED9E3 /* EPGListViewController.swift */,
@@ -526,7 +494,6 @@
 		78C251862513A0DC001ED9E3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				376FBBF72B96556200C0AB48 /* QRCode */,
 				78C251872513A0E7001ED9E3 /* TrackModel.swift */,
 				7825E7172763400F00DC4FA7 /* PlayerAssetDataSource.swift */,
 				372AA5B52B970F35009EB364 /* ErrorModel.swift */,
@@ -539,7 +506,6 @@
 			children = (
 				78C2518E2513A106001ED9E3 /* TrackSelectionViewModel.swift */,
 				7825E71C2763405400DC4FA7 /* AssetViewModel.swift */,
-				376FBBEF2B963BF500C0AB48 /* QRScannerViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -790,7 +756,6 @@
 				377BA7022BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */,
 				78D7447B274E3564002D2FAE /* StorageProvider.swift in Sources */,
 				7825E71E2763405400DC4FA7 /* AssetViewModel.swift in Sources */,
-				376FBBFA2B9658B500C0AB48 /* Helpers.swift in Sources */,
 				372AA5B72B970F35009EB364 /* ErrorModel.swift in Sources */,
 				78370416274E300300EC1F26 /* LoginViewController.swift in Sources */,
 				7825E7192763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
@@ -806,7 +771,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78B6D8C9278D751400BBD3F5 /* ContentView.swift in Sources */,
-				376FBBFB2B9658B500C0AB48 /* Helpers.swift in Sources */,
 				78B6D92D278D846D00BBD3F5 /* PlayerControls.swift in Sources */,
 				78B6D929278D846800BBD3F5 /* ProgramBasedTimeline.swift in Sources */,
 				372AA5B82B970F35009EB364 /* ErrorModel.swift in Sources */,
@@ -837,9 +801,7 @@
 			files = (
 				781C374025187CA60094C2C6 /* UIViewController+Extension.swift in Sources */,
 				78C2513925139FB6001ED9E3 /* PlayerControls.swift in Sources */,
-				78C2511925139F33001ED9E3 /* LoginViewController.swift in Sources */,
 				7825E71D2763405400DC4FA7 /* AssetViewModel.swift in Sources */,
-				376FBBF02B963BF500C0AB48 /* QRScannerViewModel.swift in Sources */,
 				78C251552513A045001ED9E3 /* UIView+Anchor.swift in Sources */,
 				372AA5B62B970F35009EB364 /* ErrorModel.swift in Sources */,
 				78C2512725139F64001ED9E3 /* EPGListViewController.swift in Sources */,
@@ -847,7 +809,6 @@
 				78C251A72513A135001ED9E3 /* RBMTextField.swift in Sources */,
 				7838DCBA27A025AA0052848A /* AVAudioSession+Airplay.swift in Sources */,
 				78456DF9294B0AA500BC6B65 /* AudioPlayerWithAVAudioEngine.swift in Sources */,
-				376FBBF22B9646D400C0AB48 /* QRCodeParameter.swift in Sources */,
 				78C251AB2513A143001ED9E3 /* RBMButton.swift in Sources */,
 				7825E7182763400F00DC4FA7 /* PlayerAssetDataSource.swift in Sources */,
 				78C2510525139E47001ED9E3 /* ColorScheme.swift in Sources */,
@@ -858,13 +819,10 @@
 				78C2516D2513A0A3001ED9E3 /* Int+timeFormat.swift in Sources */,
 				68DED0872AD8169000FA50BF /* AssetListCell.swift in Sources */,
 				781C3873251A1AF70094C2C6 /* RootViewController.swift in Sources */,
-				37224BBC2B909D320005FCBE /* QRScannerViewController.swift in Sources */,
 				78C250FD25139E09001ED9E3 /* MainNavigationController.swift in Sources */,
-				376FBBF92B9658B500C0AB48 /* Helpers.swift in Sources */,
 				78F6D49D279163A700D2B5B2 /* StickyPlayerViewController.swift in Sources */,
 				78C2512F25139F82001ED9E3 /* TrackSelectionViewController.swift in Sources */,
 				78C2514A25139FF8001ED9E3 /* AssetListTableViewCell.swift in Sources */,
-				376FBBF62B96554300C0AB48 /* QRCodeData.swift in Sources */,
 				784FF7B529432A970098E622 /* AudioPlayerViewController.swift in Sources */,
 				78C251AF2513A14F001ED9E3 /* RBMPlayerControlLabel.swift in Sources */,
 				78C2518F2513A106001ED9E3 /* TrackSelectionViewModel.swift in Sources */,
@@ -873,11 +831,9 @@
 				78C251692513A092001ED9E3 /* Date+Extension.swift in Sources */,
 				78C2510B25139ED1001ED9E3 /* StorageProvider.swift in Sources */,
 				377BA7012BA09A6B005DB8BB /* DateRangeSelectorViewController.swift in Sources */,
-				376FBBF42B9646E700C0AB48 /* QRCodeURLParameters.swift in Sources */,
 				78C251612513A077001ED9E3 /* UIViewController+Alert.swift in Sources */,
 				78C2514025139FD6001ED9E3 /* VodBasedTimeline.swift in Sources */,
 				78C251882513A0E7001ED9E3 /* TrackModel.swift in Sources */,
-				78C2511425139F1D001ED9E3 /* EnvironmentViewController.swift in Sources */,
 				78C2511F25139F44001ED9E3 /* AssetListTableViewController.swift in Sources */,
 				78C2513325139F8F001ED9E3 /* DownloadListTableViewController.swift in Sources */,
 				78C2511025139EF8001ED9E3 /* SelectionTableViewController.swift in Sources */,
