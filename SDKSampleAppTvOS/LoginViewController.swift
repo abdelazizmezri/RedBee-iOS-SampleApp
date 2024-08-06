@@ -22,13 +22,13 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordLabel: UITextField!
     
     @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var logoutButton: UIButton!
+    //@IBOutlet weak var logoutButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loginButton.addTarget(self, action: #selector(login(_:)), for: .primaryActionTriggered)
-        logoutButton.addTarget(self, action: #selector(logOut(_:)), for: .primaryActionTriggered)
+        //logoutButton.addTarget(self, action: #selector(logOut(_:)), for: .primaryActionTriggered)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -57,7 +57,7 @@ class LoginViewController: UIViewController {
         businessUnitLabel.isHidden = userhasLoggedIn
         usernameLabel.isHidden = userhasLoggedIn
         passwordLabel.isHidden = userhasLoggedIn
-        logoutButton.isHidden = !userhasLoggedIn
+        //logoutButton.isHidden = !userhasLoggedIn
         
         if userhasLoggedIn == true {
             loginButton.setTitle("Play", for: .normal)
@@ -67,7 +67,7 @@ class LoginViewController: UIViewController {
     }
     
     
-    @objc func logOut(_ sender: Any) {
+    /*@objc func logOut(_ sender: Any) {
         guard let environment = StorageProvider.storedEnvironment, let sessionToken = StorageProvider.storedSessionToken else {
             
             return
@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
                     self.showHideFields(false)
                 }
         }
-    }
+    }*/
     
     @objc func login(_ sender: Any) {
         

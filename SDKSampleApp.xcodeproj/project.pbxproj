@@ -177,7 +177,6 @@
 		68DED0862AD8169000FA50BF /* AssetListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListCell.swift; sourceTree = "<group>"; };
 		780B2DEF251B6B4C003B2A94 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		780B2E03251B6B4C003B2A94 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		780B2E04251B6C3D003B2A94 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		781C373F25187CA60094C2C6 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		781C376F251887620094C2C6 /* SDKSampleApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SDKSampleApp.entitlements; sourceTree = "<group>"; };
 		781C3872251A1AF70094C2C6 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -363,7 +362,6 @@
 			children = (
 				780B2DEF251B6B4C003B2A94 /* LICENSE */,
 				780B2E03251B6B4C003B2A94 /* README.md */,
-				780B2E04251B6C3D003B2A94 /* CHANGELOG.md */,
 				7838DCDB27A7C5290052848A /* SampleApplication-Guide.md */,
 				78C24FEE25139881001ED9E3 /* Cartfile */,
 				78C2502425139AB4001ED9E3 /* Cartfile.resolved */,
@@ -1197,7 +1195,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 18;
-				DEVELOPMENT_TEAM = 3P5CH3HLZN;
+				DEVELOPMENT_TEAM = Q5SKYGM6W5;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -1233,7 +1231,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 18;
-				DEVELOPMENT_TEAM = 3P5CH3HLZN;
+				DEVELOPMENT_TEAM = Q5SKYGM6W5;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;

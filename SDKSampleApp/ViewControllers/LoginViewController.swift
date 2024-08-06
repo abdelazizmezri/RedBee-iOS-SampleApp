@@ -159,9 +159,7 @@ extension LoginViewController {
         
         guard
             let username = usernameTextField.text,
-            let password = passwordTextField.text,
-            !username.isEmpty,
-            !password.isEmpty
+            let password = passwordTextField.text
         else {
             self.popupAlert(title:NSLocalizedString("Sorry", comment: "") , message: NSLocalizedString("Please fill all fields", comment: ""), actions: [okAction], preferedStyle: .alert)
             
@@ -169,10 +167,13 @@ extension LoginViewController {
         }
         
         Authenticate(environment: environment)
-            .login(username: username, password: password)
+            .anonymous()
             .request()
             .validate()
             .response{ [weak self] in
+                
+                print($0)
+                
                 if let error = $0.error {
                     
                     let message = "\(error.code) " + error.message + "\n" + (error.info ?? "")
